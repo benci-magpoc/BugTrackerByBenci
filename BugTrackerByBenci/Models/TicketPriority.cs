@@ -1,6 +1,15 @@
-﻿namespace BugTrackerByBenci.Models;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-public class TicketPriority
+namespace BugTrackerByBenci.Models
 {
+    public class TicketPriority
+    {
+        public int Id { get; set; }
 
+        [Required]
+        [DisplayName("Ticket Priority")]
+        public string? Name { get; set; }
+
+    }
 }

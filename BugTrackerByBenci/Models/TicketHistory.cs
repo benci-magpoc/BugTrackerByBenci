@@ -1,6 +1,10 @@
-﻿namespace BugTrackerByBenci.Models;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-public class TicketHistory
+namespace BugTrackerByBenci.Models
 {
-
+    public class TicketHistory
+    {
+        //TBD
+    }
 }

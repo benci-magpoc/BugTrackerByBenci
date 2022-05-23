@@ -1,6 +1,14 @@
-﻿namespace BugTrackerByBenci.Models;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-public class NotificationType
+namespace BugTrackerByBenci.Models
 {
+    public class NotificationType
+    {
+        public int Id { get; set; }
 
+        [Required]
+        [DisplayName("Notification Type")]
+        public string? Name { get; set; }
+    }
 }

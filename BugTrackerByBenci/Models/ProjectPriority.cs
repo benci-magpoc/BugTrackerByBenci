@@ -3,13 +3,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace BugTrackerByBenci.Models
 {
-
-    public class Invite
+    public class ProjectPriority
     {
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Invite")]
+        [DisplayName("Project Priority")]
         public string? Name { get; set; }
+
     }
 }

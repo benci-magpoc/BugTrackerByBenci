@@ -1,6 +1,14 @@
-﻿namespace BugTrackerByBenci.Models;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
-public class ProjectStatus
+namespace BugTrackerByBenci.Models
 {
+    public class ProjectStatus
+    {
+        public int Id { get; set; }
 
+        [Required]
+        [DisplayName("Project Status")]
+        public string? Name { get; set; }
+    }
 }
