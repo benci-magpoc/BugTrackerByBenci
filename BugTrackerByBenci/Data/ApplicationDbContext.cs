@@ -24,6 +24,7 @@ namespace BugTrackerByBenci.Data
         public DbSet<TicketPriority> TicketPriorities { get; set; } = default!;
         public DbSet<TicketStatus> TicketStatuses { get; set; } = default!;
         public DbSet<TicketType> TicketTypes { get; set; } = default!;
+        public DbSet<BugTrackerByBenci.Models.ProjectStatus>? ProjectStatus { get; set; }
 
     }
 }
