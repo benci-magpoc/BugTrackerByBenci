@@ -35,6 +35,7 @@ namespace BugTrackerByBenci.Models
         public int TicketTypeId { get; set; }
 
         // Foreign Keys
+        [Required]
         public string? SubmitterUserId { get; set; }
         public string? DeveloperUserId { get; set; }
 
