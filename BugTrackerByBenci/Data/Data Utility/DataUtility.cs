@@ -933,7 +933,26 @@ namespace BugTrackerByBenci.Data.Data_Utility
         }
         public static async Task SeedDefaultNotificationTypesAsync(ApplicationDbContext context)
         {
+            try
+            {
+                IList<NotificationType> notificationTypes = new List<NotificationType>() {
+                    new NotificationType() { Name = BTNotificationTypes.Project.ToString() },
+                    new NotificationType() { Name = BTNotificationTypes.Ticket.ToString() }
+                };
 
+                var dbNotificationTypes = context.NotificationTypes.Select(c => c.Name).ToList();
+                await context.NotificationTypes.AddRangeAsync(notificationTypes.Where(c => !dbNotificationTypes.Contains(c.Name)));
+                await context.SaveChangesAsync();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("*************  ERROR  *************");
+                Console.WriteLine("Error Seeding Notification Types.");
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("***********************************");
+                throw;
+            }
         }
 
     }
