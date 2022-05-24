@@ -37,7 +37,7 @@ namespace BugTrackerByBenci.Models
         public virtual Ticket? Ticket { get; set; }
         public virtual Project? Project { get; set; }
         public virtual BTUser? Invitor { get; set; }
-        public virtual BTUser Invitee { get; set; }
+        public virtual BTUser? Invitee { get; set; }
 
     }
 }

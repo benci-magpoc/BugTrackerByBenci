@@ -51,7 +51,7 @@ namespace BugTrackerByBenci.Controllers
         // GET: Invites/Create
         public IActionResult Create()
         {
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin");
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description");
             ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description");
@@ -71,7 +71,7 @@ namespace BugTrackerByBenci.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin", invite.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", invite.CompanyId);
             ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
             ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", invite.ProjectId);
@@ -91,7 +91,7 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin", invite.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", invite.CompanyId);
             ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
             ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", invite.ProjectId);
@@ -130,7 +130,7 @@ namespace BugTrackerByBenci.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin", invite.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", invite.CompanyId);
             ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
             ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
             ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", invite.ProjectId);

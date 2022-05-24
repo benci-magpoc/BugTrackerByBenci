@@ -49,7 +49,7 @@ namespace BugTrackerByBenci.Controllers
         // GET: Projects/Create
         public IActionResult Create()
         {
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin");
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description");
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name");
             return View();
         }
@@ -67,7 +67,7 @@ namespace BugTrackerByBenci.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
@@ -85,7 +85,7 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
@@ -122,7 +122,7 @@ namespace BugTrackerByBenci.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Descriptioin", project.CompanyId);
+            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }

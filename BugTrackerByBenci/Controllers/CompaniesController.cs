@@ -56,7 +56,7 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Descriptioin")] Company company)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Company company)
         {
             if (ModelState.IsValid)
             {
@@ -88,7 +88,7 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Descriptioin")] Company company)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Company company)
         {
             if (id != company.Id)
             {

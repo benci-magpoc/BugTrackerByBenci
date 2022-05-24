@@ -14,7 +14,7 @@ namespace BugTrackerByBenci.Models
 
         [Required]
         [DisplayName("Company Description")]
-        public string? Descriptioin { get; set; }
+        public string? Description { get; set; }
 
         // Navigational Properties
         public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
