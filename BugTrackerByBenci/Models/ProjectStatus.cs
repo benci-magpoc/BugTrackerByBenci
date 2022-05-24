@@ -8,7 +8,7 @@ namespace BugTrackerByBenci.Models
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Project Status")]
+        [DisplayName("Status")]
         public string? Name { get; set; }
     }
 }

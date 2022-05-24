@@ -15,25 +15,26 @@ namespace BugTrackerByBenci.Models
 
         [Required]
         [DisplayName("Project Name")]
+        [StringLength(240, ErrorMessage = "The {0} must be a minimum of {2} characters and a max of {1}.", MinimumLength = 3)]
         public string? Name { get; set; }
         
         [Required]
         [DisplayName("Project Description")]
+        [StringLength(240, ErrorMessage = "The {0} must be a minimum of {2} characters and a max of {1}.", MinimumLength = 3)]
         public string? Description { get; set; }
-        
+
         [DataType(DataType.Date)]
-        [DisplayName("Created Date")]
+        [DisplayName("Date Created")]
         public DateTime Created { get; set; }
         
         [DataType(DataType.Date)]
-        [DisplayName("Start Date")]
+        [DisplayName("Project Start Date")]
         public DateTime StartDate { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayName("End Date")]
+        [DisplayName("Project End Date")]
         public DateTime EndDate { get; set; }
 
-        [Required] 
         public int ProjectPriorityId { get; set; }
 
         // Image Properties
@@ -54,7 +55,7 @@ namespace BugTrackerByBenci.Models
         [DisplayName("Company")]
         public virtual Company? Company  { get; set; }
 
-        [DisplayName("Project Priority")] 
+        [DisplayName("Priority")] 
         public virtual ProjectPriority? Priority { get; set; }
 
         // Navigational Collections

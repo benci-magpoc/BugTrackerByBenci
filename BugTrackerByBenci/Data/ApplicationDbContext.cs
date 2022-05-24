@@ -17,7 +17,6 @@ namespace BugTrackerByBenci.Data
         public DbSet<NotificationType> NotificationTypes { get; set; } = default!;
         public DbSet<Project> Projects { get; set; } = default!;
         public DbSet<ProjectPriority> ProjectPriorities { get; set; } = default!;
-        public DbSet<ProjectStatus> ProjectStatuses { get; set; } = default!;
         public DbSet<Ticket> Tickets { get; set; } = default!;
         public DbSet<TicketAttachment> TicketAttachments { get; set; } = default!;
         public DbSet<TicketComment> TicketComments { get; set; } = default!;

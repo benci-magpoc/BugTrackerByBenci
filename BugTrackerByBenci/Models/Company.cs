@@ -11,5 +11,15 @@ namespace BugTrackerByBenci.Models
         [Required]
         [DisplayName("Company Name")]
         public string? Name { get; set; }
+
+        [Required]
+        [DisplayName("Company Description")]
+        public string? Descriptioin { get; set; }
+
+        // Navigational Properties
+        public virtual ICollection<Project> Projects { get; set; } = new HashSet<Project>();
+        public virtual ICollection<BTUser> Members { get; set; } = new HashSet<BTUser>();
+        public virtual ICollection<Invite> Invites { get; set; } = new HashSet<Invite>();
+
     }
 }

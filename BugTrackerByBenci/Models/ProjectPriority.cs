@@ -8,7 +8,7 @@ namespace BugTrackerByBenci.Models
         public int Id { get; set; }
 
         [Required]
-        [DisplayName("Project Priority")]
+        [DisplayName("Priority")]
         public string? Name { get; set; }
 
     }

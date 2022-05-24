@@ -13,7 +13,7 @@ namespace BugTrackerByBenci.Models
 
         [Required]
         [DisplayName("Ticket Description")]
-        [StringLength(200)]
+        [StringLength(2000)]
         public string? Description { get; set; }
 
         [DataType(DataType.Date)]
@@ -25,29 +25,37 @@ namespace BugTrackerByBenci.Models
         public DateTime Updated { get; set; }
 
         public bool Archived { get; set; }
+
+        [DisplayName("Archived By Project")]
         public bool ArchivedByProject { get; set; }
 
-        [Required] public int ProjectId { get; set; }
-        [Required] public int TicketPriorityId { get; set; }
-        [Required] public int TicketStatusId { get; set; }
-        [Required] public int TicketTypeId { get; set; }
+        public int ProjectId { get; set; }
+        public int TicketPriorityId { get; set; }
+        public int TicketStatusId { get; set; }
+        public int TicketTypeId { get; set; }
 
         // Foreign Keys
-        [Required] string? SubmitterUserId { get; set; }
-        [Required] string? DeveloperUserId { get; set; }
+        public string? SubmitterUserId { get; set; }
+        public string? DeveloperUserId { get; set; }
 
         // Navigational Property
         public virtual Project? Project { get; set; }
+        [DisplayName("Priority")]
         public virtual TicketPriority? TicketPriority { get; set; }
+        [DisplayName("Status")]
         public virtual TicketStatus? TicketStatus { get; set; }
+        [DisplayName("Type")]
         public virtual TicketType? TicketType { get; set; }
+        [DisplayName("Submitted By")]
         public virtual BTUser? SubmitterUser { get; set; }
+        [DisplayName("Ticket Developer")]
         public virtual BTUser? DeveloperUser { get; set; }
 
         // Navigational Collections
         public virtual ICollection<TicketComment> Comments { get; set; } = new HashSet<TicketComment>();
-        public virtual ICollection<TicketAttachment> TicketAttachments { get; set; } = new HashSet<TicketAttachment>();
+        public virtual ICollection<TicketAttachment> Attachments { get; set; } = new HashSet<TicketAttachment>();
         public virtual ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
+        public virtual ICollection<TicketHistory> History { get; set; } = new HashSet<TicketHistory>();
 
     }
 }
