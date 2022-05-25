@@ -684,6 +684,7 @@ namespace BugTrackerByBenci.Data.Data_Utility
                 blogId = context.Projects.FirstOrDefault(p => p.Name == "Build a supplemental Blog Web Application")!.Id;
                 bugtrackerId = context.Projects.FirstOrDefault(p => p.Name == "Build an Issue Tracking Web Application")!.Id;
                 movieId = context.Projects.FirstOrDefault(p => p.Name == "Build a Movie Information Web Application")!.Id;
+                addressbookId = context.Projects.FirstOrDefault(p => p.Name == "Build an Address Book Web Application")!.Id;
             }
             catch (Exception ex)
             {
@@ -890,6 +891,14 @@ namespace BugTrackerByBenci.Data.Data_Utility
                     new Ticket() {SubmitterUserId = company1AdminId, Title = "Movie Ticket 18", Description = "Ticket details for movie ticket 18", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = movieId, TicketPriorityId = priorityMedium, TicketStatusId = statusDev,  TicketTypeId = typeEnhancement},
                     new Ticket() {SubmitterUserId = company1AdminId, Title = "Movie Ticket 19", Description = "Ticket details for movie ticket 19", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = movieId, TicketPriorityId = priorityHigh, TicketStatusId = statusNew,  TicketTypeId = typeChangeRequest},
                     new Ticket() {SubmitterUserId = company1AdminId, Title = "Movie Ticket 20", Description = "Ticket details for movie ticket 20", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = movieId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
+                    // Address Book Tickets
+                    new Ticket() {SubmitterUserId = company2AdminId, Title = "Address Book Ticket 1", Description = "Ticket details for Address Book ticket 1", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = addressbookId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
+                    new Ticket() {SubmitterUserId = company2AdminId, Title = "Address Book Ticket 2", Description = "Ticket details for Address Book ticket 2", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = addressbookId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
+                    new Ticket() {SubmitterUserId = company2AdminId, Title = "Address Book Ticket 3", Description = "Ticket details for Address Book ticket 3", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = addressbookId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
+                    new Ticket() {SubmitterUserId = company2AdminId, Title = "Address Book Ticket 4", Description = "Ticket details for Address Book ticket 4", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = addressbookId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
+                    new Ticket() {SubmitterUserId = company2AdminId, Title = "Address Book Ticket 5", Description = "Ticket details for Address Book ticket 5", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = addressbookId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
+                    new Ticket() {SubmitterUserId = company2AdminId, Title = "Address Book Ticket 6", Description = "Ticket details for Address Book ticket 6", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = addressbookId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
+                    new Ticket() {SubmitterUserId = company2AdminId, Title = "Address Book Ticket 7", Description = "Ticket details for Address Book ticket 7", Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc), ProjectId = addressbookId, TicketPriorityId = priorityUrgent, TicketStatusId = statusNew, TicketTypeId = typeNewDev},
 
                 };
                 var dbTickets = context.Tickets.Select(c => c.Title).ToList();
