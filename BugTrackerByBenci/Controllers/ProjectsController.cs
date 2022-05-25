@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Models;
+using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BugTrackerByBenci.Controllers
 {
@@ -17,11 +13,12 @@ namespace BugTrackerByBenci.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
-
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager)
+        private readonly IBTProjectService _projectService;
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTProjectService projectService)
         {
             _context = context;
             _userManager = userManager;
+            _projectService = projectService;
         }
 
         // GET: Projects
@@ -29,11 +26,11 @@ namespace BugTrackerByBenci.Controllers
         public async Task<IActionResult> Index()
         {
             BTUser btUser = await _userManager.GetUserAsync(User);
-
-            var companyId = btUser.CompanyId;
-            var projects =  _context.Projects.Include(p => p.Company).Include(p => p.Priority)
-                .Where(p => p.CompanyId == companyId);
-            return View(await projects.ToListAsync());
+            int companyId = btUser.CompanyId;
+            
+            List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
+            
+            return View(projects);
         }
 
         // GET: Projects/Details/5
@@ -73,8 +70,7 @@ namespace BugTrackerByBenci.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(project);
-                await _context.SaveChangesAsync();
+                await _projectService.AddNewProjectAsync(project);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
@@ -116,8 +112,8 @@ namespace BugTrackerByBenci.Controllers
             {
                 try
                 {
-                    _context.Update(project);
-                    await _context.SaveChangesAsync();
+                    await _projectService.UpdateProjectAsync(project);
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -130,7 +126,6 @@ namespace BugTrackerByBenci.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
@@ -169,7 +164,8 @@ namespace BugTrackerByBenci.Controllers
             var project = await _context.Projects.FindAsync(id);
             if (project != null)
             {
-                _context.Projects.Remove(project);
+                await _projectService.ArchiveProjectAsync(project);
+                return RedirectToAction(nameof(Index));
             }
             
             await _context.SaveChangesAsync();

@@ -7,23 +7,34 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Models;
+using BugTrackerByBenci.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace BugTrackerByBenci.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BTUser> _userManager;
+        private readonly IBTTicketService _ticketService;
 
-        public TicketsController(ApplicationDbContext context)
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService)
         {
             _context = context;
+            _userManager = userManager;
+            _ticketService = ticketService;
         }
 
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.Project).Include(t => t.SubmitterUser).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            return View(await applicationDbContext.ToListAsync());
+            //var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.Project).Include(t => t.SubmitterUser).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+            BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = btUser.CompanyId;
+
+            List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyIdAsync(companyId); 
+
+            return View(tickets);
         }
 
         // GET: Tickets/Details/5
