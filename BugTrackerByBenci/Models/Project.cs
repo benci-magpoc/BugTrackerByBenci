@@ -20,7 +20,7 @@ namespace BugTrackerByBenci.Models
         
         [Required]
         [DisplayName("Project Description")]
-        [StringLength(240, ErrorMessage = "The {0} must be a minimum of {2} characters and a max of {1}.", MinimumLength = 3)]
+        [StringLength(2000, ErrorMessage = "The {0} must be a minimum of {2} characters and a max of {1}.", MinimumLength = 3)]
         public string? Description { get; set; }
 
         [DataType(DataType.Date)]

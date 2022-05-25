@@ -60,11 +60,11 @@ namespace BugTrackerByBenci.Data.Data_Utility
             await SeedDemoUsersAsync(userManagerSvc);
             await SeedDefaultTicketTypesAsync(dbContextSvc);
             await SeedDefaultTicketStatusesAsync(dbContextSvc);
-            await SeedDefaultProjectsAsync(dbContextSvc);
             await SeedDefaultProjectPrioritiesAsync(dbContextSvc);
+            await SeedDefaultTicketPrioritiesAsync(dbContextSvc);
+            await SeedDefaultProjectsAsync(dbContextSvc);
             await SeedDefaultTicketsAsync(dbContextSvc, userManagerSvc);
             await SeedDefaultNotificationTypesAsync(dbContextSvc);
-            await SeedDefaultTicketPrioritiesAsync(dbContextSvc);
         }
 
         public static async Task SeedRolesAsync(RoleManager<IdentityRole> roleManager)

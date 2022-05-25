@@ -7,23 +7,33 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace BugTrackerByBenci.Controllers
 {
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<BTUser> _userManager;
 
-        public ProjectsController(ApplicationDbContext context)
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Projects
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Projects.Include(p => p.Company).Include(p => p.Priority);
-            return View(await applicationDbContext.ToListAsync());
+            BTUser btUser = await _userManager.GetUserAsync(User);
+
+            var companyId = btUser.CompanyId;
+            var projects =  _context.Projects.Include(p => p.Company).Include(p => p.Priority)
+                .Where(p => p.CompanyId == companyId);
+            return View(await projects.ToListAsync());
         }
 
         // GET: Projects/Details/5
