@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
+using BugTrackerByBenci.Extensions;
 using BugTrackerByBenci.Models;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
@@ -17,20 +18,20 @@ namespace BugTrackerByBenci.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTTicketService _ticketService;
+        private readonly IBTProjectService _projectService;
 
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService)
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService)
         {
             _context = context;
             _userManager = userManager;
             _ticketService = ticketService;
+            _projectService = projectService;
         }
 
         // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            //var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.Project).Include(t => t.SubmitterUser).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
-            BTUser btUser = await _userManager.GetUserAsync(User);
-            int companyId = btUser.CompanyId;
+            int companyId = User.Identity!.GetCompanyId();
 
             List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyIdAsync(companyId); 
 
@@ -46,15 +47,7 @@ namespace BugTrackerByBenci.Controllers
             }
 
             Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
-
-            //var ticket = await _context.Tickets
-            //    .Include(t => t.DeveloperUser)
-            //    .Include(t => t.Project)
-            //    .Include(t => t.SubmitterUser)
-            //    .Include(t => t.TicketPriority)
-            //    .Include(t => t.TicketStatus)
-            //    .Include(t => t.TicketType)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
+            
             if (ticket == null)
             {
                 return NotFound();
@@ -64,13 +57,15 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id");
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description");
-            ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id");
+            int companyId = User.Identity!.GetCompanyId();
+
+            //ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId), "Id", "Name");
+            //ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id");
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
-            ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
+            //ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
             return View();
         }
@@ -80,10 +75,21 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Created,Updated,Archived,ArchivedByProject,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId,SubmitterUserId,DeveloperUserId")] Ticket ticket)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Created,Updated,ProjectId,TicketPriorityId,TicketTypeId")] Ticket ticket)
         {
+            ModelState.Remove("SubmitterUserId");
+
             if (ModelState.IsValid)
             {
+                int companyId = User.Identity!.GetCompanyId();
+                
+                // Assign Values
+
+                //ticket.ProjectId = (await _projectService.GetProjectByIdAsync(ticket.ProjectId, companyId))!.Id;
+                ticket.SubmitterUserId = _userManager.GetUserId(User);
+                ticket.Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+                ticket.TicketStatusId = (await _context.TicketStatuses.FirstOrDefaultAsync(t => t.Name == "New"))!.Id;
+
                 await _ticketService.AddNewTicketAsync(ticket);
                 return RedirectToAction(nameof(Index));
             }
@@ -103,6 +109,7 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
+            int companyId = User.Identity!.GetCompanyId();
 
             Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
@@ -168,16 +175,7 @@ namespace BugTrackerByBenci.Controllers
             }
             
             Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
-
-            //var ticket = await _context.Tickets
-            //    .Include(t => t.DeveloperUser)
-            //    .Include(t => t.Project)
-            //    .Include(t => t.SubmitterUser)
-            //    .Include(t => t.TicketPriority)
-            //    .Include(t => t.TicketStatus)
-            //    .Include(t => t.TicketType)
-            //    .FirstOrDefaultAsync(m => m.Id == id);
-
+            
             if (ticket == null)
             {
                 return NotFound();

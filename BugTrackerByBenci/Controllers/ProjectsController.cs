@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
+using BugTrackerByBenci.Extensions;
 using BugTrackerByBenci.Models;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -25,8 +26,8 @@ namespace BugTrackerByBenci.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            BTUser btUser = await _userManager.GetUserAsync(User);
-            int companyId = btUser.CompanyId;
+            //BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = User.Identity!.GetCompanyId();
             
             List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
             
@@ -40,8 +41,8 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-            BTUser btUser = await _userManager.GetUserAsync(User);
-            int companyId = btUser.CompanyId;
+
+            int companyId = User.Identity!.GetCompanyId();
 
             Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
@@ -66,10 +67,19 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,CompanyId,Name,Description,Created,StartDate,EndDate,ProjectPriorityId,FileName,FileData,FileContentType,Archived")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,CompanyId,Name,Description,StartDate,EndDate,ProjectPriorityId")] Project project)
         {
             if (ModelState.IsValid)
             {
+                int companyId = User.Identity!.GetCompanyId();
+
+                // Assigning values to project object
+                project.CompanyId = companyId;
+                project.Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+                project.StartDate = DateTime.SpecifyKind(project.StartDate, DateTimeKind.Utc);
+                project.EndDate = DateTime.SpecifyKind(project.EndDate, DateTimeKind.Utc);
+                
+                // Calling Add New Project Method of Project Service
                 await _projectService.AddNewProjectAsync(project);
                 return RedirectToAction(nameof(Index));
             }
@@ -86,8 +96,7 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            BTUser btUser = await _userManager.GetUserAsync(User);
-            int companyId = btUser.CompanyId;
+            int companyId = User.Identity!.GetCompanyId();
 
             Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
@@ -144,8 +153,7 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            BTUser btUser = await _userManager.GetUserAsync(User);
-            int companyId = btUser.CompanyId;
+            int companyId = User.Identity!.GetCompanyId();
 
             Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
@@ -167,8 +175,7 @@ namespace BugTrackerByBenci.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
             }
 
-            BTUser btUser = await _userManager.GetUserAsync(User);
-            int companyId = btUser.CompanyId;
+            int companyId = User.Identity!.GetCompanyId();
 
             Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 

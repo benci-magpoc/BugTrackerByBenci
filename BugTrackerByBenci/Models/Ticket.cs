@@ -22,7 +22,7 @@ namespace BugTrackerByBenci.Models
 
         [DataType(DataType.Date)]
         [DisplayName("Updated Date")]
-        public DateTime Updated { get; set; }
+        public DateTime? Updated { get; set; }
 
         public bool Archived { get; set; }
 

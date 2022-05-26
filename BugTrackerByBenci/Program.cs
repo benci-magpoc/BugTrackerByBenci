@@ -2,6 +2,7 @@ using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Data.Data_Utility;
 using BugTrackerByBenci.Models;
 using BugTrackerByBenci.Services;
+using BugTrackerByBenci.Services.Factories;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -18,9 +19,10 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddClaimsPrincipalFactory<BTUserClaimsPrincipalFactory>()
     .AddDefaultUI()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddDefaultTokenProviders();
 
 builder.Services.AddMvc();
 
