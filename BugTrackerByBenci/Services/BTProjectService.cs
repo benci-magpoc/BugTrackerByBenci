@@ -37,7 +37,6 @@ namespace BugTrackerByBenci.Services
             try
             {
                 project.Archived = true;
-                _context.Update(project);
                 await UpdateProjectAsync(project);
             }
             catch (Exception)
@@ -86,21 +85,30 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         }
-
-        public async Task<Project?> GetProjectByIdAsync(int? id)
-        {
-            Project? project = new();
-
-            project = await _context.Projects
-                .Include(p => p.Company)
-                .Include(p => p.Priority)
-                .FirstOrDefaultAsync(m => m.Id == id);
-
-            return project;
-        }
-
         #endregion
+        
+        #region Get a Project By Id
+        public async Task<Project?> GetProjectByIdAsync(int projectId)
+        {
+            try
+            {
+                Project? project = new();
 
+                project = await _context.Projects
+                    .Include(p => p.Company)
+                    .Include(p => p.Priority)
+                    .FirstOrDefaultAsync(m => m.Id == projectId);
+
+                return project;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        } 
+        #endregion
+        
         #region Update Project
         public async Task UpdateProjectAsync(Project project)
         {
@@ -116,8 +124,6 @@ namespace BugTrackerByBenci.Services
             }
         } 
         #endregion
-
-        //TODO Make project by ID method
 
     }
 }

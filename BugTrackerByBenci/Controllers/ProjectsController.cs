@@ -41,7 +41,7 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            Project? project = await _projectService.GetProjectByIdAsync(id);
+            Project? project = await _projectService.GetProjectByIdAsync(id.Value);
 
             if (project == null)
             {
@@ -84,7 +84,8 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects.FindAsync(id);
+            var project = await _projectService.GetProjectByIdAsync(id.Value);
+
             if (project == null)
             {
                 return NotFound();
@@ -138,10 +139,8 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            var project = await _context.Projects
-                .Include(p => p.Company)
-                .Include(p => p.Priority)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var project = await _projectService.GetProjectByIdAsync(id.Value);
+
             if (project == null)
             {
                 return NotFound();
@@ -159,7 +158,9 @@ namespace BugTrackerByBenci.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
             }
-            var project = await _context.Projects.FindAsync(id);
+
+            var project = await _projectService.GetProjectByIdAsync(id);
+
             if (project != null)
             {
                 await _projectService.ArchiveProjectAsync(project);

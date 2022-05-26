@@ -45,14 +45,16 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets
-                .Include(t => t.DeveloperUser)
-                .Include(t => t.Project)
-                .Include(t => t.SubmitterUser)
-                .Include(t => t.TicketPriority)
-                .Include(t => t.TicketStatus)
-                .Include(t => t.TicketType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
+
+            //var ticket = await _context.Tickets
+            //    .Include(t => t.DeveloperUser)
+            //    .Include(t => t.Project)
+            //    .Include(t => t.SubmitterUser)
+            //    .Include(t => t.TicketPriority)
+            //    .Include(t => t.TicketStatus)
+            //    .Include(t => t.TicketType)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
                 return NotFound();
@@ -82,8 +84,7 @@ namespace BugTrackerByBenci.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(ticket);
-                await _context.SaveChangesAsync();
+                await _ticketService.AddNewTicketAsync(ticket);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
@@ -103,7 +104,8 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.Tickets.FindAsync(id);
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
+
             if (ticket == null)
             {
                 return NotFound();
@@ -133,8 +135,7 @@ namespace BugTrackerByBenci.Controllers
             {
                 try
                 {
-                    _context.Update(ticket);
-                    await _context.SaveChangesAsync();
+                    await _ticketService.UpdateTicketAsync(ticket);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -165,15 +166,18 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
+            
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
-            var ticket = await _context.Tickets
-                .Include(t => t.DeveloperUser)
-                .Include(t => t.Project)
-                .Include(t => t.SubmitterUser)
-                .Include(t => t.TicketPriority)
-                .Include(t => t.TicketStatus)
-                .Include(t => t.TicketType)
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //var ticket = await _context.Tickets
+            //    .Include(t => t.DeveloperUser)
+            //    .Include(t => t.Project)
+            //    .Include(t => t.SubmitterUser)
+            //    .Include(t => t.TicketPriority)
+            //    .Include(t => t.TicketStatus)
+            //    .Include(t => t.TicketType)
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+
             if (ticket == null)
             {
                 return NotFound();
@@ -191,10 +195,12 @@ namespace BugTrackerByBenci.Controllers
             {
                 return Problem("Entity set 'ApplicationDbContext.Tickets'  is null.");
             }
-            var ticket = await _context.Tickets.FindAsync(id);
+
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(id);
+
             if (ticket != null)
             {
-                _context.Tickets.Remove(ticket);
+                await _ticketService.ArchiveTicketAsync(ticket);
             }
             
             await _context.SaveChangesAsync();
