@@ -88,16 +88,24 @@ namespace BugTrackerByBenci.Services
         #endregion
         
         #region Get a Project By Id
-        public async Task<Project?> GetProjectByIdAsync(int projectId)
+        public async Task<Project?> GetProjectByIdAsync(int projectId, int companyId)
         {
             try
             {
                 Project? project = new();
 
                 project = await _context.Projects
-                    .Include(p => p.Company)
-                    .Include(p => p.Priority)
-                    .FirstOrDefaultAsync(m => m.Id == projectId);
+                    .Include(p => p.Tickets)!
+                        .ThenInclude(t=>t.TicketStatus)
+                    .Include(p => p.Tickets)!
+                        .ThenInclude(t => t.TicketType)
+                    .Include(p => p.Tickets)!
+                        .ThenInclude(t => t.DeveloperUser)
+                    .Include(p => p.Tickets)!
+                        .ThenInclude(t => t.SubmitterUser)
+                    .Include(p => p.Members)!
+                    .Include(p=>p.Priority)
+                    .FirstOrDefaultAsync(p=> p.Id == projectId && p.CompanyId == companyId);
 
                 return project;
             }

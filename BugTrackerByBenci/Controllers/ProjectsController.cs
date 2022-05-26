@@ -40,8 +40,10 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
+            BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = btUser.CompanyId;
 
-            Project? project = await _projectService.GetProjectByIdAsync(id.Value);
+            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
             if (project == null)
             {
@@ -84,7 +86,10 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            var project = await _projectService.GetProjectByIdAsync(id.Value);
+            BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = btUser.CompanyId;
+
+            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
             if (project == null)
             {
@@ -139,7 +144,10 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            var project = await _projectService.GetProjectByIdAsync(id.Value);
+            BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = btUser.CompanyId;
+
+            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
             if (project == null)
             {
@@ -152,14 +160,17 @@ namespace BugTrackerByBenci.Controllers
         // POST: Projects/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? id)
         {
             if (_context.Projects == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
             }
 
-            var project = await _projectService.GetProjectByIdAsync(id);
+            BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = btUser.CompanyId;
+
+            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
             if (project != null)
             {
