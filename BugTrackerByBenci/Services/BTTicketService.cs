@@ -57,7 +57,8 @@ namespace BugTrackerByBenci.Services
                         .Include(t => t.TicketPriority)
                         .Include(t => t.TicketStatus)
                         .Include(t => t.TicketType)
-                        .Where(t => t.Project!.CompanyId == companyId);
+                        .Where(t => t.Project!.CompanyId == companyId)
+                        .OrderByDescending(t=>t.Created);
 
                 return await tickets.ToListAsync();
             }

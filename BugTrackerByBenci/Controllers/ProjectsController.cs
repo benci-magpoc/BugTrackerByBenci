@@ -83,7 +83,7 @@ namespace BugTrackerByBenci.Controllers
                 await _projectService.AddNewProjectAsync(project);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
+            //ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
@@ -104,7 +104,7 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
+            //ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
             ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
             return View(project);
         }
@@ -125,6 +125,14 @@ namespace BugTrackerByBenci.Controllers
             {
                 try
                 {
+                    int companyId = User.Identity!.GetCompanyId();
+
+                    // Assigning values to project object
+                    project.CompanyId = companyId;
+                    project.Created = DateTime.SpecifyKind(project.Created, DateTimeKind.Utc);
+                    project.StartDate = DateTime.SpecifyKind(project.StartDate, DateTimeKind.Utc);
+                    project.EndDate = DateTime.SpecifyKind(project.EndDate, DateTimeKind.Utc);
+
                     await _projectService.UpdateProjectAsync(project);
                     return RedirectToAction(nameof(Index));
                 }
