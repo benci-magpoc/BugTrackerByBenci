@@ -29,6 +29,7 @@ builder.Services.AddMvc();
 // Custom Services
 builder.Services.AddScoped<IBTProjectService, BTProjectService>();
 builder.Services.AddScoped<IBTTicketService, BTTicketService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
 
 
 

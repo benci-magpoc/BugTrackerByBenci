@@ -1,4 +1,5 @@
-﻿@model BugTrackerByBenci.Models.Project
+﻿@using BugTrackerByBenci.Models.Enums
+@model BugTrackerByBenci.Models.ViewModels.AddProjectWithPMViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -17,14 +18,14 @@
                 <select asp-for="CompanyId" class ="form-control" asp-items="ViewBag.CompanyId"></select>
             </div>*@
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Project!.Name" class="control-label"></label>
+                <input asp-for="Project!.Name" class="form-control" />
+                <span asp-validation-for="Project!.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <textarea asp-for="Description" class="form-control" style="height: 12rem; resize: none;"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Project!.Description" class="control-label"></label>
+                <textarea asp-for="Project!.Description" class="form-control" style="height: 12rem; resize: none;"></textarea>
+                <span asp-validation-for="Project!.Description" class="text-danger"></span>
             </div>
             @*<div class="form-group">
                 <label asp-for="Created" class="control-label"></label>
@@ -32,19 +33,24 @@
                 <span asp-validation-for="Created" class="text-danger"></span>
             </div>*@
             <div class="form-group">
-                <label asp-for="StartDate" class="control-label"></label>
-                <input asp-for="StartDate" class="form-control" />
-                <span asp-validation-for="StartDate" class="text-danger"></span>
+                <label asp-for="Project!.StartDate" class="control-label"></label>
+                <input asp-for="Project!.StartDate" class="form-control" />
+                <span asp-validation-for="Project!.StartDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="EndDate" class="control-label"></label>
-                <input asp-for="EndDate" class="form-control" />
-                <span asp-validation-for="EndDate" class="text-danger"></span>
+                <label asp-for="Project!.EndDate" class="control-label"></label>
+                <input asp-for="Project!.EndDate" class="form-control" />
+                <span asp-validation-for="Project!.EndDate" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProjectPriorityId" class="control-label"></label>
-                <select asp-for="ProjectPriorityId" class ="form-control" asp-items="ViewBag.ProjectPriorityId"></select>
+                <label asp-for="Project!.ProjectPriorityId" class="control-label"></label>
+                <select asp-for="Project!.ProjectPriorityId" class ="form-control" asp-items="@Model.PriorityList"></select>
             </div>
+            <div class="form-group">
+                <label asp-for="PMList" class="control-label"></label>
+                <select asp-for="PMList" class ="form-control" asp-items="@Model.PMList"></select>
+            </div>
+
             @*<div class="form-group">
                 <label asp-for="FileName" class="control-label"></label>
                 <input asp-for="FileName" class="form-control" />
@@ -65,6 +71,16 @@
                     <input class="form-check-input" asp-for="Archived" /> @Html.DisplayNameFor(model => model.Archived)
                 </label>
             </div>*@
+            
+            @if (User.IsInRole(nameof(BTRoles.ProjectManager)))
+            {
+                <div class="form-group">
+                    <label class="control-label"> Project Manager</label>
+                    <select asp-for="PMID" class="form-control" asp-items="@Model.PMList">
+                        <option></option>
+                    </select>
+                </div>
+            }
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
