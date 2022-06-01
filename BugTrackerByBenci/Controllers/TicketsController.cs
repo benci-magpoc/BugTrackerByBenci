@@ -131,20 +131,18 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Created,Updated,ProjectId,TicketPriorityId,TicketStatusId,TicketTypeId")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Created,Updated,ProjectId,SubmitterUserId,TicketPriorityId,TicketStatusId,TicketTypeId")] Ticket ticket)
         {
             if (id != ticket.Id)
             {
                 return NotFound();
             }
 
-            ModelState.Remove("SubmitterUserId");
-
             if (ModelState.IsValid)
             {
                 try
                 {
-                    ticket.SubmitterUserId = _userManager.GetUserId(User);
+                    ticket.SubmitterUserId = ticket.SubmitterUserId;
                     ticket.Created = DateTime.SpecifyKind(ticket.Created, DateTimeKind.Utc);
                     ticket.Updated = DateTime.UtcNow;
                     ticket.TicketStatusId = ticket.TicketStatusId;
