@@ -40,6 +40,16 @@ namespace BugTrackerByBenci.Controllers
             return View(projects);
         }
 
+        public async Task<IActionResult> ArchivedProjects()
+        {
+            //BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = User.Identity!.GetCompanyId();
+
+            List<Project> projects = await _projectService.GetArchivedProjectsByCompanyAsync(companyId);
+
+            return View(projects);
+        }
+
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -101,7 +111,7 @@ namespace BugTrackerByBenci.Controllers
                 // Calling Add New Project Method of Project Service
                 await _projectService.AddNewProjectAsync(model.Project!);
 
-                // TODO: Allow Admin to add ProjectManager on create
+                // Allow Admin to add ProjectManager on create
                 if (!string.IsNullOrEmpty(model.PMID))
                 {
                     await _projectService.AddProjectManagerAsync(model.PMID, model.Project!.Id);
@@ -224,8 +234,8 @@ namespace BugTrackerByBenci.Controllers
             return View(model);
         }
 
-        // GET: Projects/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Projects/Archive/5
+        public async Task<IActionResult> Archive(int? id)
         {
             if (id == null || _context.Projects == null)
             {
@@ -245,9 +255,9 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // POST: Projects/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
+        public async Task<IActionResult> ArchivedConfirmed(int? id)
         {
             if (_context.Projects == null)
             {
@@ -256,7 +266,7 @@ namespace BugTrackerByBenci.Controllers
 
             int companyId = User.Identity!.GetCompanyId();
 
-            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
+            Project? project = await _projectService.GetProjectByIdAsync(id!.Value, companyId);
 
             if (project != null)
             {
@@ -266,6 +276,59 @@ namespace BugTrackerByBenci.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> MyProjects()
+        {
+            string userId = _userManager.GetUserId(User);
+
+            List<Project> projects = await _projectService.GetUserProjectsAsync(userId);
+
+            return View(projects);
+        }
+
+        // GET: Projects/Restore/5
+        public async Task<IActionResult> RestoreProject(int? id)
+        {
+            if (id == null || _context.Projects == null)
+            {
+                return NotFound();
+            }
+
+            int companyId = User.Identity!.GetCompanyId();
+
+            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
+
+            if (project == null)
+            {
+                return NotFound();
+            }
+
+            return View(project);
+        }
+
+        // POST: Projects/Delete/5
+        [HttpPost, ActionName("Restore")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestoreConfirmed(int? id)
+        {
+            if (_context.Projects == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Projects'  is null.");
+            }
+
+            int companyId = User.Identity!.GetCompanyId();
+
+            Project? project = await _projectService.GetProjectByIdAsync(id!.Value, companyId);
+
+            if (project != null)
+            {
+                await _projectService.RestoreArchivedProject(project);
+                return RedirectToAction(nameof(ArchivedProjects));
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ArchivedProjects));
         }
 
         private bool ProjectExists(int id)

@@ -108,6 +108,14 @@ namespace BugTrackerByBenci.Services
             {
                 project.Archived = true;
                 await UpdateProjectAsync(project);
+
+                //Archive project tickets
+                foreach (Ticket ticket in project.Tickets!)
+                {
+                    ticket.ArchivedByProject = true;
+                    _context.Update(ticket);
+                    await _context.SaveChangesAsync();
+                }
             }
             catch (Exception)
             {
@@ -157,7 +165,48 @@ namespace BugTrackerByBenci.Services
             }
         }
         #endregion
-        
+
+        #region Get All Archived Projects By Company Id
+        public async Task<List<Project>> GetArchivedProjectsByCompanyAsync(int companyId)
+        {
+            try
+            {
+                List<Project>? projects = new();
+
+                projects = await _context.Projects.Where(p => p.CompanyId == companyId && p.Archived == true)
+                    .Include(p => p.Company)
+                    .Include(p => p.Members)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.Comments)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.Attachments)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.History)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.Notifications)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.DeveloperUser)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.SubmitterUser)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.TicketStatus)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.TicketPriority)
+                    .Include(p => p.Tickets)!
+                    .ThenInclude(p => p.TicketType)
+                    .Include(p => p.Priority)
+                    .ToListAsync();
+
+                return projects;
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
         #region Get a Project By Id
         public async Task<Project?> GetProjectByIdAsync(int projectId, int companyId)
         {
@@ -212,6 +261,42 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         }
+        #endregion
+
+        #region Get Projects of the User
+        public async Task<List<Project>> GetUserProjectsAsync(string userId)
+        {
+            try
+            {
+                List<Project>? projects = (await _context.Users
+                                                    .Include(u => u.Projects)!
+                                                        .ThenInclude(p => p.Company)
+                                                    .Include(u => u.Projects)!
+                                                        .ThenInclude(p => p.Members)
+                                                    .Include(u => u.Projects)!
+                                                        .ThenInclude(p => p.Tickets)!
+                                                            .ThenInclude(t => t.DeveloperUser)
+                                                    .Include(u => u.Projects)!
+                                                        .ThenInclude(p => p.Tickets)!
+                                                            .ThenInclude(t => t.SubmitterUser)
+                                                    .Include(u => u.Projects)!
+                                                        .ThenInclude(p => p.Tickets)!
+                                                            .ThenInclude(t => t.TicketPriority)
+                                                    .Include(u => u.Projects)!
+                                                        .ThenInclude(p => p.Tickets)!
+                                                            .ThenInclude(t => t.TicketStatus)
+                                                    .Include(u => u.Projects)!
+                                                        .ThenInclude(p => p.Tickets)!
+                                                            .ThenInclude(t => t.TicketType)
+                                                    .FirstOrDefaultAsync(u => u.Id == userId))?.Projects!.ToList();
+
+                return projects!;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        } 
         #endregion
 
         #region Checks if user is on the Project
@@ -270,6 +355,7 @@ namespace BugTrackerByBenci.Services
         }
         #endregion
 
+        #region Remove Project Manager from Project
         public async Task RemoveProjectManagerAsync(int projectId)
         {
             try
@@ -292,6 +378,31 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         }
+        #endregion
+
+        #region Retore Archived Project
+        public async Task RestoreArchivedProject(Project project)
+        {
+            try
+            {
+                project.Archived = false;
+                await UpdateProjectAsync(project);
+
+                ////Archive project tickets
+                //foreach (Ticket ticket in project.Tickets!)
+                //{
+                //    ticket.ArchivedByProject = false;
+                //    _context.Update(ticket);
+                //    await _context.SaveChangesAsync();
+                //}
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        } 
+        #endregion
 
         #region Update Project
         public async Task UpdateProjectAsync(Project project)

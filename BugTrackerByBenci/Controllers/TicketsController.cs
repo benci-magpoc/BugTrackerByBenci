@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Extensions;
 using BugTrackerByBenci.Models;
+using BugTrackerByBenci.Models.Enums;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -60,13 +57,22 @@ namespace BugTrackerByBenci.Controllers
         public async Task<IActionResult> Create()
         {
             int companyId = User.Identity!.GetCompanyId();
+            string userId = _userManager.GetUserId(User);
 
-            ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId), "Id", "Name");
+            if (User.IsInRole(nameof(BTRoles.Admin)))
+            {
+                ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId), "Id", "Name");
+            }
+            else
+            {
+                ViewData["ProjectId"] = new SelectList(await _projectService.GetUserProjectsAsync(userId), "Id", "Name");
+            }
+
+
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
-            //ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id");
-            //ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id");
-            //ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
+            
+
             return View();
         }
 
@@ -87,17 +93,26 @@ namespace BugTrackerByBenci.Controllers
                 ticket.TicketStatusId = (await _context.TicketStatuses.FirstOrDefaultAsync(t => t.Name == "New"))!.Id;
 
                 await _ticketService.AddNewTicketAsync(ticket);
+                // TODO: Add Ticket History
+
+                // TODO: Add Ticket Notification
                 return RedirectToAction(nameof(Index));
             }
-
+            // Reset values in case it didn't make valid on modelstate
             int companyId = User.Identity!.GetCompanyId();
-            
-            ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId), "Id", "Name", ticket.ProjectId);
+            string userId = _userManager.GetUserId(User);
+
+            if (User.IsInRole(nameof(BTRoles.Admin)))
+            {
+                ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId), "Id", "Name");
+            }
+            else
+            {
+                ViewData["ProjectId"] = new SelectList(await _projectService.GetUserProjectsAsync(userId), "Id", "Name");
+            }
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
-            //ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            //ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.SubmitterUserId);
-            //ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            
             return View(ticket);
         }
 
@@ -108,7 +123,6 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-            int companyId = User.Identity!.GetCompanyId();
 
             Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
 
@@ -117,12 +131,10 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
-            ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId), "Id", "Name", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
             ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
-            //ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            //ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.SubmitterUserId);
+            
             return View(ticket);
         }
 
