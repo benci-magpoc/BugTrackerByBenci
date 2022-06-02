@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using BugTrackerByBenci.Extensions;
 
 namespace BugTrackerByBenci.Models
 {
@@ -40,8 +41,8 @@ namespace BugTrackerByBenci.Models
         // Image Properties
         [NotMapped]
         [DataType(DataType.Upload)]
-        // TODO: Add Custom Attributes
-        public IFormFile? FormFile { get; set; }
+        [MaxFileSize(1024 * 1024)]
+        public IFormFile? ProjectImage { get; set; }
         [DisplayName("File Name")]
         public string? FileName { get; set; }
         [DisplayName("File Attachment")]

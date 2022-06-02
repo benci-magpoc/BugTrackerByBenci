@@ -18,12 +18,14 @@ namespace BugTrackerByBenci.Controllers
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTProjectService _projectService;
         private readonly IRolesService _rolesService;
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTProjectService projectService, IRolesService rolesService)
+        private readonly IBTFileService _fileService;
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTProjectService projectService, IRolesService rolesService, IBTFileService fileService)
         {
             _context = context;
             _userManager = userManager;
             _projectService = projectService;
             _rolesService = rolesService;
+            _fileService = fileService;
         }
 
         // GET: Projects
@@ -82,6 +84,14 @@ namespace BugTrackerByBenci.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check for Image in the Form
+                if (model.Project?.ProjectImage != null)
+                {
+                    model.Project.FileData = await _fileService.ConvertFileToByteArrayAsync(model.Project.ProjectImage);
+                    model.Project.FileName = model.Project.ProjectImage.FileName;
+                    model.Project.FileContentType = model.Project.ProjectImage.ContentType;
+                }
+
                 // Assigning values to project object
                 model.Project!.CompanyId = User.Identity!.GetCompanyId();
                 model.Project!.Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
@@ -118,15 +128,29 @@ namespace BugTrackerByBenci.Controllers
 
             int companyId = User.Identity!.GetCompanyId();
 
+            // Refactor for ViewModel
+            AddProjectWithPMViewModel model = new();
+
             Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
 
-            if (project == null)
+            model.Project = project;
+
+            BTUser? projectManager = await _projectService.GetProjectManagerAsync(project!.Id);
+
+            if (projectManager != null)
             {
-                return NotFound();
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName", projectManager.Id);
             }
-            //ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
-            return View(project);
+            else
+            {
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName");
+            }
+            
+            model.PriorityList = new SelectList(_context.ProjectPriorities, "Id", "Name");
+
+            return View(model);
         }
 
         // POST: Projects/Edit/5
@@ -134,9 +158,9 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,CompanyId,Name,Description,Created,StartDate,EndDate,ProjectPriorityId,FileName,FileData,FileContentType,Archived")] Project project)
+        public async Task<IActionResult> Edit(AddProjectWithPMViewModel model)
         {
-            if (id != project.Id)
+            if (model.Project == null)
             {
                 return NotFound();
             }
@@ -145,20 +169,30 @@ namespace BugTrackerByBenci.Controllers
             {
                 try
                 {
-                    int companyId = User.Identity!.GetCompanyId();
+                    // Check for Image in the Form
+                    if (model.Project?.ProjectImage != null)
+                    {
+                        model.Project.FileData = await _fileService.ConvertFileToByteArrayAsync(model.Project.ProjectImage);
+                        model.Project.FileName = model.Project.ProjectImage.FileName;
+                        model.Project.FileContentType = model.Project.ProjectImage.ContentType;
+                    }
 
                     // Assigning values to project object
-                    project.CompanyId = companyId;
-                    project.Created = DateTime.SpecifyKind(project.Created, DateTimeKind.Utc);
-                    project.StartDate = DateTime.SpecifyKind(project.StartDate, DateTimeKind.Utc);
-                    project.EndDate = DateTime.SpecifyKind(project.EndDate, DateTimeKind.Utc);
+                    model.Project!.Created = DateTime.SpecifyKind(model.Project!.Created, DateTimeKind.Utc);
+                    model.Project!.StartDate = DateTime.SpecifyKind(model.Project!.StartDate, DateTimeKind.Utc);
+                    model.Project!.EndDate = DateTime.SpecifyKind(model.Project!.EndDate, DateTimeKind.Utc);
 
-                    await _projectService.UpdateProjectAsync(project);
-                    return RedirectToAction(nameof(Index));
+                    await _projectService.UpdateProjectAsync(model.Project);
+
+                    if (!string.IsNullOrEmpty(model.PMID))
+                    {
+                        await _projectService.AddProjectManagerAsync(model.PMID, model.Project!.Id);
+                    }
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectExists(project.Id))
+                    if (!ProjectExists(model.Project!.Id))
                     {
                         return NotFound();
                     }
@@ -167,10 +201,27 @@ namespace BugTrackerByBenci.Controllers
                         throw;
                     }
                 }
+                return RedirectToAction(nameof(Index));
             }
-            //ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", project.CompanyId);
-            ViewData["ProjectPriorityId"] = new SelectList(_context.ProjectPriorities, "Id", "Name", project.ProjectPriorityId);
-            return View(project);
+
+            int companyId = User.Identity!.GetCompanyId();
+
+            BTUser? projectManager = await _projectService.GetProjectManagerAsync(model.Project!.Id);
+
+            if (projectManager != null)
+            {
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName", projectManager.Id);
+            }
+            else
+            {
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName");
+            }
+
+            model.PriorityList = new SelectList(_context.ProjectPriorities, "Id", "Name");
+
+            return View(model);
         }
 
         // GET: Projects/Delete/5
