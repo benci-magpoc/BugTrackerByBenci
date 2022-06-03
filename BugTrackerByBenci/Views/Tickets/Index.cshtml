@@ -75,25 +75,25 @@
                 @Html.DisplayFor(modelItem => item.ArchivedByProject)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Project.Company.Name)
+                @Html.DisplayFor(modelItem => item.Project!.Company!.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Project.Description)
+                @Html.DisplayFor(modelItem => item.Project!.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                @Html.DisplayFor(modelItem => item.TicketPriority!.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                @Html.DisplayFor(modelItem => item.TicketStatus!.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TicketType.Name)
+                @Html.DisplayFor(modelItem => item.TicketType!.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SubmitterUser.FullName)
+                @Html.DisplayFor(modelItem => item.SubmitterUser!.FullName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+                @Html.DisplayFor(modelItem => item.DeveloperUser!.FullName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

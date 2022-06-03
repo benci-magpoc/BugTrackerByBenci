@@ -53,13 +53,13 @@ namespace BugTrackerByBenci.Services
             try
             {
                 var tickets = _context.Tickets.Where(t => t.Archived == false)
-                        .Include(t => t.SubmitterUser)
-                        .Include(t => t.TicketPriority)
-                        .Include(t => t.TicketStatus)
-                        .Include(t => t.TicketType)
-                        .Include(t => t.Project)!
-                        .ThenInclude(c=>c.Company)
-                        .Where(t => t.Project!.CompanyId == companyId)
+                    .Include(t => t.SubmitterUser)!
+                    .Include(t => t.TicketPriority)!
+                    .Include(t => t.TicketStatus)!
+                    .Include(t => t.TicketType)!
+                    .Include(t => t.Project)!
+                    .ThenInclude(c=>c!.Company)!
+                    .Where(t => t.Project!.CompanyId == companyId)
                         .OrderByDescending(t=>t.Created);
 
                 return await tickets.ToListAsync();
@@ -88,7 +88,7 @@ namespace BugTrackerByBenci.Services
                     .Include(t => t.TicketType)
                     .FirstOrDefaultAsync(m => m.Id == ticketId);
 
-                return ticket;
+                return ticket!;
             }
             catch (Exception)
             {

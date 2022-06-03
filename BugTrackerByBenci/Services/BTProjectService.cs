@@ -166,6 +166,25 @@ namespace BugTrackerByBenci.Services
         }
         #endregion
 
+        public async Task<List<BTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
+        {
+            try
+            {
+                List<BTUser> developers = await GetProjectMembersByRoleAsync(projectId, nameof(BTRoles.Developer));
+                List<BTUser> submitters = await GetProjectMembersByRoleAsync(projectId, nameof(BTRoles.Submitter));
+                List<BTUser> admins = await GetProjectMembersByRoleAsync(projectId, nameof(BTRoles.Admin));
+
+                List<BTUser> teamMembers = developers.Concat(submitters).Concat(admins).ToList();
+
+                return teamMembers;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+
         #region Get All Archived Projects By Company Id
         public async Task<List<Project>> GetArchivedProjectsByCompanyAsync(int companyId)
         {
@@ -296,8 +315,48 @@ namespace BugTrackerByBenci.Services
             {
                 throw;
             }
-        } 
+        }
         #endregion
+
+        public async Task<List<BTUser>> GetProjectMembersByRoleAsync(int projectId, string roleName)
+        {
+            try
+            {
+                Project? project = await _context.Projects.Include(p=>p.Members).FirstOrDefaultAsync(p=> p.Id == projectId);
+                
+                List<BTUser> members = new();
+
+                foreach (BTUser user in project!.Members!)
+                {
+                    if (await _rolesService.IsUserInRoleAsync(user, roleName))
+                    {
+                        members.Add(user);
+                    }
+                }
+
+                return members;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<BTUser>> GetUsersNotOnProjectAsync(int projectId, int companyId)
+        {
+            try
+            {
+                List<BTUser> users =
+                    await _context.Users.Where(u => u.Projects!.All(p => p.Id != projectId) && u.CompanyId == companyId).ToListAsync();
+                
+                return users;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         #region Checks if user is on the Project
         public async Task<bool> IsUserOnProjectAsync(string userId, int projectId)

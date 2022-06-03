@@ -34,19 +34,26 @@ namespace BugTrackerByBenci.Controllers
         {
             //BTUser btUser = await _userManager.GetUserAsync(User);
             int companyId = User.Identity!.GetCompanyId();
-            
-            List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
 
-            List<BTUser>? projectManagers = new List<BTUser>();
+            ProjectsWithPmViewModel model = new();
+
+            List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
+            
+            model.Projects = projects;
 
             foreach (var project in projects)
             {
-                projectManagers.Add(await _projectService.GetProjectManagerAsync(project!.Id));
+                if ((await _projectService.GetProjectManagerAsync(project!.Id)) != null)
+                {
+                    model.ProjectId!.Add((int)project!.Id);
+                    model.ProjectManager = (await _projectService.GetProjectManagerAsync(project!.Id)).FullName;
+                }
+                
             }
 
-            ViewData["PMinProject"] = projectManagers;
+            //ViewData["PMinProject"] = projectManagers;
 
-            return View(projects);
+            return View(model);
         }
 
         public async Task<IActionResult> ArchivedProjects()
@@ -66,7 +73,7 @@ namespace BugTrackerByBenci.Controllers
 
             // Refactor for ViewModel
             AddProjectWithPMViewModel model = new();
-            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
+            Project? project = await _projectService.GetProjectByIdAsync(id!.Value, companyId);
 
             model.Project = project;
 
@@ -151,6 +158,62 @@ namespace BugTrackerByBenci.Controllers
 
             return View(model);
         }
+
+        // Assign Project Members
+        [HttpGet]
+        [Authorize(Roles = "Admin, ProjectManager")]
+        public async Task<IActionResult> AssignProjectMembers(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            ProjectMembersViewModel model = new();
+
+            int companyId = User.Identity!.GetCompanyId();
+
+            model.Project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
+            // Get available members
+            List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+            List<BTUser> submitters = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Submitter), companyId);
+            // Assign members 
+            List<BTUser> teamMembers = developers.Concat(submitters).ToList();
+            // Get any current members
+            List<string> projectMembers = model.Project!.Members!.Select(m => m.Id).ToList();
+
+            model.UsersList = new MultiSelectList(teamMembers, "Id", "FullName", projectMembers);
+            return View(model);
+        }
+
+        // Post method for Assign Project Members
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignProjectMembers(ProjectMembersViewModel model)
+        {
+            if (model.SelectedUsers != null)
+            {
+                List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project!.Id))
+                                                                .Select(m => m.Id).ToList();
+
+                // Remove current members
+                foreach (string member in memberIds)
+                {
+                    await _projectService.RemoveUserFromProjectAsync(member, model.Project!.Id);
+                }
+
+                // Add selected members
+                foreach (string member in model.SelectedUsers!)
+                {
+                    await _projectService.AddUserToProjectAsync(member, model.Project!.Id);
+                }
+                
+                return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
+            }
+
+            return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
+        }
+
 
         // GET: Projects/Details/5
         public async Task<IActionResult> Details(int? id)

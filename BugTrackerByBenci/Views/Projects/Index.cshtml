@@ -1,9 +1,14 @@
-﻿@using System.Collections
-@model IEnumerable<BugTrackerByBenci.Models.Project>
+﻿@using BugTrackerByBenci.Models.Enums
+@using BugTrackerByBenci.Services.Interfaces
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@*@model IEnumerable<BugTrackerByBenci.Models.Project>*@
+@model BugTrackerByBenci.Models.ViewModels.ProjectsWithPmViewModel
+
+@inject IBTProjectService projectService
 
 @{
     ViewData["Title"] = "All Projects";
-    var pm = ViewData["PMinProject"]!;
+    //var pm = ViewData["PMinProject"]!;
 }
 
 <h1>Index</h1>
@@ -15,38 +20,38 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Project Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                Description
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Created)
+                Created Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartDate)
+                Start Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.EndDate)
+                End Date
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FileData)
+                Image
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FileContentType)
+                Image Type
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company!.Name)
+                Company Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Priority)
+                Priority
             </th>
             <th>PM Assigned</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Projects!) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -74,25 +79,34 @@
                 }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.FileContentType)
+                @Html.DisplayFor(modelItem => item!.FileContentType)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Company!.Name)
+                @Html.DisplayFor(modelItem => item!.Company!.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Priority!.Name)
+                @Html.DisplayFor(modelItem => item!.Priority!.Name)
             </td>
             <td>
-                @*@foreach (var p in (IEnumerable)pm)
+                @if (User.IsInRole(nameof(BTRoles.Admin)))
                 {
-                    @p
-                }*@
+                    @((await projectService.GetProjectManagerAsync(item.Id))?.FullName)
+                }
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
-                <a asp-action="AssignProjectManager" asp-route-id="@item.Id">Assign Project Manager</a>
+                <a asp-action="Edit" asp-route-id="@item!.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item!.Id">Details</a> |
+                <a asp-action="Archive" asp-route-id="@item!.Id">Archive</a>
+                @if (User.IsInRole(nameof(BTRoles.Admin)))
+                {
+                    <text> | </text><a asp-action="AssignProjectManager" asp-route-id="@item!.Id">Assign Project Manager</a><text> |</text> 
+                    <a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Project Members</a>
+                }
+                @if (User.IsInRole(nameof(BTRoles.ProjectManager)))
+                {
+                    <text> | </text><a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Project Members</a>
+                }
+
             </td>
         </tr>
 }
