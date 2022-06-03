@@ -36,7 +36,16 @@ namespace BugTrackerByBenci.Controllers
             int companyId = User.Identity!.GetCompanyId();
             
             List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
-            
+
+            List<BTUser>? projectManagers = new List<BTUser>();
+
+            foreach (var project in projects)
+            {
+                projectManagers.Add(await _projectService.GetProjectManagerAsync(project!.Id));
+            }
+
+            ViewData["PMinProject"] = projectManagers;
+
             return View(projects);
         }
 
@@ -48,6 +57,99 @@ namespace BugTrackerByBenci.Controllers
             List<Project> projects = await _projectService.GetArchivedProjectsByCompanyAsync(companyId);
 
             return View(projects);
+        }
+
+        // Get: Assign Project Manager
+        public async Task<IActionResult> AssignProjectManager(int? id)
+        {
+            int companyId = User.Identity!.GetCompanyId();
+
+            // Refactor for ViewModel
+            AddProjectWithPMViewModel model = new();
+            Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
+
+            model.Project = project;
+
+            BTUser? projectManager = await _projectService.GetProjectManagerAsync(project!.Id);
+
+            List<BTUser> pmInProject =
+                await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
+
+            ViewData["PMinProject"] = pmInProject;
+
+            if (projectManager != null)
+            {
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName", projectManager.Id);
+            }
+            else
+            {
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName");
+            }
+
+            model.PriorityList = new SelectList(_context.ProjectPriorities, "Id", "Name");
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignProjectManager(AssignPMToProjectViewModel model)
+        {
+            if (model.Project == null)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // Assigning values to project object
+                    model.Project!.Created = DateTime.SpecifyKind(model.Project!.Created, DateTimeKind.Utc);
+                    model.Project!.StartDate = DateTime.SpecifyKind(model.Project!.StartDate, DateTimeKind.Utc);
+                    model.Project!.EndDate = DateTime.SpecifyKind(model.Project!.EndDate, DateTimeKind.Utc);
+
+                    await _projectService.UpdateProjectAsync(model.Project);
+
+                    if (!string.IsNullOrEmpty(model.PMID))
+                    {
+                        await _projectService.AddProjectManagerAsync(model.PMID, model.Project!.Id);
+                    }
+
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProjectExists(model.Project!.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            int companyId = User.Identity!.GetCompanyId();
+
+            BTUser? projectManager = await _projectService.GetProjectManagerAsync(model.Project!.Id);
+
+            if (projectManager != null)
+            {
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName", projectManager.Id);
+            }
+            else
+            {
+                model.PMList =
+                    new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName");
+            }
+
+
+            return View(model);
         }
 
         // GET: Projects/Details/5

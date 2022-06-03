@@ -134,7 +134,7 @@ namespace BugTrackerByBenci.Services
 
                 projects = await _context.Projects.Where(p => p.CompanyId == companyId && p.Archived == false)
                     .Include(p=>p.Company)
-                    .Include(p => p.Members)
+                    .Include(p => p.Members)!
                     .Include(p => p.Tickets)!
                     .ThenInclude(p => p.Comments)
                     .Include(p => p.Tickets)!

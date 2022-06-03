@@ -1,0 +1,79 @@
+﻿@using BugTrackerByBenci.Models.Enums
+@model BugTrackerByBenci.Models.ViewModels.AddProjectWithPMViewModel
+
+@{
+    ViewData["Title"] = "Assign Project Manager";
+}
+
+<h1>Assign Project Manager</h1>
+
+<h4>Project</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Project!.Id" />
+            <input type="hidden" asp-for="Project!.Created" />
+            <input type="hidden" asp-for="Project!.CompanyId" />
+            <input type="hidden" asp-for="Project!.FileData" />
+            <input type="hidden" asp-for="Project!.FileName" />
+            <input type="hidden" asp-for="Project!.Name" />
+            <input type="hidden" asp-for="Project!.Description" />
+            <input type="hidden" asp-for="Project!.StartDate" />
+            <input type="hidden" asp-for="Project!.EndDate" />
+            <input type="hidden" asp-for="Project!.ProjectPriorityId" />
+
+            <div class="form-group">
+                <label>Project Name: @Html.DisplayFor(model => model.Project!.Name)</label>
+            </div>
+            <div class="form-group">
+                <label>Project Description: @Html.DisplayFor(model => model.Project!.Description)</label>
+            </div>
+            <div class="form-group">
+                <label>Project Start Date: @Html.DisplayFor(model => model.Project!.StartDate)</label>
+            </div>
+            <div class="form-group">
+                <label>Project End Date: @Html.DisplayFor(model => model.Project!.EndDate)</label>
+            </div>
+            <div class="form-group">
+                <label>Priority: @Html.DisplayFor(model => model.Project!.ProjectPriorityId)</label>
+            </div>
+            
+                <label class="control-label">Project Image</label>
+                
+            <label>Image Preview</label>
+            @if (Model.Project?.FileData != null)
+            {
+                <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="data:image/*;base64,@(Convert.ToBase64String(Model.Project.FileData))">
+            }
+            else
+            {
+                <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="https://cdn.icon-icons.com/icons2/2331/PNG/512/task_software_platform_management_project_icon_142266.png">
+            }
+            
+            @if (User.IsInRole(nameof(BTRoles.Admin)))
+            {
+                <div class="form-group">
+                    <label class="control-label"> Project Manager</label>
+                    <select asp-for="PMID" class="form-control" asp-items="@Model.PMList">
+                        <option></option>
+                    </select>
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
