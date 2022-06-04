@@ -2,11 +2,9 @@
 
 namespace BugTrackerByBenci.Models.ViewModels
 {
-    public class ProjectsWithPmViewModel
+    public class ProjectsWithPMViewModel
     {
         public List<Project>? Projects { get; set; }
-        public List<int> ProjectId { get; set; } = new List<int>();
-        public string? ProjectManager { get; set; }
-
+        public Dictionary<int, string> PMofProjectId{ get; set; } = new Dictionary<int, string>();
     }
 }

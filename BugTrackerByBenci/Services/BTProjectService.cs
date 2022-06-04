@@ -166,6 +166,7 @@ namespace BugTrackerByBenci.Services
         }
         #endregion
 
+        #region Get All Project Members Except PM
         public async Task<List<BTUser>> GetAllProjectMembersExceptPMAsync(int projectId)
         {
             try
@@ -182,8 +183,8 @@ namespace BugTrackerByBenci.Services
             {
                 throw;
             }
-        }
-
+        } 
+        #endregion
 
         #region Get All Archived Projects By Company Id
         public async Task<List<Project>> GetArchivedProjectsByCompanyAsync(int companyId)
@@ -318,12 +319,13 @@ namespace BugTrackerByBenci.Services
         }
         #endregion
 
+        #region Get Project Members by their Roles
         public async Task<List<BTUser>> GetProjectMembersByRoleAsync(int projectId, string roleName)
         {
             try
             {
-                Project? project = await _context.Projects.Include(p=>p.Members).FirstOrDefaultAsync(p=> p.Id == projectId);
-                
+                Project? project = await _context.Projects.Include(p => p.Members).FirstOrDefaultAsync(p => p.Id == projectId);
+
                 List<BTUser> members = new();
 
                 foreach (BTUser user in project!.Members!)
@@ -341,23 +343,25 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         }
+        #endregion
 
+        #region Get Users not on the Project
         public async Task<List<BTUser>> GetUsersNotOnProjectAsync(int projectId, int companyId)
         {
             try
             {
                 List<BTUser> users =
                     await _context.Users.Where(u => u.Projects!.All(p => p.Id != projectId) && u.CompanyId == companyId).ToListAsync();
-                
+
                 return users;
             }
             catch (Exception)
             {
                 throw;
             }
-        }
-
-
+        } 
+        #endregion
+        
         #region Checks if user is on the Project
         public async Task<bool> IsUserOnProjectAsync(string userId, int projectId)
         {

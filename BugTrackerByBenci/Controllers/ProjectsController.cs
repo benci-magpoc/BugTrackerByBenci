@@ -32,10 +32,9 @@ namespace BugTrackerByBenci.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-            //BTUser btUser = await _userManager.GetUserAsync(User);
             int companyId = User.Identity!.GetCompanyId();
 
-            ProjectsWithPmViewModel model = new();
+            ProjectsWithPMViewModel model = new();
 
             List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
             
@@ -45,13 +44,10 @@ namespace BugTrackerByBenci.Controllers
             {
                 if ((await _projectService.GetProjectManagerAsync(project!.Id)) != null)
                 {
-                    model.ProjectId!.Add((int)project!.Id);
-                    model.ProjectManager = (await _projectService.GetProjectManagerAsync(project!.Id)).FullName;
+                    model.PMofProjectId.Add(project.Id, (await _projectService.GetProjectManagerAsync(project!.Id)).FullName);
                 }
                 
             }
-
-            //ViewData["PMinProject"] = projectManagers;
 
             return View(model);
         }
@@ -78,11 +74,6 @@ namespace BugTrackerByBenci.Controllers
             model.Project = project;
 
             BTUser? projectManager = await _projectService.GetProjectManagerAsync(project!.Id);
-
-            List<BTUser> pmInProject =
-                await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId);
-
-            ViewData["PMinProject"] = pmInProject;
 
             if (projectManager != null)
             {
