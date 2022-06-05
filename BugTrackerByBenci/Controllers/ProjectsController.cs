@@ -68,7 +68,7 @@ namespace BugTrackerByBenci.Controllers
             int companyId = User.Identity!.GetCompanyId();
 
             // Refactor for ViewModel
-            AddProjectWithPMViewModel model = new();
+            AssignPMToProjectViewModel model = new();
             Project? project = await _projectService.GetProjectByIdAsync(id!.Value, companyId);
 
             model.Project = project;
@@ -85,9 +85,7 @@ namespace BugTrackerByBenci.Controllers
                 model.PMList =
                     new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName");
             }
-
-            model.PriorityList = new SelectList(_context.ProjectPriorities, "Id", "Name");
-
+            
             return View(model);
         }
 
@@ -485,6 +483,16 @@ namespace BugTrackerByBenci.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(ArchivedProjects));
+        }
+
+        public async Task<IActionResult> UnassignedProjects()
+        {
+            //BTUser btUser = await _userManager.GetUserAsync(User);
+            int companyId = User.Identity!.GetCompanyId();
+
+            List<Project> projects = await _projectService.GetUnassignedProjectsAsync(companyId);
+
+            return View(projects);
         }
 
         private bool ProjectExists(int id)

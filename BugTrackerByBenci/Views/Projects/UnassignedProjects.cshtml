@@ -1,46 +1,43 @@
-﻿@using BugTrackerByBenci.Models.Enums
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@model BugTrackerByBenci.Models.ViewModels.ProjectsWithPMViewModel
+﻿@model IEnumerable<BugTrackerByBenci.Models.Project>
 
 @{
-    ViewData["Title"] = "All Projects";
+    ViewData["Title"] = "Uassigned Projects";
 }
 
-<h1>Index</h1>
+<h1>Unassigned Projects</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Project Name
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                Description
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                Created Date
+                @Html.DisplayNameFor(model => model.Created)
             </th>
             <th>
-                Start Date
+                @Html.DisplayNameFor(model => model.StartDate)
             </th>
             <th>
-                End Date
+                @Html.DisplayNameFor(model => model.EndDate)
             </th>
             <th>
-                Image
+                Project Image
             </th>
             <th>
-                Priority
+                @Html.DisplayNameFor(model => model.Company!.Name)
             </th>
-            <th>PM Assigned</th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Projects!) {
+@foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -68,28 +65,14 @@
                 }
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item!.Company!.Name)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item!.Priority!.Name)
             </td>
             <td>
-                    @if (Model.PMofProjectId.ContainsKey(item!.Id))
-                    {
-                        @Model.PMofProjectId[item.Id]
-                    }
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item!.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item!.Id">Details</a> |<br/>
-                <a asp-action="Archive" asp-route-id="@item!.Id">Archive</a> |<br/>
-                @if (User.IsInRole(nameof(BTRoles.Admin)))
-                {
-                    <a asp-action="AssignProjectManager" asp-route-id="@item!.Id">Assign PM</a><text> |</text> 
-                    <a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Members</a>
-                }
-                @if (User.IsInRole(nameof(BTRoles.ProjectManager)))
-                {
-                    <text> | </text><a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Project Members</a>
-                }
-
+                <a asp-action="AssignProjectManager" asp-route-id="@item!.Id">Assign PM</a> |
+                <a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Members</a>
             </td>
         </tr>
 }

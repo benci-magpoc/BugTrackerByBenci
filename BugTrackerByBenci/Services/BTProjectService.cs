@@ -359,9 +359,39 @@ namespace BugTrackerByBenci.Services
             {
                 throw;
             }
+        }
+        #endregion
+
+        #region Get Projects that are Unassigned
+        public async Task<List<Project>> GetUnassignedProjectsAsync(int companyId)
+        {
+            List<Project> result = new();
+            List<Project> projects = new();
+            try
+            {
+                projects = await _context.Projects
+                    .Include(p=>p.Company)
+                    .Include(p => p.Priority)
+                    .Where(p => p.CompanyId == companyId).ToListAsync();
+                foreach (Project project in projects)
+                {
+                    if ((await GetProjectMembersByRoleAsync(project.Id, nameof(BTRoles.ProjectManager))).Count == 0
+                        && (await GetProjectMembersByRoleAsync(project.Id, nameof(BTRoles.Developer))).Count == 0
+                        && (await GetProjectMembersByRoleAsync(project.Id, nameof(BTRoles.Submitter))).Count == 0
+                        && (await GetProjectMembersByRoleAsync(project.Id, nameof(BTRoles.Admin))).Count == 0)
+                    {
+                        result.Add(project);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return result;
         } 
         #endregion
-        
+
         #region Checks if user is on the Project
         public async Task<bool> IsUserOnProjectAsync(string userId, int projectId)
         {
