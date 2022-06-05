@@ -1,11 +1,12 @@
 ﻿@model BugTrackerByBenci.Models.Ticket
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Restore Ticket";
 }
 
-<h1>Details</h1>
+<h1>Restore</h1>
 
+<h3>Are you sure you want to restore this ticket?</h3>
 <div>
     <h4>Ticket</h4>
     <hr />
@@ -50,41 +51,43 @@
             @Html.DisplayNameFor(model => model.Project)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project!.Description)
+            @Html.DisplayFor(model => model.Project.Description)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TicketPriority)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model!.TicketPriority!.Name)
+            @Html.DisplayFor(model => model.TicketPriority.Name)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model!.TicketStatus)
+            @Html.DisplayNameFor(model => model.TicketStatus)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model!.TicketStatus!.Name)
+            @Html.DisplayFor(model => model.TicketStatus.Name)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TicketType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TicketType!.Name)
+            @Html.DisplayFor(model => model.TicketType.Name)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.SubmitterUser)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SubmitterUser!.FullName)
+            @Html.DisplayFor(model => model.SubmitterUser.Id)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.DeveloperUser)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeveloperUser!.FullName)
+            @Html.DisplayFor(model => model.DeveloperUser.Id)
         </dd>
     </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    
+    <form asp-action="Restore">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Restore" class="btn btn-success" /> |
+        <a asp-action="ArchivedTickets">Back to List</a>
+    </form>
 </div>

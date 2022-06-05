@@ -35,6 +35,15 @@ namespace BugTrackerByBenci.Controllers
             return View(tickets);
         }
 
+        public async Task<IActionResult> ArchivedTickets()
+        {
+            int companyId = User.Identity!.GetCompanyId();
+
+            List<Ticket> tickets = await _ticketService.GetArchivedTicketsByCompanyIdAsync(companyId);
+
+            return View(tickets);
+        }
+
         // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -186,8 +195,8 @@ namespace BugTrackerByBenci.Controllers
             return View(ticket);
         }
 
-        // GET: Tickets/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        // GET: Tickets/Restore/5
+        public async Task<IActionResult> Archive(int? id)
         {
             if (id == null || _context.Tickets == null)
             {
@@ -204,10 +213,10 @@ namespace BugTrackerByBenci.Controllers
             return View(ticket);
         }
 
-        // POST: Tickets/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Tickets/Restore/5
+        [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> ArchiveConfirmed(int id)
         {
             if (_context.Tickets == null)
             {
@@ -223,6 +232,45 @@ namespace BugTrackerByBenci.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Tickets/Restore/5
+        public async Task<IActionResult> RestoreTicket(int? id)
+        {
+            if (id == null || _context.Tickets == null)
+            {
+                return NotFound();
+            }
+
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(id.Value);
+
+            if (ticket == null)
+            {
+                return NotFound();
+            }
+
+            return View(ticket);
+        }
+
+        // POST: Tickets/Delete/5
+        [HttpPost, ActionName("Restore")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RestoreConfirmed(int id)
+        {
+            if (_context.Tickets == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Tickets'  is null.");
+            }
+
+            Ticket ticket = await _ticketService.GetTicketByIdAsync(id);
+
+            if (ticket != null)
+            {
+                await _ticketService.RestoreTicketAsync(ticket);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(ArchivedTickets));
         }
 
         private bool TicketExists(int id)

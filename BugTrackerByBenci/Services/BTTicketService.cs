@@ -72,23 +72,62 @@ namespace BugTrackerByBenci.Services
         }
         #endregion
 
+        #region Get Archived Tickets By Company Id
+        public async Task<List<Ticket>> GetArchivedTicketsByCompanyIdAsync(int companyId)
+        {
+            try
+            {
+                var tickets = _context.Tickets.Where(t => t.Archived == true)
+                    .Include(t => t.SubmitterUser)!
+                    .Include(t => t.TicketPriority)!
+                    .Include(t => t.TicketStatus)!
+                    .Include(t => t.TicketType)!
+                    .Include(t => t.Project)!
+                    .ThenInclude(c => c!.Company)!
+                    .Where(t => t.Project!.CompanyId == companyId)
+                    .OrderByDescending(t => t.Created);
+
+                return await tickets.ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
         #region Get Ticket By Id
         public async Task<Ticket> GetTicketByIdAsync(int ticketId)
         {
             try
             {
-                Ticket? ticket = new();
-
-                ticket = await _context.Tickets
-                    .Include(t => t.DeveloperUser)
-                    .Include(t => t.Project)
-                    .Include(t => t.SubmitterUser)
-                    .Include(t => t.TicketPriority)
-                    .Include(t => t.TicketStatus)
-                    .Include(t => t.TicketType)
-                    .FirstOrDefaultAsync(m => m.Id == ticketId);
+                Ticket? ticket = await _context.Tickets
+                                        .Include(t => t.DeveloperUser)
+                                        .Include(t => t.Project)
+                                        .Include(t => t.SubmitterUser)
+                                        .Include(t => t.TicketPriority)
+                                        .Include(t => t.TicketStatus)
+                                        .Include(t => t.TicketType)
+                                        .FirstOrDefaultAsync(m => m.Id == ticketId);
 
                 return ticket!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region Restore Ticket
+        public async Task RestoreTicketAsync(Ticket ticket)
+        {
+            try
+            {
+                ticket.Archived = false;
+                await UpdateTicketAsync(ticket);
             }
             catch (Exception)
             {
