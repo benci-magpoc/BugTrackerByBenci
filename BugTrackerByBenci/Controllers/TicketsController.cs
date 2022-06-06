@@ -232,6 +232,17 @@ namespace BugTrackerByBenci.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Get: My Tickets (current logged in user)
+        public async Task<IActionResult> MyTickets()
+        {
+            int companyId = User.Identity!.GetCompanyId();
+            string userId = _userManager.GetUserId(User);
+
+            List<Ticket> tickets = await _ticketService.GetTicketsByUserIdAsync(userId, companyId);
+
+            return View(tickets);
+        }
+
         // GET: Tickets/Restore/5
         public async Task<IActionResult> RestoreTicket(int? id)
         {

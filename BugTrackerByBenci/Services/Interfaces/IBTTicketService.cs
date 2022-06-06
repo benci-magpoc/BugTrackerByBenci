@@ -9,6 +9,7 @@ namespace BugTrackerByBenci.Services.Interfaces
         public Task<List<Ticket>> GetAllTicketsByCompanyIdAsync(int companyId);
         public Task<List<Ticket>> GetArchivedTicketsByCompanyIdAsync(int companyId);
         public Task<Ticket> GetTicketByIdAsync(int ticketId);
+        public Task<List<Ticket>> GetTicketsByUserIdAsync(string userId, int companyId);
         public Task RestoreTicketAsync(Ticket ticket);
         public Task UpdateTicketAsync(Ticket ticket);
 

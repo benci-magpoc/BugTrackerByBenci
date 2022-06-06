@@ -1,5 +1,6 @@
 ﻿using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Models;
+using BugTrackerByBenci.Models.Enums;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,11 +9,14 @@ namespace BugTrackerByBenci.Services
     public class BTTicketService : IBTTicketService
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRolesService _rolesService;
+        private readonly IBTProjectService _projectService;
 
-
-        public BTTicketService(ApplicationDbContext context)
+        public BTTicketService(ApplicationDbContext context, IRolesService rolesService, IBTProjectService projectService)
         {
             _context = context;
+            _rolesService = rolesService;
+            _projectService = projectService;
         }
 
         #region Add New Ticket
@@ -112,6 +116,48 @@ namespace BugTrackerByBenci.Services
                                         .FirstOrDefaultAsync(m => m.Id == ticketId);
 
                 return ticket!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region Get Tickets By User Id
+        public async Task<List<Ticket>> GetTicketsByUserIdAsync(string userId, int companyId)
+        {
+            BTUser? btUser = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            List<Ticket>? tickets = new();
+
+            try
+            {
+                if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Admin)))
+                {
+                    tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(p => p.Tickets!).ToList();
+                }
+                else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Developer)))
+                {
+                    tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(p => p.Tickets!)
+                                                    .Where(t => t.DeveloperUserId == userId || t.SubmitterUserId == userId).ToList();
+                }
+                else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.Submitter)))
+                {
+                    tickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(t => t.Tickets!).Where(t => t.SubmitterUserId == userId).ToList();
+                }
+                else if (await _rolesService.IsUserInRoleAsync(btUser!, nameof(BTRoles.ProjectManager)))
+                {
+                    List<Ticket>? projectTickets = (await _projectService.GetUserProjectsAsync(userId)).SelectMany(t => t.Tickets!).ToList();
+                    List<Ticket>? submittedTickets = (await _projectService.GetAllProjectsByCompanyIdAsync(companyId))
+                                                    .SelectMany(p => p.Tickets!).Where(t => t.SubmitterUserId == userId).ToList();
+                    tickets = projectTickets.Concat(submittedTickets).ToList();
+                }
+
+                return tickets;
             }
             catch (Exception)
             {
