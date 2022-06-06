@@ -42,9 +42,11 @@ namespace BugTrackerByBenci.Controllers
 
             foreach (var project in projects)
             {
-                if ((await _projectService.GetProjectManagerAsync(project!.Id)) != null)
+                var projectIdPM = await _projectService.GetProjectManagerAsync(project!.Id);
+
+                if (projectIdPM != null)
                 {
-                    model.PMofProjectId.Add(project.Id, (await _projectService.GetProjectManagerAsync(project!.Id)).FullName);
+                    model.PMofProjectId.Add(project.Id, projectIdPM.FullName);
                 }
                 
             }
@@ -485,6 +487,7 @@ namespace BugTrackerByBenci.Controllers
             return RedirectToAction(nameof(ArchivedProjects));
         }
 
+        // Get Unassigned Projects
         public async Task<IActionResult> UnassignedProjects()
         {
             //BTUser btUser = await _userManager.GetUserAsync(User);
