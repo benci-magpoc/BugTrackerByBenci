@@ -182,26 +182,25 @@ namespace BugTrackerByBenci.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AssignProjectMembers(ProjectMembersViewModel model)
         {
-            if (model.SelectedUsers != null)
-            {
-                List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project!.Id))
-                                                                .Select(m => m.Id).ToList();
-
-                // Remove current members
-                foreach (string member in memberIds)
+                if (model.SelectedUsers != null)
                 {
-                    await _projectService.RemoveUserFromProjectAsync(member, model.Project!.Id);
-                }
+                    List<string> memberIds = (await _projectService.GetAllProjectMembersExceptPMAsync(model.Project!.Id))
+                                                                    .Select(m => m.Id).ToList();
 
-                // Add selected members
-                foreach (string member in model.SelectedUsers!)
-                {
-                    await _projectService.AddUserToProjectAsync(member, model.Project!.Id);
-                }
-                
-                return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
-            }
+                    // Remove current members
+                    foreach (string member in memberIds)
+                    {
+                        await _projectService.RemoveUserFromProjectAsync(member, model.Project!.Id);
+                    }
 
+                    // Add selected members
+                    foreach (string member in model.SelectedUsers!)
+                    {
+                        await _projectService.AddUserToProjectAsync(member, model.Project!.Id);
+                    }
+                    
+                    return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
+                }
             return RedirectToAction(nameof(Details), new { id = model.Project!.Id });
         }
 

@@ -1,0 +1,33 @@
+﻿@model BugTrackerByBenci.Models.ViewModels.TicketDeveloperViewModel
+
+<div class="container">
+    <h2>Assign Developer for</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3> @Model.Ticket!.Title</h3>
+            <div class="card">
+                <div class="card-header">
+                    <label asp-for="@Model.DeveloperList" class="control-label">Assign Developer for the Project</label>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-action="AssignDeveloper" asp-controller="Tickets">
+                        <input hidden asp-for="Ticket!.Id" />
+                        <div class="col-12 mb-3">
+                            <div class="form-group">
+                                <select required asp-for="@Model.DeveloperId" class="form-control" asp-items="@Model!.DeveloperList"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <input type="submit" class="btn alert-primary" value="Assign Users" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <a asp-action="Details" asp-controller="Tickets" asp-route-id="@Model.Ticket.Id">Back to Details</a>
+    </div>
+</div>

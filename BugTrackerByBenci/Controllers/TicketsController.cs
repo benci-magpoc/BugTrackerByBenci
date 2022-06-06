@@ -5,6 +5,7 @@ using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Extensions;
 using BugTrackerByBenci.Models;
 using BugTrackerByBenci.Models.Enums;
+using BugTrackerByBenci.Models.ViewModels;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,13 +17,14 @@ namespace BugTrackerByBenci.Controllers
         private readonly UserManager<BTUser> _userManager;
         private readonly IBTTicketService _ticketService;
         private readonly IBTProjectService _projectService;
-
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService)
+        private readonly IRolesService _rolesService;
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService, IRolesService rolesService)
         {
             _context = context;
             _userManager = userManager;
             _ticketService = ticketService;
             _projectService = projectService;
+            _rolesService = rolesService;
         }
 
         // GET: Tickets
@@ -42,6 +44,41 @@ namespace BugTrackerByBenci.Controllers
             List<Ticket> tickets = await _ticketService.GetArchivedTicketsByCompanyIdAsync(companyId);
 
             return View(tickets);
+        }
+        //GET: Assign Tickets 
+        public async Task<IActionResult> AssignDeveloper(int? id)
+        {
+            int companyId = User.Identity!.GetCompanyId();
+
+            List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+
+            TicketDeveloperViewModel model = new();
+
+            model.Ticket = await _ticketService.GetTicketByIdAsync(id!.Value);
+
+            if (model.Ticket != null)
+            {
+                model.DeveloperList = new SelectList(developers, "Id", "FullName", model.Ticket.DeveloperUserId);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        // Post: Assign Developer
+        public async Task<IActionResult> AssignDeveloper(TicketDeveloperViewModel model)
+        {
+                //List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
+                //BTUser ticketDeveloper = await _ticketService.GetCurrentDeveloperAsync(model.Ticket!.Id);
+                
+            if (!string.IsNullOrEmpty(model.DeveloperId))
+            {
+                await _ticketService.AddDeveloperToTicketAsync(model.DeveloperId!, model.Ticket!.Id);
+                return RedirectToAction(nameof(Details), new { id = model.Ticket!.Id });
+            }
+
+            return RedirectToAction(nameof(Details), new { id = model.Ticket!.Id });
         }
 
         // GET: Tickets/Details/5
@@ -282,6 +319,14 @@ namespace BugTrackerByBenci.Controllers
             return RedirectToAction(nameof(ArchivedTickets));
         }
 
+        public async Task<IActionResult> UnassignedTickets()
+        {
+            int companyId = User.Identity!.GetCompanyId();
+
+            List<Ticket> tickets = await _ticketService.GetUnassignedTicketsByCompanyIdAsync(companyId);
+
+            return View(tickets);
+        }
         private bool TicketExists(int id)
         {
           return (_context.Tickets?.Any(e => e.Id == id)).GetValueOrDefault();

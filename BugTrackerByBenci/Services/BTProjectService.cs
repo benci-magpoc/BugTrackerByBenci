@@ -480,14 +480,7 @@ namespace BugTrackerByBenci.Services
             {
                 project.Archived = false;
                 await UpdateProjectAsync(project);
-
-                ////Archive project tickets
-                //foreach (Ticket ticket in project.Tickets!)
-                //{
-                //    ticket.ArchivedByProject = false;
-                //    _context.Update(ticket);
-                //    await _context.SaveChangesAsync();
-                //}
+                
             }
             catch (Exception)
             {

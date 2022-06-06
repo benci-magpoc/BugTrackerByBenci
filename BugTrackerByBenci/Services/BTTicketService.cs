@@ -51,6 +51,42 @@ namespace BugTrackerByBenci.Services
         }
         #endregion
 
+        #region Add Developer to Ticket Async
+        public async Task<bool> AddDeveloperToTicketAsync(string userId, int ticketId)
+        {
+            BTUser? currentDeveloper = await GetCurrentDeveloperAsync(ticketId);
+            BTUser? newDeveloper = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            Ticket? ticket= await _context.Tickets.FirstOrDefaultAsync(p => p.Id == ticketId);
+
+            if (currentDeveloper != null)
+            {
+                try
+                {
+                    // Remove Developer from Ticket
+                    await RemoveDeveloperFromTicketAsync(ticketId);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+            // Add the new Developer
+            try
+            {
+                // Add Developer to Ticket
+                ticket!.DeveloperUser = newDeveloper;
+                ticket.DeveloperUserId = userId;
+                await _context.SaveChangesAsync();
+
+                return true;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
         #region Get All Tickets By Company Id
         public async Task<List<Ticket>> GetAllTicketsByCompanyIdAsync(int companyId)
         {
@@ -58,6 +94,7 @@ namespace BugTrackerByBenci.Services
             {
                 var tickets = _context.Tickets.Where(t => t.Archived == false)
                     .Include(t => t.SubmitterUser)!
+                    .Include(t => t.DeveloperUser)!
                     .Include(t => t.TicketPriority)!
                     .Include(t => t.TicketStatus)!
                     .Include(t => t.TicketType)!
@@ -162,6 +199,103 @@ namespace BugTrackerByBenci.Services
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+        #endregion
+
+        #region Get Current Developer
+        public async Task<BTUser> GetCurrentDeveloperAsync(int ticketId)
+        {
+            try
+            {
+                Ticket? ticket = await _context.Tickets
+                    .Include(t => t.DeveloperUser)
+                    .FirstOrDefaultAsync(t => t.Id == ticketId);
+
+                if (ticket!.DeveloperUser != null)
+                {
+                    return ticket.DeveloperUser;
+                }
+
+                return null!;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region Get All Unassigned Tickets By Company Id
+        public async Task<List<Ticket>> GetUnassignedTicketsByCompanyIdAsync(int companyId)
+        {
+            try
+            {
+                var tickets = _context.Tickets.Where(t => t.Archived == false && t.DeveloperUser == null)
+                    .Include(t => t.SubmitterUser)!
+                    .Include(t => t.TicketPriority)!
+                    .Include(t => t.TicketStatus)!
+                    .Include(t => t.TicketType)!
+                    .Include(t => t.Project)!
+                    .ThenInclude(c => c!.Company)!
+                    .Where(t => t.Project!.CompanyId == companyId)
+                    .OrderByDescending(t => t.Created);
+
+                return await tickets.ToListAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        #endregion
+
+        #region Checks if Developer is on the Ticket
+        public async Task<bool> IsDeveloperOnTicketAsync(string userId, int ticketId)
+        {
+            try
+            {
+                Ticket? ticket = await _context.Tickets
+                    .Include(t => t.DeveloperUser)
+                    .FirstOrDefaultAsync(p => p.Id == ticketId);
+
+                bool result = false;
+
+                if (ticket != null)
+                {
+                    result = ticket.DeveloperUser is not null;
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region Remove Developer from Ticket
+        public async Task RemoveDeveloperFromTicketAsync(int ticketId)
+        {
+            try
+            {
+                Ticket? ticket = await _context.Tickets
+                    .Include(t => t.DeveloperUser)
+                    .FirstOrDefaultAsync(p => p.Id == ticketId);
+
+                if (ticket!.DeveloperUser != null)
+                {
+                    // Remove Developer from Ticket
+                    ticket.DeveloperUser = null;
+                    await _context.SaveChangesAsync();
+                }
+                
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }
