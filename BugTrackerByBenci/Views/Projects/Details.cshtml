@@ -1,4 +1,7 @@
-﻿@model BugTrackerByBenci.Models.Project
+﻿@using Microsoft.AspNetCore.Identity
+@using BugTrackerByBenci.Services.Interfaces
+@model BugTrackerByBenci.Models.Project
+@inject IRolesService RoleService
 
 @{
     ViewData["Title"] = "Details";
@@ -90,7 +93,7 @@
         <dd class = "col-sm-10">
             @foreach (var member in Model!.Members!)
             {
-                @member.FullName
+                <span>@member.FullName - </span><span>@RoleService.GetUserRoleNameAsync(member) </span>
                 <br/>
             }
         </dd>

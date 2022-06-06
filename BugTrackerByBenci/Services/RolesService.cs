@@ -2,6 +2,7 @@
 using BugTrackerByBenci.Models;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BugTrackerByBenci.Services
 {
@@ -43,6 +44,21 @@ namespace BugTrackerByBenci.Services
             catch (Exception)
             {
 
+                throw;
+            }
+        }
+
+        public string GetUserRoleNameAsync(BTUser user)
+        {
+            try
+            {
+                var roleId = _context.UserRoles.First(u=>u.UserId==user.Id).RoleId;
+                var roleName = _context.Roles.Find(roleId)!.Name;
+                
+                return roleName!;
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }
