@@ -30,7 +30,7 @@ namespace BugTrackerByBenci.Controllers
 
         // GET: Projects
         [Authorize]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> AllProjects()
         {
             int companyId = User.Identity!.GetCompanyId();
 
@@ -93,6 +93,7 @@ namespace BugTrackerByBenci.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        //POST: Assigning Project Manager
         public async Task<IActionResult> AssignProjectManager(AssignPMToProjectViewModel model)
         {
             if (model.Project == null)
@@ -128,7 +129,7 @@ namespace BugTrackerByBenci.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllProjects));
             }
 
             int companyId = User.Identity!.GetCompanyId();
@@ -272,7 +273,7 @@ namespace BugTrackerByBenci.Controllers
                     await _projectService.AddProjectManagerAsync(model.PMID, model.Project!.Id);
                 }
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllProjects));
             }
             
             int companyId = User.Identity!.GetCompanyId();
@@ -366,7 +367,7 @@ namespace BugTrackerByBenci.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllProjects));
             }
 
             int companyId = User.Identity!.GetCompanyId();
@@ -426,13 +427,14 @@ namespace BugTrackerByBenci.Controllers
             if (project != null)
             {
                 await _projectService.ArchiveProjectAsync(project);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(AllProjects));
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(AllProjects));
         }
 
+        //GET: Query project of logged in user
         public async Task<IActionResult> MyProjects()
         {
             string userId = _userManager.GetUserId(User);
