@@ -1,0 +1,82 @@
+// dashboard 2
+
+.weight-border{
+    border-top: 2px solid $success;
+    height: 2px;
+    width: 100px;
+    display: inline-block;
+}
+
+.bottom-text{
+    position: absolute;
+    bottom: 1.57rem;
+}
+
+@media (max-width: 767px) {
+    .bottom-text{
+        right: 1.57rem;
+    }
+}
+.calendar-schedule-table{
+    width: 100%;
+    td {
+        padding: 17px 13px;
+        text-align: center;
+        font-weight: 400;
+        .month-option {
+            text-align: left;
+            color: $white;
+            font-weight: 400;
+            padding-left: 30px;
+        }
+        &.cal-active {
+            border-radius: 60px;
+            background: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.mailbox-widget {
+    .custom-tab {
+        .nav-item {
+            .nav-link {
+                border: 0px;
+                color: $white;
+                border-bottom: 3px solid transparent;
+                &:hover {
+                    background: transparent;
+                    opacity: 0.5;
+                }
+                &.active {
+                    background: none;
+                    color: $white;
+                    border-bottom: 3px solid $success;
+                }
+            }
+        }
+    }
+}
+
+.weather-report{
+    .weather-type{
+        color: $gray-200;
+    }
+    &.active{
+        border-bottom: 2px solid $danger;
+        .weather-type{
+            color: $danger;
+        }
+    }
+}
+
+.demo-container .flot-x-axis,
+.demo-container .flot-text {
+    display: none;
+}
+
+.demo-placeholder {
+    width: 100%;
+    height: 100%;
+    font-size: 14px;
+    line-height: 1.2em;
+}

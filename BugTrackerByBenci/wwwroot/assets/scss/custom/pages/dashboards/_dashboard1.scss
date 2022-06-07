@@ -1,0 +1,106 @@
+.nav-tabs.manage-tabs{
+    border-bottom: 0 !important;
+    .nav-item{
+        margin-bottom: -1px;
+        position: relative;
+        z-index: 1;
+        display: block;
+        margin: 0;
+        text-align: center;
+        flex: 1;
+    }
+    .nav-link{
+        position: relative;
+        background: $info !important;
+        color: rgba($white, 0.6) !important;
+        font-weight: 400;
+        border: 0px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+        padding: 20px;
+        font-size: 16px;
+        &:hover{
+            color: rgba($white, 0.6);
+        }
+    }
+    .nav-item.show .nav-link, 
+    .nav-link.active{
+        color: rgba($white, 1) !important;
+        background: $info !important;
+        &::after{
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -10px;
+            width: 0;
+            height: 0;
+            border: solid transparent;
+            border-width: 10px;
+            border-top-color: $info;
+            content: '';
+            pointer-events: none;
+        }
+    }
+}
+
+.manage-table{
+    thead{
+        tr{
+            th{
+                font-size: 16px;
+                color: $gray-700;
+                font-weight: 600;
+            }
+        }
+    }
+    .sml-pd{
+        padding: 5px;
+    }
+    tr.advanced-table{
+        border: 2px solid $border-color;
+        // color: $gray-600;
+        &.active {
+            border: 2px solid $info !important;
+        }
+        td {
+            vertical-align: middle;
+            font-size: 16px;
+            background: $white;
+        }
+    }
+}
+
+.user-table{
+    thead{
+        color: $gray-700;
+    }
+    tbody{
+        tr{
+            background-color: inherit;
+            &:hover{
+                background-color: rgba(0,0,0,0.025);
+            }
+            td{
+                vertical-align: middle;
+            }
+            .category-select{
+                max-width: 150px;
+                border-radius: 20px;
+            }
+        }
+    }
+}
+
+.chat-list{
+    li{
+        .chat-icon{
+            display: none;
+        }
+        &:hover{
+            .chat-icon{
+                display: block;
+            }
+        }
+    }
+}
+

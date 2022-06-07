@@ -1,0 +1,61 @@
+// 
+// Theme Breadcrumb
+// 
+.page-breadcrumb {
+  padding: 11px 30px;
+  background-color: $body-bg;
+  .breadcrumb{
+    background-color: $body-bg;
+    .breadcrumb-item, .breadcrumb-item > a{
+      color: $text-muted;
+    }
+    .active{
+      color: $info;
+    }
+  }
+}
+
+.breadcrumb {
+    &.bg-light-info,
+    &.border-info {
+        .breadcrumb-item+.breadcrumb-item::before {
+            color: $info;
+        }
+    }
+}
+
+.breadcrumb {
+    &.bg-light-primary,
+    &.border-primary {
+        .breadcrumb-item+.breadcrumb-item::before {
+            color: $primary;
+        }
+    }
+}
+
+.breadcrumb {
+    &.bg-light-warning,
+    &.border-warning {
+        .breadcrumb-item+.breadcrumb-item::before {
+            color: $warning;
+        }
+    }
+}
+
+.breadcrumb {
+    &.bg-light-danger,
+    &.border-danger {
+        .breadcrumb-item+.breadcrumb-item::before {
+            color: $danger;
+        }
+    }
+}
+
+.breadcrumb {
+    &.bg-light-success,
+    &.border-success {
+        .breadcrumb-item+.breadcrumb-item::before {
+            color: $success;
+        }
+    }
+}
