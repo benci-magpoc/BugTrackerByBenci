@@ -93,7 +93,7 @@
         <dd class = "col-sm-10">
             @foreach (var member in Model!.Members!)
             {
-                <span>@member.FullName - </span><span>@RoleService.GetUserRoleNameAsync(member) </span>
+                <span>@member.FullName - </span><span>@RoleService.GetUserRoleAsync(member) </span>
                 <br/>
             }
         </dd>
