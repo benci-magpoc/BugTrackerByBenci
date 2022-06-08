@@ -30,6 +30,10 @@
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <!-- Tables Plugin CSS -->
+    <link href="/assets/extra-libs/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="/assets/extra-libs/datatables.net-bs4/css/responsive.dataTables.min.css">
 </head>
 
 <body>
@@ -658,7 +662,7 @@
             <!-- Container fluid  -->
             <!-- ============================================================== -->
             <div class="page-content container-fluid">
-                @RenderBody();
+                @RenderBody()
             </div>
             <!-- ============================================================== -->
             <!-- End Container fluid  -->
@@ -667,7 +671,7 @@
             <!-- footer -->
             <!-- ============================================================== -->
             <footer class="footer text-center">
-                All Rights Reserved by Ample admin. .
+                All Rights Reserved &copy;Benci Magpoc
             </footer>
             <!-- ============================================================== -->
             <!-- End footer -->
@@ -704,11 +708,20 @@
     <script src="/assets/libs/moment/min/moment.min.js"></script>
     <script src="/assets/libs/fullcalendar/dist/fullcalendar.min.js"></script>
     <script src="/dist/js/pages/calendar/cal-init.js"></script>
+    <!--Table plugins -->
+    <script src="/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="/assets/extra-libs/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
+<script src="/dist/js/pages/datatable/datatable-basic.init.js"></script>
+    <script>
+        $('#calendar').fullCalendar('option', 'height', 650);
+    </script>
+    
 <script>
-    $('#calendar').fullCalendar('option', 'height', 650);
+    $(document).ready( function () {
+        $('#myTable').DataTable();
+    } );
 </script>
-
-@await RenderSectionAsync("Scripts", required: false)
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>

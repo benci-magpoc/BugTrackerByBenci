@@ -1,107 +1,161 @@
 ﻿@model IEnumerable<BugTrackerByBenci.Models.Ticket>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "All Tickets";
 }
 
-<h1>Index</h1>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="border-bottom title-part-padding">
+                <h4 class="card-title mb-0">All Projects</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="zero_config" class="table table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Created)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Updated)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Archived)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ArchivedByProject)
+                            </th>
+                            <th>
+                                Company Name
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Project)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TicketPriority)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TicketStatus)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TicketType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SubmitterUser)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DeveloperUser)
+                            </th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model!)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Title)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Created)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Updated)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Archived)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.ArchivedByProject)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project!.Company!.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Project!.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketPriority!.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketStatus!.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TicketType!.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.SubmitterUser!.FullName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DeveloperUser!.FullName)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                    <a asp-action="Archive" asp-route-id="@item.Id">Archive</a> |
+                                    <a asp-action="AssignDeveloper" asp-route-id="@item.Id">Assign Developer</a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Created)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Updated)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Archived)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ArchivedByProject)
+                            </th>
+                            <th>
+                                Company Name
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Project)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TicketPriority)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TicketStatus)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TicketType)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SubmitterUser)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DeveloperUser)
+                            </th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Archived)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArchivedByProject)
-            </th>
-            <th>
-                Company Name
-            </th><th>
-                @Html.DisplayNameFor(model => model.Project)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketPriority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubmitterUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeveloperUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Updated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Archived)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArchivedByProject)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project!.Company!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project!.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketPriority!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketType!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubmitterUser!.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeveloperUser!.FullName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Archive" asp-route-id="@item.Id">Archive</a> |
-                <a asp-action="AssignDeveloper" asp-route-id="@item.Id">Assign Developer</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
