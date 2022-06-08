@@ -36,6 +36,9 @@ namespace BugTrackerByBenci.Services
         {
             try
             {
+                List<BTUser> members = new();
+                members = (await _context.Companies.Include(c => c.Members).FirstOrDefaultAsync(c => c.Id == 1)).Members.ToList();
+
                 List<IdentityRole> result = new();
                 result = await _context.Roles.ToListAsync();
                 return result!;
