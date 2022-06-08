@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<BTUser> SignInManager
 @inject UserManager<BTUser> UserManager
-@{ 
+@{
     BTUser btUser = await UserManager.GetUserAsync(User);
 }
 
@@ -9,32 +9,58 @@
 
     @if (SignInManager.IsSignedIn(User))
     {
-        <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" width="28" height="28" class="rounded-circle">
-            <span class="d-none d-sm-inline mx-1">@btUser.FirstName</span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Profile</a></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="javascript:document.getElementById('logoutForm').submit();">Sign out</a></li>
-        </ul>
-
+        <!-- ============================================================== -->
+        <!-- Logged In User -->
+        <!-- ============================================================== -->
+        <li class="sidebar-item">
+            <a class="sidebar-link has-arrow waves-effect waves-dark profile-dd" href="javascript:void(0)" aria-expanded="false">
+                <img src="/assets/images/users/1.jpg" class="rounded-circle ms-2" width="30">
+                <span class="hide-menu">@btUser.FirstName </span>
+            </a>
+            <ul aria-expanded="false" class="collapse  first-level">
+                <li class="sidebar-item">
+                    <a asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage" class="sidebar-link">
+                        <i class="ti-user"></i>
+                        <span class="hide-menu"> My Profile </span>
+                    </a>
+                </li>
+                <div class="devider"></div>
+                <li class="sidebar-item">
+                    <a href="javascript:document.getElementById('logoutForm').submit();" class="sidebar-link">
+                        <i class="ti-wallet"></i>
+                        <span class="hide-menu"> Sign Out </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
     }
+
     else
     {
-        <a asp-area="Identity" asp-page="/Account/Login" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png" alt="" width="28" height="28" class="rounded-circle">
-            <span class="d-none d-sm-inline mx-1">Log In</span>
-        </a>
-        <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Register</a></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Sign In</a></li>
-        </ul>
+        <!-- ============================================================== -->
+        <!-- Logged In User -->
+        <!-- ============================================================== -->
+        <li class="sidebar-item">
+            <a class="sidebar-link has-arrow waves-effect waves-dark profile-dd" href="javascript:void(0)" aria-expanded="false">
+                <img src="/assets/images/users/1.jpg" class="rounded-circle ms-2" width="30">
+                <span class="hide-menu">Log In</span>
+            </a>
+            <ul aria-expanded="false" class="collapse  first-level">
+                <li class="sidebar-item">
+                    <a asp-area="Identity" asp-area="Identity" asp-page="/Account/Register" title="Register" class="sidebar-link">
+                        <i class="ti-user"></i>
+                        <span class="hide-menu"> Register </span>
+                    </a>
+                </li>
+                <div class="devider"></div>
+                <li class="sidebar-item">
+                    <a asp-area="Identity" asp-page="/Account/Login" class="sidebar-link">
+                        <i class="ti-wallet"></i>
+                        <span class="hide-menu"> Sign In </span>
+                    </a>
+                </li>
+            </ul>
+        </li>
     }
 </div>
 <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
