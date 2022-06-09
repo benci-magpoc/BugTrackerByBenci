@@ -5,6 +5,7 @@ using BugTrackerByBenci.Services;
 using BugTrackerByBenci.Services.Factories;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -32,6 +33,8 @@ builder.Services.AddScoped<IBTTicketService, BTTicketService>();
 builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IBTFileService, BTFileService>();
 builder.Services.AddScoped<IBTCompanyInfoService, BTCompanyInfoService>();
+builder.Services.AddScoped<IEmailSender, BTEmailService>();
+builder.Services.AddScoped<IBTInviteService, BTInviteService>();
 
 var app = builder.Build();
 

@@ -31,5 +31,27 @@ namespace BugTrackerByBenci.Services
             }
         }
 
-    }
+        public async Task<Company> GetCompanyInfoById(int? companyId)
+        {
+            try
+            {
+                Company? company = new();
+
+                if (companyId != null)
+                {
+                    company = await _context.Companies
+                                            .Include(c => c.Members)
+                                            .Include(c => c.Projects)
+                                            .Include(c => c.Invites)
+                                            .FirstOrDefaultAsync(c=>c.Id==companyId);
+                }
+
+                return company!;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        }
 }
