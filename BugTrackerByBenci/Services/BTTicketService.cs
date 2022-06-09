@@ -33,6 +33,12 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         }
+
+        public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Archive Ticket
@@ -164,7 +170,6 @@ namespace BugTrackerByBenci.Services
         }
         #endregion
 
-        #region Get Ticket Attachments
         public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
         {
             try
@@ -180,7 +185,6 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         } 
-        #endregion
 
         #region Get Tickets By User Id
         public async Task<List<Ticket>> GetTicketsByUserIdAsync(string userId, int companyId)
