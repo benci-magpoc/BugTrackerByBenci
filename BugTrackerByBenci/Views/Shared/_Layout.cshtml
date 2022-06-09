@@ -711,16 +711,16 @@
     <!--Table plugins -->
     <script src="/assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="/assets/extra-libs/datatables.net-bs4/js/dataTables.responsive.min.js"></script>
-<script src="/dist/js/pages/datatable/datatable-basic.init.js"></script>
+    <script src="/dist/js/pages/datatable/datatable-basic.init.js"></script>
     <script>
         $('#calendar').fullCalendar('option', 'height', 650);
     </script>
-    
-<script>
-    $(document).ready( function () {
-        $('#myTable').DataTable();
-    } );
-</script>
+
+    <script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+        });
+    </script>
     @await RenderSectionAsync("Scripts", required: false)
 
 </body>

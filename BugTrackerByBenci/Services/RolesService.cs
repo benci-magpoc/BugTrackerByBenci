@@ -32,12 +32,26 @@ namespace BugTrackerByBenci.Services
             }
         }
 
+        public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        {
+            try
+            {
+                await _context.AddAsync(ticketAttachment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
         public async Task<List<IdentityRole>> GetBTRolesAsync()
         {
             try
             {
                 List<BTUser> members = new();
-                members = (await _context.Companies.Include(c => c.Members).FirstOrDefaultAsync(c => c.Id == 1)).Members.ToList();
+                members = (await _context.Companies.Include(c => c.Members).FirstOrDefaultAsync(c => c.Id == 1))!.Members.ToList();
 
                 List<IdentityRole> result = new();
                 result = await _context.Roles.ToListAsync();

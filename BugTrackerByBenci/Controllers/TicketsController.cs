@@ -18,13 +18,15 @@ namespace BugTrackerByBenci.Controllers
         private readonly IBTTicketService _ticketService;
         private readonly IBTProjectService _projectService;
         private readonly IRolesService _rolesService;
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService, IRolesService rolesService)
+        private readonly IBTFileService _fileService;
+        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService, IRolesService rolesService, IBTFileService fileService)
         {
             _context = context;
             _userManager = userManager;
             _ticketService = ticketService;
             _projectService = projectService;
             _rolesService = rolesService;
+            _fileService = fileService;
         }
 
         // GET: Tickets
@@ -37,6 +39,32 @@ namespace BugTrackerByBenci.Controllers
             return View(tickets);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddTicketAttachment([Bind("Id,FormFile,Description,TicketId")] TicketAttachment ticketAttachment)
+        {
+            string statusMessage;
+
+            if (ModelState.IsValid && ticketAttachment.FormFile != null)
+            {
+                ticketAttachment.FileData = await _fileService.ConvertFileToByteArrayAsync(ticketAttachment.FormFile);
+                ticketAttachment.FileName = ticketAttachment.FormFile.FileName;
+                ticketAttachment.FileContentType = ticketAttachment.FormFile.ContentType;
+
+                ticketAttachment.Created = DateTime.UtcNow;
+                ticketAttachment.UserId = _userManager.GetUserId(User);
+
+                await _ticketService.AddTicketAttachmentAsync(ticketAttachment);
+                statusMessage = "Success: New attachment added to Ticket.";
+            }
+            else
+            {
+                statusMessage = "Error: Invalid data.";
+
+            }
+
+            return RedirectToAction("Details", new { id = ticketAttachment.TicketId, message = statusMessage });
+        }
         public async Task<IActionResult> ArchivedTickets()
         {
             int companyId = User.Identity!.GetCompanyId();
@@ -319,6 +347,19 @@ namespace BugTrackerByBenci.Controllers
             return RedirectToAction(nameof(ArchivedTickets));
         }
 
+        // Get: Show File
+        public async Task<IActionResult> ShowFile(int id)
+        {
+            TicketAttachment ticketAttachment = await _ticketService.GetTicketAttachmentByIdAsync(id);
+            string? fileName = ticketAttachment.FileName;
+            byte[]? fileData = ticketAttachment.FileData;
+            string? ext = Path.GetExtension(fileName)!.Replace(".", "");
+
+            Response.Headers.Add("Content-Disposition", $"inline; filename={fileName}");
+            return File(fileData!, $"application/{ext}");
+        }
+
+        // Get: Unassigned Tickets
         public async Task<IActionResult> UnassignedTickets()
         {
             int companyId = User.Identity!.GetCompanyId();

@@ -150,6 +150,8 @@ namespace BugTrackerByBenci.Services
                                         .Include(t => t.TicketPriority)
                                         .Include(t => t.TicketStatus)
                                         .Include(t => t.TicketType)
+                                        .Include(t => t.Comments)
+                                        .Include(t => t.Attachments)
                                         .FirstOrDefaultAsync(m => m.Id == ticketId);
 
                 return ticket!;
@@ -160,6 +162,24 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         }
+        #endregion
+
+        #region Get Ticket Attachments
+        public async Task<TicketAttachment> GetTicketAttachmentByIdAsync(int ticketAttachmentId)
+        {
+            try
+            {
+                TicketAttachment? ticketAttachment = await _context.TicketAttachments
+                    .Include(t => t.User)
+                    .FirstOrDefaultAsync(t => t.Id == ticketAttachmentId);
+                return ticketAttachment!;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        } 
         #endregion
 
         #region Get Tickets By User Id

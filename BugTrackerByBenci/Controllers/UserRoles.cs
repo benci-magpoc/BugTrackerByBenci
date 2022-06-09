@@ -43,6 +43,33 @@ namespace BugTrackerByBenci.Controllers
             return View(model);
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageUserRoles(ManageUserRolesViewModel member)
+        {
+
+            int companyId = User.Identity!.GetCompanyId();
+            BTUser? btUser =
+                (await _companyInfoService.GetAllMembersAsync(companyId)).FirstOrDefault(u =>
+                    u.Id == member.BtUser!.Id);
+            IEnumerable<string> currentRoles = await _roleService.GetUserRolesAsync(btUser!);
+            string? selectedUserRole = member.SelectedRoles!.FirstOrDefault();
+
+            // Add user to new role
+            if (!string.IsNullOrEmpty(selectedUserRole))
+            {
+                if (await _roleService.RemoveUserFromRolesAsync(btUser!, currentRoles))
+                {
+                    await _roleService.AddUserToRoleAsync(btUser!, selectedUserRole);
+                }
+            }
+            else
+            {
+                return RedirectToAction(nameof(ManageUserRoles));
+            }
+
+            return RedirectToAction(nameof(ManageUserRoles));
+        }
         // GET: UserRoles/Details/5
         public ActionResult Details(int id)
         {

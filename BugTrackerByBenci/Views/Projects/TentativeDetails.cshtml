@@ -1,0 +1,231 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BugTrackerByBenci.Services.Interfaces
+@model BugTrackerByBenci.Models.Project
+@inject IRolesService RoleService
+
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<div class="row">
+    <!-- Column -->
+    <div class="col-lg-12">
+        <div class="card">
+            <div class="card-body">
+                <h3 class="box-title mb-2" data-bs-toggle="tooltip" title="Project Name">@Html.DisplayFor(model => model.Name)</h3>
+                <div class="row">
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        @if (Model?.FileData != null)
+                        {
+                            <img id="projectImage" class="img-fluid" data-bs-toggle="tooltip" title="Project Image" src="data:image/*;base64,@(Convert.ToBase64String(Model.FileData))">
+                        }
+                        else
+                        {
+                            <img id="projectImage" class="img-fluid" data-bs-toggle="tooltip" src="https://cdn.icon-icons.com/icons2/2331/PNG/512/task_software_platform_management_project_icon_142266.png">
+                        }
+                    </div>
+                    <div class="col-lg-9 col-md-9 col-sm-6">
+                        <h3 class="box-title">Project Description</h3>
+                        <p>@Html.DisplayFor(model => model.Description)</p>
+                        <h3 class="box-title mt-5">Project Members</h3>
+                        <ul class="list-group list-group-flush ps-0">
+                            @foreach (var member in Model!.Members!)
+                            {
+                                <li class="list-group-item border-bottom-0 py-1 px-0 text-muted">
+                                    <span>@member.FullName - </span><span>@await RoleService.GetUserRoleAsync(member) </span>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <h3 class="box-title mt-5">Key Details</h3>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <tbody>
+                                    <tr>
+                                        <td width="390">Date Created</td>
+                                        <td> @Html.DisplayFor(model => model.Created) </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Start Date</td>
+                                        <td> @Html.DisplayFor(model => model.StartDate) </td>
+                                    </tr>
+                                    <tr>
+                                        <td>End Date</td>
+                                        <td> @Html.DisplayFor(model => model.EndDate) </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Priority</td>
+                                        <td> @Html.DisplayFor(model => model.Priority!.Name) </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+</div>
+
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="border-bottom title-part-padding">
+                <h4 class="card-title mb-0">Tickets of Project - @Html.DisplayFor(model => model.Name)</h4>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="zero_config" class="table table-striped table-bordered">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Ticket Name
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Date Created
+                                </th>
+                                <th>
+                                    Date Updated
+                                </th>
+                                <th>
+                                    Archived
+                                </th>
+                                <th>
+                                    Archived by Project
+                                </th>
+                                <th>
+                                    Company Name
+                                </th>
+                                <th>
+                                    Project Name
+                                </th>
+                                <th>
+                                    Priority
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Submitter
+                                </th>
+                                <th>
+                                    Developer
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Tickets!)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Updated)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Archived)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ArchivedByProject)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Project!.Company!.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Project!.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketPriority!.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketStatus!.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TicketType!.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.SubmitterUser!.FullName)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.DeveloperUser!.FullName)
+                                    </td>
+                                    <td>
+                                        <a asp-action="Edit" asp-controller="Tickets" asp-route-id="@item.Id">Edit</a> |
+                                        <a asp-action="Details" asp-controller="Tickets" asp-route-id="@item.Id">Details</a> |
+                                        <a asp-action="Archive" asp-controller="Tickets" asp-route-id="@item.Id">Archive</a> |
+                                        <a asp-action="AssignDeveloper" asp-controller="Tickets" asp-route-id="@item.Id">Assign Developer</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th>
+                                    Ticket Name
+                                </th>
+                                <th>
+                                    Description
+                                </th>
+                                <th>
+                                    Date Created
+                                </th>
+                                <th>
+                                    Date Updated
+                                </th>
+                                <th>
+                                    Archived
+                                </th>
+                                <th>
+                                    Archived by Project
+                                </th>
+                                <th>
+                                    Company Name
+                                </th>
+                                <th>
+                                    Project Name
+                                </th>
+                                <th>
+                                    Priority
+                                </th>
+                                <th>
+                                    Status
+                                </th>
+                                <th>
+                                    Type
+                                </th>
+                                <th>
+                                    Submitter
+                                </th>
+                                <th>
+                                    Developer
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="AllProjects">Back to List</a>
+</div>
