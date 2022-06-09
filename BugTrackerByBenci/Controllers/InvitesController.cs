@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Extensions;
 using BugTrackerByBenci.Models;
+using BugTrackerByBenci.Models.Enums;
 using BugTrackerByBenci.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -70,6 +72,7 @@ namespace BugTrackerByBenci.Controllers
             return View(invite);
         }
 
+        [Authorize(Roles = nameof(BTRoles.Admin))]
         // GET: Invites/Create
         public async Task<IActionResult> Create()
         {
@@ -88,6 +91,7 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = nameof(BTRoles.Admin))]
         public async Task<IActionResult> Create([Bind("Id,ProjectId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,Message")] Invite invite)
         {
             ModelState.Remove("InvitorId");
@@ -144,6 +148,31 @@ namespace BugTrackerByBenci.Controllers
         [HttpPost]
         public async Task<IActionResult> ProcessInvite(string token, string email, string company)
         {
+            if (token == null)
+            {
+                return NotFound();
+            }
+
+            Guid companyToken = Guid.Parse(_protector.Unprotect(token));
+            string inviteeEmail = _protector.Unprotect(email);
+            int companyId = int.Parse(_protector.Unprotect(company));
+
+            try
+            {
+                Invite invite = await _inviteService.GetInviteAsync(companyToken, inviteeEmail, companyId);
+
+                if (invite != null)
+                {
+                    return View(invite);
+                }
+
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
