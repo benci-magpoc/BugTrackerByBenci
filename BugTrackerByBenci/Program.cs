@@ -36,6 +36,8 @@ builder.Services.AddScoped<IBTCompanyInfoService, BTCompanyInfoService>();
 builder.Services.AddScoped<IEmailSender, BTEmailService>();
 builder.Services.AddScoped<IBTInviteService, BTInviteService>();
 
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+
 var app = builder.Build();
 
 var scope = app.Services.CreateScope();

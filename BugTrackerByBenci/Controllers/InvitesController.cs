@@ -90,10 +90,12 @@ namespace BugTrackerByBenci.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProjectId,InviteeId,InviteeEmail,InviteeFirstName,InviteeLastName,Message")] Invite invite)
         {
+            ModelState.Remove("InvitorId");
+
+            int companyId = User.Identity!.GetCompanyId();
+
             if (ModelState.IsValid)
             {
-                int companyId = User.Identity!.GetCompanyId();
-
                 try
                 {
                     Guid guid = Guid.NewGuid();
@@ -126,21 +128,16 @@ namespace BugTrackerByBenci.Controllers
 
                     await _inviteService.AddNewInviteAsync(invite); 
                 
-                    return RedirectToAction(nameof(Index));
+                    return RedirectToAction("Index", "Home");
                 }
                 catch (Exception)
                 {
                     throw;
                 }
-
-                _context.Add(invite);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
             }
-            ViewData["CompanyId"] = new SelectList(_context.Companies, "Id", "Description", invite.CompanyId);
-            ViewData["InviteeId"] = new SelectList(_context.Users, "Id", "Id", invite.InviteeId);
-            ViewData["InvitorId"] = new SelectList(_context.Users, "Id", "Id", invite.InvitorId);
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Description", invite.ProjectId);
+
+            ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId),
+                "Id", "Name");
             return View(invite);
         }
 

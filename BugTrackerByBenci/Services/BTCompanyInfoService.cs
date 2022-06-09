@@ -30,7 +30,7 @@ namespace BugTrackerByBenci.Services
                 throw;
             }
         }
-
+        
         public async Task<Company> GetCompanyInfoById(int? companyId)
         {
             try
