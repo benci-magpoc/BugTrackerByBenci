@@ -21,6 +21,6 @@
             @Model.Invitor!.FullName has invited you to collaborate on the @Model.Project!.Name project.
             <br /><br /> Click the "JOIN" button below to register with the company and begin entering tickets.
         </p>
-        <a class="btn btn-primary btn-lg btn-block" asp-area="Identity" asp-page="/Account/RegisterByInvite" asp-route-id="@Model.Id" asp-route-companyId="@Model.CompanyId"><i class="bi bi-box-arrow-in-right"></i> <span>JOIN</span></a>
+        <a class="btn btn-primary btn-lg btn-block" asp-area="Identity" asp-page="/Account/RegisterByInvite" asp-route-id="@Model.Id" asp-route-companyId="@Model.CompanyId" return><i class="bi bi-box-arrow-in-right"></i> <span>JOIN</span></a>
     </div>
 </div>

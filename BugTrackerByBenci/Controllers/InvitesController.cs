@@ -145,7 +145,7 @@ namespace BugTrackerByBenci.Controllers
             return View(invite);
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> ProcessInvite(string token, string email, string company)
         {
             if (token == null)

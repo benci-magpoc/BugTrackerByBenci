@@ -61,7 +61,7 @@ namespace BugTrackerByBenci.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [BindProperty]
-        public InputModel Input { get; set; }
+        public InputModel Input { get; set; } = new();
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -80,7 +80,8 @@ namespace BugTrackerByBenci.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public class InputModel
-        {
+         {
+            
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -146,8 +147,9 @@ namespace BugTrackerByBenci.Areas.Identity.Pages.Account
         }
 
 
-        public async Task OnGetAsync(int id, int companyId, string returnUrl = null)
+        public async Task OnGetAsync(int id, int companyId, string returnUrl)
         {
+
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
@@ -156,9 +158,9 @@ namespace BugTrackerByBenci.Areas.Identity.Pages.Account
             Input.Email = invite.InviteeEmail;
             Input.FirstName = invite.InviteeFirstName;
             Input.LastName = invite.InviteeLastName;
-            Input.Company = invite.Company.Name;
+            Input.Company = invite.Company!.Name;
             Input.CompanyId = invite.CompanyId;
-            Input.CompanyId = invite.ProjectId;
+            Input.ProjectId = invite.ProjectId;
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
