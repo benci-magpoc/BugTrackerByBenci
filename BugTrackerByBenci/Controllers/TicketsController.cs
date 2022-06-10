@@ -67,9 +67,19 @@ namespace BugTrackerByBenci.Controllers
             return RedirectToAction("Details", new { id = ticketAttachment.TicketId, message = statusMessage });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddTicketComment([Bind("Id,Comment,Created,TicketId,UserId")] TicketComment ticketComment)
         {
+            if (ModelState.IsValid)
+            {
 
+                _context.Add(ticketComment);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", "Tickets", new { Id = ticketComment.Id });
+            }
+            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", ticketComment.TicketId);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", ticketComment.UserId);
             return RedirectToAction("Details", "Tickets", new { Id = ticketComment.Id });
         }
         public async Task<IActionResult> ArchivedTickets()

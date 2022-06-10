@@ -59,14 +59,12 @@ namespace BugTrackerByBenci.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                ticketComment.Created = DateTime.UtcNow;
                 _context.Add(ticketComment);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", "Tickets", new { Id=ticketComment.Id});
+                return RedirectToAction("Details", "Tickets", new { id=ticketComment.TicketId });
             }
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "Id", "Description", ticketComment.TicketId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", ticketComment.UserId);
-            return View(ticketComment);
+            return RedirectToAction("Details", "Tickets", new { id = ticketComment.TicketId });
         }
 
         // GET: TicketComments/Edit/5

@@ -92,8 +92,10 @@
                             </div>
                             <div class="card-body" style="overflow-y:auto;height:600px;">
                                 @*Form and Logic for authorized users to add comments*@
-                                <form class="form-horizontal form-bordered" asp-action="AddTicketComment" asp-controller="Tickets" method="post">
+                                <form class="form-horizontal form-bordered" asp-action="Create" asp-controller="TicketComments" method="post">
                                     <input type="hidden" asp-for="Id" name="TicketId" />
+                                    <input type="hidden" asp-for="Created" name="Created" />
+                                    <input type="hidden" asp-for="@btUser.Id" name="UserId" />
                                     @if (Model.DeveloperUserId == btUser.Id || Model.SubmitterUserId == btUser.Id || projectManager?.Id == btUser.Id || User.IsInRole(nameof(BTRoles.Admin)))
                                     {
                                         <div class="form-group">
