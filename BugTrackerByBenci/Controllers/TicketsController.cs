@@ -20,7 +20,17 @@ namespace BugTrackerByBenci.Controllers
         private readonly IBTProjectService _projectService;
         private readonly IRolesService _rolesService;
         private readonly IBTFileService _fileService;
-        public TicketsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTTicketService ticketService, IBTProjectService projectService, IRolesService rolesService, IBTFileService fileService)
+        private readonly ITicketHistoryService _ticketHistoryService;
+        private readonly IBTNotificationService _notificationService;
+        private readonly IBTLookupService _lookupService;
+        public TicketsController(ApplicationDbContext context, 
+                                    UserManager<BTUser> userManager, 
+                                    IBTTicketService ticketService, 
+                                    IBTProjectService projectService, 
+                                    IRolesService rolesService, 
+                                    IBTFileService fileService, 
+                                    ITicketHistoryService ticketHistoryService, 
+                                    IBTNotificationService notificationService, IBTLookupService lookupService)
         {
             _context = context;
             _userManager = userManager;
@@ -28,6 +38,9 @@ namespace BugTrackerByBenci.Controllers
             _projectService = projectService;
             _rolesService = rolesService;
             _fileService = fileService;
+            _ticketHistoryService = ticketHistoryService;
+            _notificationService = notificationService;
+            _lookupService = lookupService;
         }
 
         // GET: Tickets
@@ -114,15 +127,51 @@ namespace BugTrackerByBenci.Controllers
         // Post: Assign Developer
         public async Task<IActionResult> AssignDeveloper(TicketDeveloperViewModel model)
         {
-                //List<BTUser> developers = await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.Developer), companyId);
-                //BTUser ticketDeveloper = await _ticketService.GetCurrentDeveloperAsync(model.Ticket!.Id);
-                
-            if (!string.IsNullOrEmpty(model.DeveloperId))
-            {
-                await _ticketService.AddDeveloperToTicketAsync(model.DeveloperId!, model.Ticket!.Id);
-                return RedirectToAction(nameof(Details), new { id = model.Ticket!.Id });
-            }
+            //BTUser btUser = await _userManager.GetUserAsync(User);
+            //Ticket? oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket!.Id);
 
+            //if (!string.IsNullOrEmpty(model.DeveloperId))
+            //{
+            //    await _ticketService.AddDeveloperToTicketAsync(model.DeveloperId!, model.Ticket!.Id);
+            //    return RedirectToAction(nameof(Details), new { id = model.Ticket!.Id });
+            //}
+            if (model.DeveloperId != null)
+            {
+                BTUser btUser = await _userManager.GetUserAsync(User);
+                //oldTicket
+                Ticket? oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket!.Id);
+                try
+                {
+                    await _ticketService.AddDeveloperToTicketAsync(model.DeveloperId, model.Ticket.Id);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                //newTicket
+                Ticket? newTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket.Id);
+                // Add History
+                await _ticketHistoryService.AddHistoryAsync(oldTicket, newTicket, btUser.Id);
+                //Send Notifications
+                //Notify Developer
+                if (model.Ticket.DeveloperUserId != null)
+                {
+                    Notification devNotification = new()
+                    {
+                        TicketId = model.Ticket.Id,
+                        NotificationTypeId = (await _lookupService.LookupNotificationTypeIdAsync(nameof(BTNotificationTypes.Ticket)))!.Value,
+                        Title = "Ticket Updated",
+                        Message = $"Ticket: {model.Ticket.Title}, was updated by {btUser.FullName}",
+                        Created = DateTime.UtcNow,
+                        SenderId = btUser.Id,
+                        RecipientId = model.Ticket.DeveloperUserId
+                    };
+                    await _notificationService.AddNotificationAsync(devNotification);
+                    await _notificationService.SendEmailNotificationAsync(devNotification, "Ticket Updated");
+                }
+
+                return RedirectToAction(nameof(Details), new { id = model.Ticket?.Id });
+            }
             return RedirectToAction(nameof(Details), new { id = model.Ticket!.Id });
         }
 
@@ -183,6 +232,8 @@ namespace BugTrackerByBenci.Controllers
 
                 await _ticketService.AddNewTicketAsync(ticket);
                 // TODO: Add Ticket History
+                Ticket? newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _ticketHistoryService.AddHistoryAsync(null, newTicket, ticket.SubmitterUserId);
 
                 // TODO: Add Ticket Notification
                 return RedirectToAction(nameof(Index));
@@ -241,6 +292,9 @@ namespace BugTrackerByBenci.Controllers
 
             if (ModelState.IsValid)
             {
+                string userId = _userManager.GetUserId(User);
+                Ticket? oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+
                 try
                 {
                     ticket.SubmitterUserId = ticket.SubmitterUserId;
@@ -261,6 +315,10 @@ namespace BugTrackerByBenci.Controllers
                         throw;
                     }
                 }
+                //TODO: Add History
+                Ticket? newTicket = await _ticketService.GetTicketAsNoTrackingAsync(ticket.Id);
+                await _ticketHistoryService.AddHistoryAsync(oldTicket, newTicket, userId);
+
                 return RedirectToAction(nameof(Index));
             }
 

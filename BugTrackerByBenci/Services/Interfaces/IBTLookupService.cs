@@ -8,5 +8,7 @@ namespace BugTrackerByBenci.Services.Interfaces
         public Task<List<TicketStatus>> GetTicketStatusesAsync();
         public Task<List<TicketType>> GetTicketTypesAsync();
         public Task<List<ProjectPriority>> GetProjectPrioritiesAsync();
+        public Task<int?> LookupNotificationTypeIdAsync(string typeName);
+
     }
 }

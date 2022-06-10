@@ -19,6 +19,7 @@ namespace BugTrackerByBenci.Services.Interfaces
         public Task RemoveDeveloperFromTicketAsync(int ticketId);
         public Task RestoreTicketAsync(Ticket ticket);
         public Task UpdateTicketAsync(Ticket ticket);
+        public Task<Ticket?> GetTicketAsNoTrackingAsync(int ticketId);
 
     }
 }
