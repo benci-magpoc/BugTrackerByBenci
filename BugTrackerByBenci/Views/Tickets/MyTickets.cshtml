@@ -1,103 +1,58 @@
-﻿@model IEnumerable<BugTrackerByBenci.Models.Ticket>
+﻿@using BugTrackerByBenci.Models.Enums
+@model IEnumerable<BugTrackerByBenci.Models.Ticket>
 
 @{
     ViewData["Title"] = "My Tickets";
 }
 
 <h1>My Tickets</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Updated)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Archived)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ArchivedByProject)
-            </th>
-            <th>
-                Company Name
-            </th><th>
-                @Html.DisplayNameFor(model => model.Project)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketPriority)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketStatus)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TicketType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SubmitterUser)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeveloperUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Updated)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Archived)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ArchivedByProject)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project!.Company!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Project!.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketPriority!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TicketType!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SubmitterUser!.FullName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeveloperUser!.FullName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Archive" asp-route-id="@item.Id">Archive</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="table-responsive" style="overflow-y:auto;height:600px;">
+    <table class="table table-hover">
+        <thead class="">
+            <tr>
+                @* Table header *@
+                <th>Title</th>
+                <th>Developer</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* Table body *@
+            @foreach (var ticket in Model.OrderByDescending(d => d.Created))
+            {
+                <tr>
+                    <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id" style="color:black"><strong>@ticket.Title</strong></a> </td>
+                    <td>
+                        @if (ticket.DeveloperUserId != null)
+                        {
+                            @ticket.DeveloperUser?.FullName
+                        }
+                        else
+                        {
+                            if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                            {
+                                <a class="btn btn-xs btn-info" asp-action="AssignDeveloper" asp-controller="Tickets" asp-route-id="@ticket.Id">Assign Dev</a>
+                            }
+                        }
+                    </td>
+                    @if (ticket.TicketStatus!.Name == "New")
+                    {
+                        <td><span class="badge-success">@ticket.TicketStatus.Name </span></td>
+                    }
+                    else
+                    {
+                        <td><span class="badge-primary">@ticket.TicketStatus.Name </span></td>
+                    }
+                    <td><span class="badg">@ticket.TicketPriority!.Name </span></td>
+                    <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><i class="fs-5 bi-justify"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

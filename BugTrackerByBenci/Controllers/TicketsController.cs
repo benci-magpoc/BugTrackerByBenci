@@ -222,9 +222,12 @@ namespace BugTrackerByBenci.Controllers
         public async Task<IActionResult> Create([Bind("Id,Title,Description,Created,ProjectId,TicketPriorityId,TicketTypeId")] Ticket ticket)
         {
             ModelState.Remove("SubmitterUserId");
+            int companyId = User.Identity!.GetCompanyId();
+            string userId = _userManager.GetUserId(User);
 
             if (ModelState.IsValid)
             {
+                BTUser? btUser = await _userManager.GetUserAsync(User);
                 // Assign Values
                 ticket.SubmitterUserId = _userManager.GetUserId(User);
                 ticket.Created = DateTime.UtcNow;
@@ -236,11 +239,31 @@ namespace BugTrackerByBenci.Controllers
                 await _ticketHistoryService.AddHistoryAsync(null, newTicket, ticket.SubmitterUserId);
 
                 // TODO: Add Ticket Notification
-                return RedirectToAction(nameof(Index));
+                BTUser projectManager = await _projectService.GetProjectManagerAsync(ticket.ProjectId);
+                Notification notification = new()
+                {
+                    NotificationTypeId = (await _lookupService.LookupNotificationTypeIdAsync(nameof(BTNotificationTypes.Ticket)))!.Value,
+                    TicketId = ticket.Id,
+                    Title = "New Ticket Added",
+                    Message = $"New Ticket: {ticket.Title}, was created by {btUser.FullName}",
+                    Created = DateTime.UtcNow,
+                    SenderId = userId,
+                    RecipientId = projectManager?.Id
+                };
+
+                await _notificationService.AddNotificationAsync(notification);
+
+                if (projectManager != null)
+                {
+                    await _notificationService.SendEmailNotificationAsync(notification, $"New Ticket Added For Project: {newTicket.Project.Name}");
+                }
+                else
+                {
+                    await _notificationService.SendEmailNotificationsByRoleAsync(notification, companyId, nameof(BTRoles.Admin));
+                }
+
+                return RedirectToAction(nameof(UnassignedTickets));
             }
-            // Reset values in case it didn't make valid on modelstate
-            int companyId = User.Identity!.GetCompanyId();
-            string userId = _userManager.GetUserId(User);
 
             if (User.IsInRole(nameof(BTRoles.Admin)))
             {
@@ -283,7 +306,7 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Created,Updated,ProjectId,SubmitterUserId,TicketPriorityId,TicketStatusId,TicketTypeId")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Created,Updated,ProjectId,DeveloperUserId,SubmitterUserId,TicketPriorityId,TicketStatusId,TicketTypeId")] Ticket ticket)
         {
             if (id != ticket.Id)
             {
@@ -327,9 +350,7 @@ namespace BugTrackerByBenci.Controllers
             ViewData["ProjectId"] = new SelectList(await _projectService.GetAllProjectsByCompanyIdAsync(companyId), "Id", "Description", ticket.ProjectId);
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
-            //ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
-            //ViewData["SubmitterUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.SubmitterUserId);
-            //ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+            
             return View(ticket);
         }
 

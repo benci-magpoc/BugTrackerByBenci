@@ -105,8 +105,8 @@ namespace BugTrackerByBenci.Services
                     {
                         TicketId = newTicket.Id,
                         PropertyName = "TicketStatus",
-                        OldValue = oldTicket.TicketStatus.Name,
-                        NewValue = newTicket.TicketStatus.Name,
+                        OldValue = oldTicket.TicketStatus!.Name,
+                        NewValue = newTicket.TicketStatus!.Name,
                         Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
                         UserId = userId,
                         Description = $"New ticket Status: {newTicket.TicketStatus.Name}"
@@ -141,7 +141,7 @@ namespace BugTrackerByBenci.Services
                         NewValue = newTicket.DeveloperUser?.FullName,
                         Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
                         UserId = userId,
-                        Description = $"New ticket developer: {newTicket.DeveloperUser.FullName}"
+                        Description = $"New ticket developer: {newTicket.DeveloperUser!.FullName}"
 
                     };
                     await _context.TicketHistories.AddAsync(history);
