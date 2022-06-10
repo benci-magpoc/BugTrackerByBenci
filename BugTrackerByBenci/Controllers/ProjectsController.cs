@@ -50,7 +50,10 @@ namespace BugTrackerByBenci.Controllers
                 }
                 
             }
-
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"All Projects"
+            };
             return View(model);
         }
 
@@ -61,6 +64,10 @@ namespace BugTrackerByBenci.Controllers
 
             List<Project> projects = await _projectService.GetArchivedProjectsByCompanyAsync(companyId);
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"Archived Projects"
+            };
             return View(projects);
         }
 
@@ -87,7 +94,11 @@ namespace BugTrackerByBenci.Controllers
                 model.PMList =
                     new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id", "FullName");
             }
-            
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Projects/AllProjects\">All Projects</a>",
+                $"Assign Project Manager"
+            };
             return View(model);
         }
 
@@ -175,6 +186,11 @@ namespace BugTrackerByBenci.Controllers
             List<string> projectMembers = model.Project!.Members!.Select(m => m.Id).ToList();
 
             model.UsersList = new MultiSelectList(teamMembers, "Id", "FullName", projectMembers);
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Projects/AllProjects\">All Projects</a>",
+                $"Assign Project Members"
+            };
             return View(model);
         }
 
@@ -222,7 +238,12 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-
+            // Bread Crumbs ViewData
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Projects/AllProjects\">All Projects</a>",
+                $"Details"
+            };
             return View(project);
         }
 
@@ -237,7 +258,11 @@ namespace BugTrackerByBenci.Controllers
             model.PMList =
                 new SelectList(await _rolesService.GetUsersInRoleAsync(nameof(BTRoles.ProjectManager), companyId), "Id","FullName");
             model.PriorityList = new SelectList(_context.ProjectPriorities, "Id", "Name");
-            
+
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"Create Project"
+            };
             return View(model);
         }
 
@@ -315,7 +340,11 @@ namespace BugTrackerByBenci.Controllers
             }
             
             model.PriorityList = new SelectList(_context.ProjectPriorities, "Id", "Name");
-
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Projects/AllProjects\">All Projects</a>",
+                $"Edit"
+            };
             return View(model);
         }
 
@@ -406,7 +435,11 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Projects/AllProjects\">All Projects</a>",
+                $"Archive"
+            };
             return View(project);
         }
 
@@ -441,6 +474,10 @@ namespace BugTrackerByBenci.Controllers
 
             List<Project> projects = await _projectService.GetUserProjectsAsync(userId);
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"My Projects"
+            };
             return View(projects);
         }
 
@@ -460,7 +497,11 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Projects/AllProjects\">All Projects</a>",
+                $"Restore Project"
+            };
             return View(project);
         }
 
@@ -496,7 +537,12 @@ namespace BugTrackerByBenci.Controllers
 
             List<Project> projects = await _projectService.GetUnassignedProjectsAsync(companyId);
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"Unassigned Projects"
+            };
             return View(projects);
+
         }
 
         private bool ProjectExists(int id)

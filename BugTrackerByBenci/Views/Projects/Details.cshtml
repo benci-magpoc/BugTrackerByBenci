@@ -6,6 +6,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    //ViewData["BreadCrumb"] = ViewData["BreadCrumb"] as List<string>;
 }
 
 <h1>Details</h1>
@@ -23,7 +24,7 @@
                             <p>@Html.DisplayFor(model => model.Description)</p>
                             <div class="progress-container progress-info m-b-25">
                                 <span class="progress-badge" style="font-size:small">Project Status</span>
-                                <div class="progress" style="height: 20px;">
+                                <div class="progress" style="height: 1rem;">
                                     @* Razor code block *@
                                     <div class="progress-container progress-info m-b-25">
                                         <span class="progress-badge" style="font-size:small"></span>
