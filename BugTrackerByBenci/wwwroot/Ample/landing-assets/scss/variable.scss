@@ -1,0 +1,126 @@
+/*******************************/
+
+// Custom Variables
+
+/*******************************/
+
+@import url('https://fonts.googleapis.com/css?family=Rubik:300,400,500,700,900');
+
+
+/*Theme Colors*/
+
+$themecolor: #2962FF;
+$themecolor-dark: #028ee1;
+$themecolor-alt: #26c6da;
+$theme-light:#fff;
+$theme-dark:#212529;
+
+
+/*Shadow*/
+
+$shadow:8px 0px 20px rgba(0,
+0,
+0,
+0.08);
+
+
+/*******************************/
+
+// Bootstrap overrides
+
+/*******************************/
+
+
+/**
+ * Table Of Content
+ *
+ *  1. Color system
+ *  2. Options
+ *  3. Body
+ *  4. Typography
+ *  5. Breadcrumbs
+ *  6. Cards
+ *  7. Dropdowns
+ *  8. Buttons
+ *  9. Typography
+ *  10. Progress bars
+ *  11. Tables
+ *  12. Forms
+ *  14. Component
+ */
+
+//
+// Color system
+//
+$white: #fff !default;
+$gray-100: #f7fafc !default;
+$gray-200: #e9ecef !default;
+$gray-300: #dee2e6 !default;
+$gray-400: #ced4da !default;
+$gray-500: #adb5bd !default;
+$gray-600: #8898aa !default;
+$gray-700: #525f7f !default;
+$gray-800: #313131 !default;
+$gray-900: #212529 !default;
+$black: #000 !default;
+$cyan: #4fc3f7 !default;
+$info: #2cabe3 !default;
+$red: #ff5050 !default;
+$green: #2cd07e !default;
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    'primary': #707cd2,
+    'secondary': $gray-600,
+    'success': #2cd07e,
+    'info': #2cabe3,
+    'warning': #ffc36d,
+    'danger': #ff5050,
+    'light': $gray-100,
+    'dark': $gray-800,
+    'cyan': #4fc3f7,
+    'orange': #ffc36d,
+    'purple': #707cd2,
+    'inverse': #4c5667
+  ),
+  $theme-colors
+);
+
+// Body
+//
+// Settings for the  element.
+$main-body-bg: #fff!default;
+$body-bg: #fff;
+$body-color: #9098ac !default;
+
+
+// Typography
+//
+// Font, line-height, and color for body text, headings, and more.
+$font-size-base: 1rem;
+$font-family-sans-serif: 'Rubik', sans-serif !default;
+$font-weight-light: 300 !default;
+$font-weight-normal: 400 !default;
+$font-weight-medium: 500 !default;
+$font-weight-bold: 700 !default;
+
+$h1-font-size: 36px !default;
+$h2-font-size: 30px !default;
+$h3-font-size: 24px !default;
+$h4-font-size: 18px !default;
+$h5-font-size: 16px !default;
+$h6-font-size: 14px !default;
+
+$headings-margin-bottom: (1rem / 2) !default;
+$headings-font-weight: 400 !default;
+$headings-color: #414755 !default;
+
+//Navbar
+$navbar-padding-x: 0 !default;
+$navbar-nav-link-padding-x: 1rem;
+$navbar-light-color: #9098ac !default;
+
+//Buttons
+$btn-border-radius: 2px !default;
+$btn-border-radius-lg: 2px !default;
+$btn-border-radius-sm: 2px !default;

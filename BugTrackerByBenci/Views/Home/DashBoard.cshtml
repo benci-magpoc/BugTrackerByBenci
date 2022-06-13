@@ -8,9 +8,23 @@
     ViewData["Title"] = "Dashboard";
     @* Instantiate the btUser *@
     BTUser? btUser = await UserManager.GetUserAsync(User);
+    int? ticketId = null;
 }
 
 
+@*
+<table class="table table-hover">
+    <thead class="">
+    <tr>
+    <th>Title</th>
+    <th>Developer</th>
+    <th>Status</th>
+    <th>Priority</th>
+    </thead>
+    <tbody id="ticketsList">
+
+    </tbody>
+</table>*@
 
 <a href="javascript:void(0);">
     @* User Info *@
@@ -70,10 +84,10 @@
                         <div class="p-15 text-light">
                             <h3>
                                 @(
-    Model.Projects!.Count()
-    + Model.Tickets!.Count()
-    + Model.Members!.Count()
-                                    )
+                                Model.Projects!.Count()
+                                + Model.Tickets!.Count()
+                                + Model.Members!.Count()
+                                )
                             </h3>
                             <span>Total Data</span>
                         </div>
@@ -155,7 +169,12 @@
                             <h2>Projects</h2>
                         </div>
                         <div class="card-body">
-                            @* [Copy and format table from Unassigned Tickets] *@
+                            <ol id="projects">
+                                @foreach (var project in Model.Projects!)
+                                {
+                                    <li><a data-target-id="@project.Id" data-target-name="@project.Name" type="button" class="projectItem">@project.Name</a></li>
+                                }
+                            </ol>
                         </div>
                         <div class="card-footer">
                         </div>
@@ -167,34 +186,53 @@
                 <div class="bg-secondary">
                     <div class="card m-1 p-2">
                         <div class="card-header">
-                            <h2>Tickets</h2>
-                        </div>
-                        <div class="card-body">
+                            <h2>Tickets of <span id="projectName">All Projects</span></h2>
+                            <table class="table table-hover">
+                                <thead class="">
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Developer</th>
+                                    <th>Status</th>
+                                    <th>Priority</th>
+                                </tr>
+                                </thead>
+                                <tbody id="ticketsList">
+                                    @foreach(var ticket in Model.Tickets!){
+                                        <tr data-target="@ticket.ProjectId">
+                                            <td>@ticket.Title</td>
+                                            <td>@ticket.DeveloperUser?.FullName</td>
+                                            <td>@ticket.TicketStatus!.Name</td>
+                                            <td>@ticket.TicketPriority!.Name</td>
+                                        </tr>
+                                        }
 
-                            @* Copy and format table from Unassigned Tickets *@
-                        </div>
-                        <div class="card-footer">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-body">
+                            </div>
+                            <div class="card-footer">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-2 ">
-                <div class="bg-dark">
-                    <div class="card m-1 p-2">
-                        <div class="card-header">
-                            <h2>Members</h2>
-                            <hr />
-                        </div>
-                        <div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
-                            @* Looop over Company members. Display Name and Role *@
+                <div class="col-md-2 ">
+                    <div class="bg-dark">
+                        <div class="card m-1 p-2">
+                            <div class="card-header">
+                                <h2>Members</h2>
+                                <hr />
+                            </div>
+                            <div class="card-body" style="overflow-y:auto;height:600px;background-color:antiquewhite">
+                                                        @* Looop over Company members. Display Name and Role *@
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@section scripts{
+                                        @section scripts{
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
@@ -203,16 +241,16 @@
             {
                 label: "Low",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Low)).Count()
-            }, {
+                            }, {
                 label: "Medium",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Medium)).Count()
-            }, {
+                            }, {
                 label: "High",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.High)).Count()
-            }, {
+                            }, {
                 label: "Urgent",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Urgent)).Count()
-            }
+                            }
         ];
         /*
         Chart for Ticket by Priority
@@ -241,16 +279,16 @@
             {
                 label: "New",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.New)).Count()
-            }, {
+                            }, {
                 label: "Dev",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Development)).Count()
-            }, {
+                            }, {
                 label: "Test",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Testing)).Count()
-            }, {
+                            }, {
                 label: "Resolved",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Resolved)).Count()
-            }
+                            }
         ];
 
 
@@ -276,36 +314,36 @@
             });
         };
 
-        var morrisDataTicketType= [
+        var morrisDataTicketType = [
             {
                 label: "New Development",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.NewDevelopment)).Count()
-            }, {
+                            }, {
                 label: "Routine",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.WorkTask)).Count()
-            }, {
+                            }, {
                 label: "Defect",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Defect)).Count()
-            }, {
+                            }, {
                 label: "Change",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.ChangeRequest)).Count()
-            }, {
+                            }, {
                 label: "Enchancement",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Enhancement)).Count()
-            }, {
+                            }, {
                 label: "General",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.GeneralTask)).Count()
-            }
+                            }
         ];
         /*
         Chart for Ticket by Type
         */
         if ($('#morrisTicketType').get(0)) {
-            var donutChartType= Morris.Donut({
+            var donutChartType = Morris.Donut({
                 resize: true,
                 element: 'morrisTicketType',
                 data: morrisDataTicketType,
-                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b', '#ffc36d', '#7460ee' ]
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b', '#ffc36d', '#7460ee']
             });
 
             donutChartType.options.data.forEach(function(label, i) {
@@ -323,16 +361,16 @@
             {
                 label: "Active Projects",
                 value: @Model.Projects.Where(p => p.StartDate < DateTime.Now && p.EndDate > DateTime.Now).Count()
-            }, {
+                            }, {
                 label: "Assigned Tickets",
                 value: @Model.Tickets.Where(t => t.DeveloperUser != null).Count()
-            }, {
+                            }, {
                 label: "Unassigned Tickets",
                 value: @Model.Tickets.Where(t => t.DeveloperUser == null).Count()
-            }, {
+                            }, {
                 label: "Members",
                 value: @Model.Company.Members.Count()
-            }
+                            }
         ];
         /*
         Chart for Ticket by Type
@@ -368,21 +406,57 @@
             data: '{}',
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function (result) {
+            success: function(result) {
                 var data = result;
 
-                var layout = {barmode: 'group'};
+                var layout = { barmode: 'group' };
 
                 Plotly.newPlot('plotlyChart', data, layout);
             },
-            failure: function (result) {
+            failure: function(result) {
                 alert(result.d);
             },
-            error: function (result) {
+            error: function(result) {
                 alert(result.d);
             }
         });
     </script>
 
+    <script>
+        document.querySelectorAll("[data-target-id]").forEach((project) => {
 
+
+        });
+
+        var allRows = document.querySelectorAll("#ticketsList > tr");
+
+        console.log(allRows);
+        document.querySelectorAll("a.projectItem").forEach((btn) => {
+            
+            btn.addEventListener("click",
+                function() {
+                    var ticketBody = document.getElementById("ticketsList");
+                    allRows.forEach((row) => {
+                        ticketBody.appendChild(row);
+                    });
+
+                    var projectName = this.getAttribute("data-target-name");
+                    var targetId = this.getAttribute("data-target-id");
+                    var ticketId = document.querySelectorAll(`tr[data-target="${targetId}"]`);
+                    ticketBody = document.getElementById("ticketsList");
+                    console.log(allRows);
+
+                    document.getElementById("projectName").innerHTML = projectName;
+                    while (ticketBody.hasChildNodes()) {
+                        ticketBody.removeChild(ticketBody.firstChild);
+                    }
+                    
+                    ticketId.forEach((row) => {
+                        ticketBody.appendChild(row);
+                        
+                    });
+                });
+        });
+
+    </script>
 }
