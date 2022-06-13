@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using BugTrackerByBenci.Extensions;
+using BugTrackerByBenci.Models.ChartModels;
+using BugTrackerByBenci.Models.Enums;
 using BugTrackerByBenci.Models.ViewModels;
 using BugTrackerByBenci.Services.Interfaces;
 
@@ -53,6 +55,43 @@ namespace BugTrackerByBenci.Controllers
         {
             return View();
         }
+
+        [HttpPost]
+        public async Task<JsonResult> PlotlyBarChart()
+        {
+            PlotlyBarData plotlyData = new();
+            List<PlotlyBar> barData = new();
+
+            int companyId = User.Identity!.GetCompanyId();
+
+            List<Project> projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
+
+            //Bar One
+            PlotlyBar barOne = new()
+            {
+                X = projects.Select(p => p.Name).ToArray()!,
+                Y = projects.SelectMany(p => p.Tickets).GroupBy(t => t.ProjectId).Select(g => g.Count()).ToArray(),
+                Name = "Tickets",
+                Type = "bar"
+            };
+
+            //Bar Two
+            PlotlyBar barTwo = new()
+            {
+                X = projects.Select(p => p.Name).ToArray()!,
+                Y = projects.Select(async p => (await _projectService.GetProjectMembersByRoleAsync(p.Id, nameof(BTRoles.Developer))).Count).Select(c => c.Result).ToArray(),
+                Name = "Developers",
+                Type = "bar"
+            };
+
+            barData.Add(barOne);
+            barData.Add(barTwo);
+
+            plotlyData.Data = barData;
+
+            return Json(plotlyData);
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

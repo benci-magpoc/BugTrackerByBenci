@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Microsoft.AspNetCore.Identity
+@using BugTrackerByBenci.Models.Enums
 @model BugTrackerByBenci.Models.ViewModels.DashboardViewModel
 @inject UserManager<BTUser> UserManager
 
@@ -8,6 +9,8 @@
     @* Instantiate the btUser *@
     BTUser? btUser = await UserManager.GetUserAsync(User);
 }
+
+
 
 <a href="javascript:void(0);">
     @* User Info *@
@@ -67,10 +70,10 @@
                         <div class="p-15 text-light">
                             <h3>
                                 @(
-                                Model.Projects!.Count()
-                                + Model.Tickets!.Count()
-                                + Model.Members!.Count()
-                                )
+    Model.Projects!.Count()
+    + Model.Tickets!.Count()
+    + Model.Members!.Count()
+                                    )
                             </h3>
                             <span>Total Data</span>
                         </div>
@@ -83,26 +86,47 @@
                 <div class="row col-cols-4 mt-5 bg-secondary">
                     <div class="card col m-1 p-2">
                         <div class="card-body">
-                            <h5>Chart 1</h5>
-                            <p>[Projects]</p>
+                            <h5>Projects by Tickets</h5>
+                            <!-- Morris: Donut -->
+                            <div class="col-md-12">
+                                <div class="chart chart-md" id="morrisActiveWork"></div>
+                            </div>
+                        </div><div class="col-md-12 text-center">
+                            <div id="activeWorkLegend" class="donut-legend" style="font-size:x-small"></div>
                         </div>
                     </div>
                     <div class="card col m-1 p-2">
                         <div class="card-body">
-                            <h5>Chart 2</h5>
-                            <p>[Projects]</p>
+                            <h5>Tickets by Priority</h5>
+                            <!-- Morris: Donut -->
+                            <div class="col-md-12">
+                                <div class="chart chart-md" id="morrisTicketPriority"></div>
+                            </div>
+                        </div><div class="col-md-12 text-center">
+                            <div id="legend" class="donut-legend" style="font-size:x-small"></div>
                         </div>
                     </div>
                     <div class="card col m-1 p-2">
                         <div class="card-body">
-                            <h5>Chart 3</h5>
-                            <p>[Tickets]</p>
+                            <h5>Tickets by Type</h5>
+                            <!-- Morris: Donut -->
+                            <div class="col-md-12">
+                                <div class="chart chart-md" id="morrisTicketType"></div>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <div id="typeLegend" class="donut-legend" style="font-size:x-small"></div>
+                            </div>
                         </div>
                     </div>
                     <div class="card col m-1 p-2">
                         <div class="card-body">
-                            <h5>Chart 4</h5>
-                            <p>[Tickets]</p>
+                            <h5>Tickets by Status</h5>
+                            <!-- Morris: Donut -->
+                            <div class="col-md-12">
+                                <div class="chart chart-md" id="morrisTicketStatus"></div>
+                            </div>
+                        </div><div class="col-md-12 text-center">
+                            <div id="statusLegend" class="donut-legend" style="font-size:x-small"></div>
                         </div>
                     </div>
                 </div>
@@ -111,9 +135,10 @@
         <div class="row gy-2">
             <div class="cols mt-5 bg-secondary">
                 <div class="card col m-1 p-2">
-                    <div class="card-body" style="height: 380px">
-                        <h5>Chart 5</h5>
-                        <p>[Projects: Tickets vs Developers]</p>
+                    <div class="card-body" style="height:600px;overflow-y:auto;">
+                        <h5>Project: Tickets vs Developers</h5>
+                        <!-- HTML -->
+                        <div id="plotlyChart"></div>
                     </div>
                 </div>
             </div>
@@ -169,3 +194,195 @@
         </div>
     </div>
 </div>
+@section scripts{
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+
+    <script>
+        var morrisDonutData = [
+            {
+                label: "Low",
+                value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Low)).Count()
+            }, {
+                label: "Medium",
+                value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Medium)).Count()
+            }, {
+                label: "High",
+                value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.High)).Count()
+            }, {
+                label: "Urgent",
+                value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Urgent)).Count()
+            }
+        ];
+        /*
+        Chart for Ticket by Priority
+        */
+        if ($('#morrisTicketPriority').get(0)) {
+            var donutChart = Morris.Donut({
+                resize: true,
+                element: 'morrisTicketPriority',
+                data: morrisDonutData,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
+            });
+
+            donutChart.options.data.forEach(function(label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChart.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#legend').append(legendItem);
+            });
+        };
+
+        //Ticket Status
+        var morrisDataTicketStatus = [
+            {
+                label: "New",
+                value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.New)).Count()
+            }, {
+                label: "Dev",
+                value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Development)).Count()
+            }, {
+                label: "Test",
+                value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Testing)).Count()
+            }, {
+                label: "Resolved",
+                value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Resolved)).Count()
+            }
+        ];
+
+
+        /*
+        Chart for Ticket By Status
+        */
+        if ($('#morrisTicketStatus').get(0)) {
+            var donutChartStatus = Morris.Donut({
+                resize: true,
+                element: 'morrisTicketStatus',
+                data: morrisDataTicketStatus,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
+            });
+
+            donutChartStatus.options.data.forEach(function(label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChart.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#statusLegend').append(legendItem);
+            });
+        };
+
+        var morrisDataTicketType= [
+            {
+                label: "New Development",
+                value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.NewDevelopment)).Count()
+            }, {
+                label: "Routine",
+                value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.WorkTask)).Count()
+            }, {
+                label: "Defect",
+                value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Defect)).Count()
+            }, {
+                label: "Change",
+                value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.ChangeRequest)).Count()
+            }, {
+                label: "Enchancement",
+                value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Enhancement)).Count()
+            }, {
+                label: "General",
+                value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.GeneralTask)).Count()
+            }
+        ];
+        /*
+        Chart for Ticket by Type
+        */
+        if ($('#morrisTicketType').get(0)) {
+            var donutChartType= Morris.Donut({
+                resize: true,
+                element: 'morrisTicketType',
+                data: morrisDataTicketType,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b', '#ffc36d', '#7460ee' ]
+            });
+
+            donutChartType.options.data.forEach(function(label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChartType.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#typeLegend').append(legendItem);
+            });
+        };
+
+        var morrisDataActiveWork = [
+            {
+                label: "Active Projects",
+                value: @Model.Projects.Where(p => p.StartDate < DateTime.Now && p.EndDate > DateTime.Now).Count()
+            }, {
+                label: "Assigned Tickets",
+                value: @Model.Tickets.Where(t => t.DeveloperUser != null).Count()
+            }, {
+                label: "Unassigned Tickets",
+                value: @Model.Tickets.Where(t => t.DeveloperUser == null).Count()
+            }, {
+                label: "Members",
+                value: @Model.Company.Members.Count()
+            }
+        ];
+        /*
+        Chart for Ticket by Type
+        */
+        if ($('#morrisActiveWork').get(0)) {
+            var donutChartActiveWork = Morris.Donut({
+                resize: true,
+                element: 'morrisActiveWork',
+                data: morrisDataActiveWork,
+                colors: ['#0088cc', '#734ba9', '#E36159', '#ff993b']
+            });
+
+            donutChartActiveWork.options.data.forEach(function(label, i) {
+                var legendItem = $('<span></span>').text(label['label'] + ": " + label['value']).prepend('<span>&nbsp;</span>');
+                legendItem.find('span')
+                    .css('backgroundColor', donutChartActiveWork.options.colors[i])
+                    .css('width', '20px')
+                    .css('display', 'inline-block')
+                    .css('margin', '10px');
+                $('#activeWorkLegend').append(legendItem);
+            });
+        };
+
+    </script>
+
+    <!--  Plotly Charts  -->
+    <!-- Load plotly.js into the DOM -->
+    <script src='https://cdn.plot.ly/plotly-2.4.2.min.js'></script>
+    <script>
+        $.ajax({
+            type: "POST",
+            url: "/Home/PlotlyBarChart",
+            data: '{}',
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (result) {
+                var data = result;
+
+                var layout = {barmode: 'group'};
+
+                Plotly.newPlot('plotlyChart', data, layout);
+            },
+            failure: function (result) {
+                alert(result.d);
+            },
+            error: function (result) {
+                alert(result.d);
+            }
+        });
+    </script>
+
+
+}
