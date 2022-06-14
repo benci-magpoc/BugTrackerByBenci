@@ -34,9 +34,17 @@ namespace BugTrackerByBenci.Services
             }
         }
 
-        public Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
+        public async Task AddTicketAttachmentAsync(TicketAttachment ticketAttachment)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _context.Add(ticketAttachment);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         #endregion
@@ -158,6 +166,7 @@ namespace BugTrackerByBenci.Services
                                         .Include(t => t.TicketType)
                                         .Include(t => t.Comments)
                                         .Include(t => t.Attachments)
+                                        .Include(t => t.History)
                                         .FirstOrDefaultAsync(m => m.Id == ticketId);
 
                 return ticket!;

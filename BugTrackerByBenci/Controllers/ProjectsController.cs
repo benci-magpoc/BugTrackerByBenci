@@ -9,6 +9,7 @@ using BugTrackerByBenci.Models.ViewModels;
 using BugTrackerByBenci.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 
 namespace BugTrackerByBenci.Controllers
 {
@@ -57,6 +58,7 @@ namespace BugTrackerByBenci.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ArchivedProjects()
         {
             //BTUser btUser = await _userManager.GetUserAsync(User);
@@ -72,6 +74,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // Get: Assign Project Manager
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AssignProjectManager(int? id)
         {
             int companyId = User.Identity!.GetCompanyId();
@@ -104,6 +107,7 @@ namespace BugTrackerByBenci.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         //POST: Assigning Project Manager
         public async Task<IActionResult> AssignProjectManager(AssignPMToProjectViewModel model)
         {
@@ -197,6 +201,7 @@ namespace BugTrackerByBenci.Controllers
         // Post method for Assign Project Members
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> AssignProjectMembers(ProjectMembersViewModel model)
         {
                 if (model.SelectedUsers != null)
@@ -248,6 +253,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // GET: Projects/Create
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Create()
         {
             int companyId = User.Identity!.GetCompanyId();
@@ -271,6 +277,7 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Create(AddProjectWithPMViewModel model)
         {
             if (ModelState.IsValid)
@@ -310,6 +317,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // GET: Projects/Edit/5
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -353,6 +361,7 @@ namespace BugTrackerByBenci.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> Edit(AddProjectWithPMViewModel model)
         {
             if (model.Project == null)
@@ -420,6 +429,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // GET: Projects/Archive/5
+        [Authorize(Roles = nameof(BTRoles.Admin))]
         public async Task<IActionResult> Archive(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -444,8 +454,9 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // POST: Projects/Delete/5
-        [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Archive")]
+        [Authorize(Roles = nameof(BTRoles.Admin))]
         public async Task<IActionResult> ArchivedConfirmed(int? id)
         {
             if (_context.Projects == null)
@@ -468,6 +479,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         //GET: Query project of logged in user
+        [Authorize]
         public async Task<IActionResult> MyProjects()
         {
             string userId = _userManager.GetUserId(User);
@@ -482,6 +494,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // GET: Projects/Restore/5
+        [Authorize(Roles = nameof(BTRoles.Admin))]
         public async Task<IActionResult> RestoreProject(int? id)
         {
             if (id == null || _context.Projects == null)
@@ -506,8 +519,9 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // POST: Projects/Delete/5
-        [HttpPost, ActionName("Restore")]
         [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Restore")]
+        [Authorize(Roles = nameof(BTRoles.Admin))]
         public async Task<IActionResult> RestoreConfirmed(int? id)
         {
             if (_context.Projects == null)

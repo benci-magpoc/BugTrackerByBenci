@@ -41,7 +41,7 @@
 
     <div class="container mt-5 text-center">
         <!-- <div class="form-signin bg-light"> -->
-        <form class="pt-2">
+        <form class="pt-2" asp-page="">
             <h1 class="mb-5 appTitle">Bug Tracker</h1>
             <h1 class="signInText h3 my-4 fw-normal">Please sign in</h1>
             <div class="container">
@@ -62,7 +62,7 @@
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div id="signInButton" class="col g-0">
-                        <button class="myButton mb-3" type="submit">Sign in</button>
+                        <a asp-page="/Account/Login" asp-area="Identity" class="myButton mb-3" type="submit">Sign in</a>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center my-2">
@@ -71,17 +71,17 @@
 
                 <div id="demoLogin" class="row d-flex justify-content-center">
                     <div class="col col-md-3 g-0">
-                        <button class="myButton" data-toggle="tooltip" title="Demo Admin" type="submit">Admin</button>
+                        <button class="myButton" data-toggle="tooltip" title="Demo Admin" type="submit" name="demoEmail" value="DemoAdminEmail">Admin</button>
                     </div>
                     <div class="col col-md-3 g-0">
                         <button class="myButton" data-toggle="tooltip" title="Demo Project Manager"
-                                type="submit">PM</button></div>
+                                type="submit" name="demoEmail" value="DemoPMEmail">PM</button></div>
                     <div class="col col-md-3 g-0">
                         <button class="myButton" data-toggle="tooltip" title="Demo Developer"
-                                type="submit">Developer</button></div>
+                                type="submit" name="demoEmail" value="DemoDevEmail">Developer</button></div>
                     <div class="col col-md-3 g-0">
                         <button class="myButton" data-toggle="tooltip" title="Demo Submitter"
-                                type="submit">Submitter</button></div>
+                                type="submit" name="demoEmail" value="DemoSubEmail">Submitter</button></div>
                 </div>
                 <div class="mt-5 d-flex justify-content-center">
                     <p class="mt-3 text-muted">&copy; Benci Magpoc 2022</p>

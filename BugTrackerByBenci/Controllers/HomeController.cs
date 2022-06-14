@@ -6,9 +6,11 @@ using BugTrackerByBenci.Models.ChartModels;
 using BugTrackerByBenci.Models.Enums;
 using BugTrackerByBenci.Models.ViewModels;
 using BugTrackerByBenci.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BugTrackerByBenci.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
@@ -28,17 +30,16 @@ namespace BugTrackerByBenci.Controllers
 
         public async Task<IActionResult> Index()
         {
-            //DashboardViewModel model = new DashboardViewModel();
-            //int companyId = User.Identity!.GetCompanyId();
-
-            //model.Projects = await _projectService.GetAllProjectsByCompanyIdAsync(companyId);
-            //model.Tickets = await _ticketService.GetAllTicketsByCompanyIdAsync(companyId);
-            //model.Members = await _companyInfoService.GetAllMembersAsync(companyId);
-            //model.Company = await _companyInfoService.GetCompanyInfoById(companyId);
-
             return View();
         }
 
+        public async Task<IActionResult> CompanyMembers()
+        {
+            int companyId = User.Identity!.GetCompanyId();
+            List<BTUser> btUsers = await _companyInfoService.GetAllMembersAsync(companyId);
+
+            return View(btUsers);
+        }
         public async Task<IActionResult> Dashboard()
         {
             DashboardViewModel model = new DashboardViewModel();

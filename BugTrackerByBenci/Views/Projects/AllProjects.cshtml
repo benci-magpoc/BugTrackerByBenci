@@ -65,19 +65,20 @@
                                         }
                                     </td>
                                     <td>
-                                        <a asp-action="Details" asp-route-id="@item!.Id">Details</a> |<br />
-                                        <a asp-action="Archive" asp-route-id="@item!.Id">Archive</a> |<br />
-                                        @if (User.IsInRole(nameof(BTRoles.Admin)))
-                                        {
-                                            <a asp-action="AssignProjectManager" asp-route-id="@item!.Id">Assign PM</a>
-                                        }
-                                        @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                        {
-                                            <text> | </text>
-                                            <a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Project Members</a>
-                                            <a asp-action="Edit" asp-route-id="@item!.Id">Edit</a>
-                                        }
+                                        <div class="row">
 
+                                            <div class="col-12 mb-1"><a asp-action="Details" asp-route-id="@item!.Id">Details</a></div>
+                                            <div class="col-12 mb-1"><a asp-action="Archive" asp-route-id="@item!.Id">Archive</a></div>
+                                            @if (User.IsInRole(nameof(BTRoles.Admin)))
+                                            {
+                                                <div class="col-12 mb-1"><a asp-action="AssignProjectManager" asp-route-id="@item!.Id">Assign PM</a></div>
+                                            }
+                                            @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                            {
+                                                <div class="col-12 mb-1"><a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Members</a></div>
+                                                <div class="col-12 mb-1"><a asp-action="Edit" asp-route-id="@item!.Id">Edit</a></div>
+                                            }
+                                        </div>
                                     </td>
                                 </tr>
                             }

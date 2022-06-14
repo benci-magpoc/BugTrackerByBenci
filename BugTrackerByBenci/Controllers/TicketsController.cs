@@ -55,7 +55,7 @@ namespace BugTrackerByBenci.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddTicketAttachment([Bind("Id,FormFile,Description,TicketId")] TicketAttachment ticketAttachment)
+        public async Task<IActionResult> AddTicketAttachment([Bind("Id,UserId,FormFile,Description,TicketId")] TicketAttachment ticketAttachment)
         {
             string statusMessage;
 
@@ -127,14 +127,6 @@ namespace BugTrackerByBenci.Controllers
         // Post: Assign Developer
         public async Task<IActionResult> AssignDeveloper(TicketDeveloperViewModel model)
         {
-            //BTUser btUser = await _userManager.GetUserAsync(User);
-            //Ticket? oldTicket = await _ticketService.GetTicketAsNoTrackingAsync(model.Ticket!.Id);
-
-            //if (!string.IsNullOrEmpty(model.DeveloperId))
-            //{
-            //    await _ticketService.AddDeveloperToTicketAsync(model.DeveloperId!, model.Ticket!.Id);
-            //    return RedirectToAction(nameof(Details), new { id = model.Ticket!.Id });
-            //}
             if (model.DeveloperId != null)
             {
                 BTUser btUser = await _userManager.GetUserAsync(User);

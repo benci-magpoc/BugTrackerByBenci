@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using BugTrackerByBenci.Models.Enums
 @inject SignInManager<BTUser> SignInManager
 
 
@@ -514,6 +515,23 @@
                                 <i class="mdi mdi-cellphone-link"></i>
                                 <span class="hide-menu">Company</span>
                             </a>
+                            <ul aria-expanded="false" class="collapse  first-level">
+                                @if (User.IsInRole(nameof(BTRoles.Admin)))
+                                {
+                                    <li class="sidebar-item">
+                                        <a asp-area="" asp-controller="UserRoles" asp-action="ManageUserRoles" class="sidebar-link">
+                                            <i class="mdi mdi-view-quilt"></i>
+                                            <span class="hide-menu"> Manage Roles </span>
+                                        </a>
+                                    </li>
+                                }
+                                <li class="sidebar-item">
+                                    <a asp-area="" asp-controller="Home" asp-action="CompanyMembers" class="sidebar-link">
+                                        <i class="mdi mdi-view-quilt"></i>
+                                        <span class="hide-menu"> Members </span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <!-- ============================================================== -->
                         <!-- End Company Page -->
@@ -528,12 +546,22 @@
                                 <span class="hide-menu">Projects</span>
                             </a>
                             <ul aria-expanded="false" class="collapse  first-level">
-                                <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Projects" asp-action="Create" class="sidebar-link">
-                                        <i class="mdi mdi-view-quilt"></i>
-                                        <span class="hide-menu"> Create New </span>
-                                    </a>
-                                </li>
+                                @if (User.IsInRole(nameof(BTRoles.Admin)))
+                                {
+                                    <li class="sidebar-item">
+                                        <a asp-area="" asp-controller="Projects" asp-action="Create" class="sidebar-link">
+                                            <i class="mdi mdi-view-quilt"></i>
+                                            <span class="hide-menu"> Create New </span>
+                                        </a>
+                                    </li>
+                                    <li class="sidebar-item">
+                                        <a asp-area="" asp-controller="Projects" asp-action="ArchivedProjects" class="sidebar-link">
+                                            <i class="mdi mdi-view-array"></i>
+                                            <span class="hide-menu"> Archived Projects </span>
+                                        </a>
+                                    </li>
+
+                                }
                                 <li class="sidebar-item">
                                     <a asp-area="" asp-controller="Projects" asp-action="MyProjects" class="sidebar-link">
                                         <i class="mdi mdi-view-parallel"></i>
@@ -544,12 +572,6 @@
                                     <a asp-area="" asp-controller="Projects" asp-action="AllProjects" class="sidebar-link">
                                         <i class="mdi mdi-view-day"></i>
                                         <span class="hide-menu"> All Projects </span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Projects" asp-action="ArchivedProjects" class="sidebar-link">
-                                        <i class="mdi mdi-view-array"></i>
-                                        <span class="hide-menu"> Archived Projects </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
@@ -591,12 +613,15 @@
                                         <span class="hide-menu"> All Tickets </span>
                                     </a>
                                 </li>
-                                <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Tickets" asp-action="ArchivedTickets" class="sidebar-link">
-                                        <i class="mdi mdi-view-array"></i>
-                                        <span class="hide-menu"> Archived Tickets </span>
-                                    </a>
-                                </li>
+                                @if (User.IsInRole(nameof(BTRoles.Admin)))
+                                {
+                                    <li class="sidebar-item">
+                                        <a asp-area="" asp-controller="Tickets" asp-action="ArchivedTickets" class="sidebar-link">
+                                            <i class="mdi mdi-view-array"></i>
+                                            <span class="hide-menu"> Archived Tickets </span>
+                                        </a>
+                                    </li>
+                                }
                                 <li class="sidebar-item">
                                     <a asp-area="" asp-controller="Tickets" asp-action="UnassignedTickets" class="sidebar-link">
                                         <i class="mdi mdi-view-array"></i>

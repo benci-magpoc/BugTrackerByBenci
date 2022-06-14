@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BugTrackerByBenci.Data;
 using BugTrackerByBenci.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BugTrackerByBenci.Controllers
 {
+    [Authorize (Roles="Admin")]
     public class CompaniesController : Controller
     {
         private readonly ApplicationDbContext _context;
