@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace BugTrackerByBenci.Controllers
 {
+    [Authorize (Roles="Admin")]
     public class InvitesController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -132,7 +133,7 @@ namespace BugTrackerByBenci.Controllers
 
                     await _inviteService.AddNewInviteAsync(invite); 
                 
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("Dashboard", "Home");
                 }
                 catch (Exception)
                 {
@@ -146,6 +147,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> ProcessInvite(string token, string email, string company)
         {
             if (token == null)
@@ -172,8 +174,6 @@ namespace BugTrackerByBenci.Controllers
             {
                 throw;
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
     }

@@ -105,7 +105,7 @@ namespace BugTrackerByBenci.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null, string demoEmail = null)
         {
-            returnUrl ??= Url.Content("~/Home/Dashboard");
+            returnUrl ??= Url.Action("Dashboard", "Home");
 
             if (!string.IsNullOrEmpty(demoEmail))
             {

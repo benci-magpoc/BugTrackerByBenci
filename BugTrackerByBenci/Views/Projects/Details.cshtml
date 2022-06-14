@@ -6,7 +6,6 @@
 
 @{
     ViewData["Title"] = "Details";
-    //ViewData["BreadCrumb"] = ViewData["BreadCrumb"] as List<string>;
 }
 
 <div>
@@ -183,7 +182,7 @@
                                             {
                                                 <td><span class="badge-primary">@ticket.TicketStatus.Name </span></td>
                                             }
-                                            <td><span class="badge-primary">@((ticket.TicketPriority)?.Name)</span></td>
+                                            <td><span class="badge-primary">@ticket.TicketPriority!.Name</span></td>
                                             <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
                                             <td>
                                                 <a class="btn btn-sm btn-outline-info" asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><i class="fs-5 ti-info-alt" data-bs-toggle="tooltip" title="Details"></i></a>

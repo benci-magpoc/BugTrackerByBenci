@@ -67,7 +67,7 @@
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div id="signInButton" class="col g-0">
-                        <button id="login-submit" asp-route-returnUrl="~/Home/Dashboard" class="myButton mb-3" type="submit">Sign in</button>
+                        <button id="login-submit" asp-route-returnUrl="/Home/Dashboard" class="myButton mb-3" type="submit">Sign in</button>
                     </div>
                 </div>
                 <div class="row d-flex justify-content-center my-2">
@@ -76,16 +76,16 @@
 
                 <div id="demoLogin" class="row d-flex justify-content-center">
                     <div class="col col-md-3 g-0">
-                        <button class="myButton" data-toggle="tooltip" title="Demo Admin" type="submit" name="demoEmail" value="DemoAdminEmail">Admin</button>
+                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Admin" type="submit" name="demoEmail" value="DemoAdminEmail">Admin</button>
                     </div>
                     <div class="col col-md-3 g-0">
-                        <button class="myButton" data-toggle="tooltip" title="Demo Project Manager"
+                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Project Manager"
                                 type="submit" name="demoEmail" value="DemoPMEmail">PM</button></div>
                     <div class="col col-md-3 g-0">
-                        <button class="myButton" data-toggle="tooltip" title="Demo Developer"
+                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Developer"
                                 type="submit" name="demoEmail" value="DemoDevEmail">Developer</button></div>
                     <div class="col col-md-3 g-0">
-                        <button class="myButton" data-toggle="tooltip" title="Demo Submitter"
+                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Submitter"
                                 type="submit" name="demoEmail" value="DemoSubEmail">Submitter</button></div>
                 </div>
                 <div class="mt-5 d-flex justify-content-center">

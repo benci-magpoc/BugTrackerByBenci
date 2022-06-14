@@ -1,9 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using BugTrackerByBenci.Models.Enums
 @inject SignInManager<BTUser> SignInManager
-
-
-
+@inject UserManager<BTUser> UserManager
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
 
@@ -432,7 +430,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle waves-effect waves-dark" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <img src="/assets/images/users/1.jpg" alt="user" class="rounded-circle" width="36">
-                                <span class="ms-2 font-weight-medium">Steve</span><span class="fas fa-angle-down ms-2"></span>
+                                <span class="ms-2 font-weight-medium">@((await UserManager.GetUserAsync(User)).FirstName)</span><span class="fas fa-angle-down ms-2"></span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end user-dd animated flipInY">
                                 <div class="d-flex no-block align-items-center p-3 bg-info text-white mb-2">
@@ -498,7 +496,7 @@
                         <!-- Home Page -->
                         <!-- ============================================================== -->
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark" asp-area="" asp-controller="Home" asp-action="Index" aria-expanded="false">
+                            <a class="sidebar-link waves-effect waves-dark" asp-area="" asp-controller="Home" asp-action="Dashboard" aria-expanded="false">
                                 <i class="mdi mdi-home-variant"></i>
                                 <span class="hide-menu">Home</span>
                             </a>
@@ -511,11 +509,17 @@
                         <!-- Company Page -->
                         <!-- ============================================================== -->
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
+                            <a class="sidebar-link has-arrow waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                                 <i class="mdi mdi-cellphone-link"></i>
                                 <span class="hide-menu">Company</span>
                             </a>
                             <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a asp-area="" asp-controller="Home" asp-action="CompanyMembers" class="sidebar-link">
+                                        <i class="mdi mdi-view-quilt"></i>
+                                        <span class="hide-menu"> Members </span>
+                                    </a>
+                                </li>
                                 @if (User.IsInRole(nameof(BTRoles.Admin)))
                                 {
                                     <li class="sidebar-item">
@@ -524,13 +528,13 @@
                                             <span class="hide-menu"> Manage Roles </span>
                                         </a>
                                     </li>
+                                    <li class="sidebar-item">
+                                        <a asp-area="" asp-controller="Invites" asp-action="Create" class="sidebar-link">
+                                            <i class="mdi mdi-view-quilt"></i>
+                                            <span class="hide-menu"> Invite Member </span>
+                                        </a>
+                                    </li>
                                 }
-                                <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Home" asp-action="CompanyMembers" class="sidebar-link">
-                                        <i class="mdi mdi-view-quilt"></i>
-                                        <span class="hide-menu"> Members </span>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         <!-- ============================================================== -->

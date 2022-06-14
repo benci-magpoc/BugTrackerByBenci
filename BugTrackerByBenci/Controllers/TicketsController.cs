@@ -8,10 +8,12 @@ using BugTrackerByBenci.Models;
 using BugTrackerByBenci.Models.Enums;
 using BugTrackerByBenci.Models.ViewModels;
 using BugTrackerByBenci.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace BugTrackerByBenci.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
