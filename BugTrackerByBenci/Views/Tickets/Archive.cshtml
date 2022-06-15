@@ -4,90 +4,116 @@
     ViewData["Title"] = "Archive Ticket";
 }
 
-<h1>Archive</h1>
+<div class="container">
+    <div class="row">
+        <div class="col col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3>Are you sure you want to archive this ticket?</h3>
+                    <div>
+                        <hr />
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Properties</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Title)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Title)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Description)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Created)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Updated)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Updated)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Project)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Project!.Name)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.TicketPriority)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.TicketPriority!.Name)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.TicketStatus)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.TicketStatus!.Name)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.TicketType)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.TicketType!.Name)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.SubmitterUser)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.SubmitterUser!.FullName)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.DeveloperUser)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.DeveloperUser!.FullName)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-<h3>Are you sure you want to archive this?</h3>
-<div>
-    <h4>Ticket</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Created)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Created)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Updated)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Updated)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Archived)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Archived)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ArchivedByProject)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ArchivedByProject)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TicketPriority)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TicketPriority.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TicketStatus)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TicketStatus.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TicketType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TicketType.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.SubmitterUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.SubmitterUser.Id)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeveloperUser)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeveloperUser.Id)
-        </dd>
-    </dl>
-    
-    <form asp-action="Archive">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Archive" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+                        <form asp-action="Archive">
+                            <div class="form-group text-center">
+
+                            <input type="hidden" asp-for="Id"/>
+                            <a asp-action="Index" class="btn btn-outline-secondary m-2">Cancel</a>
+                            <input type="submit" value="Archive" class="btn btn-danger"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

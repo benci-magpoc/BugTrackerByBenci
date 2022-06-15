@@ -1,99 +1,125 @@
-﻿@model IEnumerable<BugTrackerByBenci.Models.Project>
+﻿@using BugTrackerByBenci.Models.Enums
+@using BugTrackerByBenci.Services.Interfaces
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model IEnumerable<BugTrackerByBenci.Models.Project>
+@inject IRolesService RoleService
 
 @{
     ViewData["Title"] = "My Projects";
 }
 
-<h1>My Projects</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Created)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EndDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileData)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FileContentType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Archived)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Company!.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Priority)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FileName)
-            </td>
-            <td>
-                @if (item?.FileData != null)
-                {
-                    <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="data:image/*;base64,@(Convert.ToBase64String(item.FileData))" >
-                }
-                else
-                {
-                    <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="https://cdn.icon-icons.com/icons2/2331/PNG/512/task_software_platform_management_project_icon_142266.png">
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item!.FileContentType)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item!.Archived)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item!.Company!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item!.Priority!.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item!.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item!.Id">Details</a> |
-                <a asp-action="Archive" asp-route-id="@item!.Id">Archive</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table id="zero_config" class="table table-hover table-bordered border-2">
+                        <thead>
+                            <tr>
+                                <th>Project Name</th>
+                                <th>Project Description</th>
+                                <th>Created Date</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Image</th>
+                                <th>Priority</th>
+                                <th>PM Assigned</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.EndDate)
+                                    </td>
+                                    <td>
+                                        @if (item?.FileData != null)
+                                        {
+                                            <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="data:image/*;base64,@(Convert.ToBase64String(item.FileData))">
+                                        }
+                                        else
+                                        {
+                                            <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="https://cdn.icon-icons.com/icons2/2331/PNG/512/task_software_platform_management_project_icon_142266.png">
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item!.Priority!.Name)
+                                    </td>
+                                    <td>
+                                        @foreach (var member in item!.Members!)
+                                        {
+                                            if (await RoleService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
+                                            {
+                                                @if (member.AvatarData != null)
+                                                {
+                                                    <span class="mx-2"><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="30" /></span>
+                                                }
+                                                else
+                                                {
+                                                    <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30" /></span>
+                                                }
+                                                <span class="h4">@member.FullName</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-light-primary text-primary dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" asp-action="Details" asp-route-id="@item!.Id">
+                                                    <i data-feather="eye"
+                                                       class="feather-sm me-2"></i> Details
+                                                </a>
+                                                @if (User.IsInRole(nameof(BTRoles.Admin)))
+                                                {
+                                                    <a class="dropdown-item" asp-action="RestoreProject" asp-route-id="@item!.Id">
+                                                        <i data-feather="trash-2"
+                                                           class="feather-sm me-2"></i> Restore
+                                                    </a>
+                                                    <a class="dropdown-item" asp-action="AssignProjectManager" asp-route-id="@item!.Id">
+                                                        <i data-feather="user-plus"
+                                                           class="feather-sm me-2"></i> Assign PM
+                                                    </a>
+                                                }
+                                                @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                                {
+                                                    <a class="dropdown-item" asp-action="AssignProjectMembers" asp-route-id="@item!.Id">
+                                                        <i data-feather="users"
+                                                           class="feather-sm me-2"></i> Assign Members
+                                                    </a>
+                                                    <a class="dropdown-item" asp-action="Edit" asp-route-id="@item!.Id">
+                                                        <i data-feather="edit-2"
+                                                           class="feather-sm me-2"></i> Edit
+                                                    </a>
+                                                }
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -8,6 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Projects\OldAllProjects.cshtml" />
+    <Content Remove="Views\Projects\OldCreate.cshtml" />
+    <Content Remove="Views\Projects\TentativeDetails.cshtml" />
+    <Content Remove="Views\Tickets\OldDetails.cshtml" />
+    <Content Remove="Views\Tickets\OldIndex.cshtml" />
+    <Content Remove="Views\Tickets\OldUnassignedTickets.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="3.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.5" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.5" />

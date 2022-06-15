@@ -10,12 +10,11 @@
     ViewData["Title"] = "Dashboard";
     @* Instantiate the btUser *@
     BTUser? btUser = await UserManager.GetUserAsync(User);
-    int? ticketId = null;
 }
 
 <a href="javascript:void(0);">
     @* User Info *@
-    @btUser.AvatarData
+    
 </a>
 @* Get The btUser FullName *@
 <strong>@btUser.FullName</strong>

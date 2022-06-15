@@ -536,7 +536,7 @@ namespace BugTrackerByBenci.Controllers
             if (project != null)
             {
                 await _projectService.RestoreArchivedProject(project);
-                return RedirectToAction(nameof(ArchivedProjects));
+                return RedirectToAction(nameof(AllProjects));
             }
 
             await _context.SaveChangesAsync();
