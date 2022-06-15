@@ -8,6 +8,56 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Views\Notifications\**" />
+    <Compile Remove="Views\NotificationTypes\**" />
+    <Compile Remove="Views\ProjectStatus\**" />
+    <Compile Remove="Views\TicketAttachments\**" />
+    <Compile Remove="Views\TicketComments\**" />
+    <Compile Remove="Views\TicketHistories\**" />
+    <Compile Remove="Views\TicketPriorities\**" />
+    <Compile Remove="Views\TicketStatus\**" />
+    <Compile Remove="Views\TicketTypes\**" />
+    <Content Remove="Views\Notifications\**" />
+    <Content Remove="Views\NotificationTypes\**" />
+    <Content Remove="Views\ProjectStatus\**" />
+    <Content Remove="Views\TicketAttachments\**" />
+    <Content Remove="Views\TicketComments\**" />
+    <Content Remove="Views\TicketHistories\**" />
+    <Content Remove="Views\TicketPriorities\**" />
+    <Content Remove="Views\TicketStatus\**" />
+    <Content Remove="Views\TicketTypes\**" />
+    <EmbeddedResource Remove="Views\Notifications\**" />
+    <EmbeddedResource Remove="Views\NotificationTypes\**" />
+    <EmbeddedResource Remove="Views\ProjectStatus\**" />
+    <EmbeddedResource Remove="Views\TicketAttachments\**" />
+    <EmbeddedResource Remove="Views\TicketComments\**" />
+    <EmbeddedResource Remove="Views\TicketHistories\**" />
+    <EmbeddedResource Remove="Views\TicketPriorities\**" />
+    <EmbeddedResource Remove="Views\TicketStatus\**" />
+    <EmbeddedResource Remove="Views\TicketTypes\**" />
+    <None Remove="Views\Notifications\**" />
+    <None Remove="Views\NotificationTypes\**" />
+    <None Remove="Views\ProjectStatus\**" />
+    <None Remove="Views\TicketAttachments\**" />
+    <None Remove="Views\TicketComments\**" />
+    <None Remove="Views\TicketHistories\**" />
+    <None Remove="Views\TicketPriorities\**" />
+    <None Remove="Views\TicketStatus\**" />
+    <None Remove="Views\TicketTypes\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Controllers\NotificationTypesController.cs" />
+    <Compile Remove="Controllers\ProjectPrioritiesController.cs" />
+    <Compile Remove="Controllers\ProjectStatusController.cs" />
+    <Compile Remove="Controllers\TicketAttachmentsController.cs" />
+    <Compile Remove="Controllers\TicketHistoriesController.cs" />
+    <Compile Remove="Controllers\TicketPrioritiesController.cs" />
+    <Compile Remove="Controllers\TicketStatusController.cs" />
+    <Compile Remove="Controllers\TicketTypesController.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="Views\Projects\OldAllProjects.cshtml" />
     <Content Remove="Views\Projects\OldCreate.cshtml" />
     <Content Remove="Views\Projects\TentativeDetails.cshtml" />

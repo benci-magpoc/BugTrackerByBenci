@@ -4,89 +4,117 @@
 @{
     ViewData["Title"] = "Assign Project Manager";
 }
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="AssignProjectManager" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="Project!.Id" />
+                        <input type="hidden" asp-for="Project!.Created" />
+                        <input type="hidden" asp-for="Project!.CompanyId" />
+                        <input type="hidden" asp-for="Project!.FileData" />
+                        <input type="hidden" asp-for="Project!.FileName" />
+                        <input type="hidden" asp-for="Project!.Name" />
+                        <input type="hidden" asp-for="Project!.Description" />
+                        <input type="hidden" asp-for="Project!.StartDate" />
+                        <input type="hidden" asp-for="Project!.EndDate" />
+                        <input type="hidden" asp-for="Project!.ProjectPriorityId" />
+                        
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Properties</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Project!.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Project!.Name)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Project!.Description)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Project!.Description)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Project!.Created)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Project!.Created)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Project!.StartDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Project!.StartDate)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Project!.EndDate)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Project!.EndDate)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayNameFor(model => model.Project!.Priority)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(model => model.Project!.Priority!.Name)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        Project Image Attachment
+                                    </td>
+                                    <td>
+                                        @if (Model.Project!.FileData != null)
+                                        {
+                                            <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="data:image/*;base64,@(Convert.ToBase64String(Model.Project!.FileData))">
+                                        }
+                                        else
+                                        {
+                                            <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="https://cdn.icon-icons.com/icons2/2331/PNG/512/task_software_platform_management_project_icon_142266.png">
+                                        }
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        @if (User.IsInRole(nameof(BTRoles.Admin)))
+                        {
+                            <div class="col">
+                                <label class="control-label"> Project Manager</label>
+                                <select asp-for="PMID" class="form-control" asp-items="@Model.PMList">
+                                    <option></option>
+                                </select>
+                            </div>
+                        }
+                        <div class="form-group text-center">
+                            <a asp-action="AllProjects" class="btn btn-outline-secondary m-2">Cancel</a>
+                            <input type="submit" value="Save" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
 
-<h1>Assign Project Manager</h1>
-
-<h4>Project</h4>
-<hr />
-<div class="row">
-    <form asp-action="AssignProjectManager" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="Project!.Id" />
-        <input type="hidden" asp-for="Project!.Created" />
-        <input type="hidden" asp-for="Project!.CompanyId" />
-        <input type="hidden" asp-for="Project!.FileData" />
-        <input type="hidden" asp-for="Project!.FileName" />
-        <input type="hidden" asp-for="Project!.Name" />
-        <input type="hidden" asp-for="Project!.Description" />
-        <input type="hidden" asp-for="Project!.StartDate" />
-        <input type="hidden" asp-for="Project!.EndDate" />
-        <input type="hidden" asp-for="Project!.ProjectPriorityId" />
-
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.NameFor(model => model.Project!.Name)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Project!.Name)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.NameFor(model => model.Project!.Description)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Project!.Description)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.NameFor(model => model.Project!.StartDate)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Project!.StartDate)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.NameFor(model => model.Project!.EndDate)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Project!.EndDate)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.NameFor(model => model.Project!.Priority)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Project!.ProjectPriorityId)
-            </dd>
-            <dt class="col-sm-10">Project Image</dt>
-            <dd class="col-sm-10">
-
-                @if (Model.Project?.FileData != null)
-                {
-                    <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="data:image/*;base64,@(Convert.ToBase64String(Model.Project.FileData))">
-                }
-                else
-                {
-                    <img id="projectImage" class="img-fluid img-thumbnail mt-2" style="width:120px;height:120px" src="https://cdn.icon-icons.com/icons2/2331/PNG/512/task_software_platform_management_project_icon_142266.png">
-                }
-            </dd>
-        </dl>
-
-        @if (User.IsInRole(nameof(BTRoles.Admin)))
-        {
-            <div class="col-sm-6">
-                <label class="control-label"> Project Manager</label>
-                <select asp-for="PMID" class="form-control" asp-items="@Model.PMList">
-                    <option></option>
-                </select>
             </div>
-        }
-        <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" />
         </div>
-    </form>
+    </div>
 </div>
-
-<div>
-    <a asp-action="AllProjects">Back to List</a>
-</div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");

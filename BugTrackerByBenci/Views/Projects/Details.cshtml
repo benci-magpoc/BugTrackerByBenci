@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using BugTrackerByBenci.Services.Interfaces
 @using BugTrackerByBenci.Models.Enums
-@model BugTrackerByBenci.Models.Project
+@model BugTrackerByBenci.Models.ViewModels.ProjectDetailsWithHistoryViewModel
 @inject IRolesService RoleService
 
 @{
@@ -16,9 +16,9 @@
                     <div class="card col m-1 p-2">
                         <div class="body">
                             @* Project Name *@
-                            <h5>@Html.DisplayFor(model => model.Name)</h5>
+                            <h5>@Html.DisplayFor(model => model.Project!.Name)</h5>
                             @* Project Description *@
-                            <p>@Html.DisplayFor(model => model.Description)</p>
+                            <p>@Html.DisplayFor(model => model.Project!.Description)</p>
                             <div class="progress-container progress-info m-b-25">
                                 <span class="progress-badge" style="font-size:small">Project Status</span>
                                 <div class="progress" style="height: 1rem;">
@@ -28,8 +28,8 @@
                                         <div class="progress">
                                             @* Razor code block *@
                                             @{
-                                                var start = Model.StartDate;
-                                                var end = Model.EndDate;
+                                                var start = Model.Project!.StartDate;
+                                                var end = Model.Project!.EndDate;
                                                 var today = DateTime.Now;
                                                 var percent = today >= end ? 100 : today < start ? 0 : Math.Round((today.Subtract(start)) / (end.Subtract(start)) * 100);
                                             }
@@ -47,10 +47,10 @@
                     <div class="card col m-1 p-2">
                         <div class="body">
                             <ul class=" list-unstyled basic-list">
-                                <li>Start Date: <span class="">@Html.DisplayFor(model => model.StartDate)</span></li>
-                                <li>Deadline: <span class="">@Html.DisplayFor(model => model.EndDate)</span></li>
-                                <li>Priority: <span class="">@Html.DisplayFor(model => model.Priority!.Name)</span></li>
-                                <li>@((Model.StartDate < DateTime.Now && Model.EndDate > DateTime.Now) ? "Active" : "Inactive")</li>
+                                <li>Start Date: <span class="">@Html.DisplayFor(model => model.Project!.StartDate)</span></li>
+                                <li>Deadline: <span class="">@Html.DisplayFor(model => model.Project!.EndDate)</span></li>
+                                <li>Priority: <span class="">@Html.DisplayFor(model => model.Project!.Priority!.Name)</span></li>
+                                <li>@((Model.Project!.StartDate < DateTime.Now && Model.Project!.EndDate > DateTime.Now) ? "Active" : "Inactive")</li>
                             </ul>
                         </div>
                     </div>
@@ -62,12 +62,12 @@
                         <div class="header">
                             <h2 class="me-5">
                                 Project Manager
-                                <a class="btn btn-md btn-info ms-4" asp-action="AssignProjectManager" asp-controller="Projects" asp-route-id="@Model.Id" data-bs-toggle="tooltip" title="Assign Project Manager">Assign PM</a>
+                                <a class="btn btn-md btn-info ms-4" asp-action="AssignProjectManager" asp-controller="Projects" asp-route-id="@Model.Project!.Id" data-bs-toggle="tooltip" title="Assign Project Manager">Assign PM</a>
                             </h2>
                             <hr />
                         </div>
                         <div class="body" style="overflow-y:auto;height:300px;">
-                            @foreach (var member in Model!.Members!)
+                            @foreach (var member in Model.Project!.Members!)
                             {
                                 if (await RoleService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
                                 {
@@ -94,12 +94,12 @@
                         <div class="header">
                             <h2>
                                 Project Team
-                                <a class="btn btn-md btn-info ms-4" asp-action="AssignProjectMembers" asp-controller="Projects" asp-route-id="@Model.Id" data-bs-toggle="tooltip" title="Assign Project Members">Assign Members</a>
+                                <a class="btn btn-md btn-info ms-4" asp-action="AssignProjectMembers" asp-controller="Projects" asp-route-id="@Model.Project!.Id" data-bs-toggle="tooltip" title="Assign Project Members">Assign Members</a>
                             </h2>
                             <hr />
                         </div>
                         <div class="body" style="overflow-y:auto;height:300px;">
-                            @foreach (var member in Model!.Members!)
+                            @foreach (var member in Model.Project!.Members!)
                             {
                                 <h4 class="ms-3">
                                     @if (member.AvatarData != null)
@@ -128,9 +128,14 @@
                             <h2>Project Activity</h2>
                             <hr />
                         </div>
-                        <div class="body" style="overflow-y:auto;height:300px;background-color:antiquewhite">
-                            @* Project Activity loop *@
-                            [Project Activity  e.g. Ticket History]
+                        <div class="card-body" style="overflow-y:auto;height:300px;background-color:antiquewhite">
+                            @foreach (TicketHistory history in Model.TicketHistory!)
+                            {
+                                <h6>@history.Description</h6>
+                                <h6>From: @history.OldValue <span><i class="mdi mdi-arrow-right-bold"></i></span> @history.NewValue</h6>
+                                <h6>Date of change: @history.Created</h6>
+                                                                    <hr/>
+                            }
                         </div>
 
                     </div>
@@ -158,7 +163,7 @@
                                 </thead>
                                 <tbody>
                                     @* Table body *@
-                                    @foreach (var ticket in Model.Tickets!.OrderByDescending(d => d.Created))
+                                    @foreach (var ticket in Model.Project!.Tickets!.OrderByDescending(d => d.Created))
                                     {
                                         <tr>
                                             <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id" style="color:black"><strong>@ticket.Title</strong></a> </td>

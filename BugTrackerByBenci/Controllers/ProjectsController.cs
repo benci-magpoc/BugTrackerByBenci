@@ -20,13 +20,15 @@ namespace BugTrackerByBenci.Controllers
         private readonly IBTProjectService _projectService;
         private readonly IRolesService _rolesService;
         private readonly IBTFileService _fileService;
-        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTProjectService projectService, IRolesService rolesService, IBTFileService fileService)
+        private readonly ITicketHistoryService _historyService;
+        public ProjectsController(ApplicationDbContext context, UserManager<BTUser> userManager, IBTProjectService projectService, IRolesService rolesService, IBTFileService fileService, ITicketHistoryService historyService)
         {
             _context = context;
             _userManager = userManager;
             _projectService = projectService;
             _rolesService = rolesService;
             _fileService = fileService;
+            _historyService = historyService;
         }
 
         // GET: Projects
@@ -235,10 +237,11 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
+            ProjectDetailsWithHistoryViewModel model = new();
             int companyId = User.Identity!.GetCompanyId();
-
             Project? project = await _projectService.GetProjectByIdAsync(id.Value, companyId);
-
+            model.Project = project;
+            model.TicketHistory = await _historyService.GetProjectTicketsHistoriesAsync(model.Project!.Id, companyId);
             if (project == null)
             {
                 return NotFound();
@@ -249,7 +252,7 @@ namespace BugTrackerByBenci.Controllers
                 $"<a href=\"/Projects/AllProjects\">All Projects</a>",
                 $"Details"
             };
-            return View(project);
+            return View(model);
         }
 
         // GET: Projects/Create
