@@ -121,7 +121,7 @@ namespace BugTrackerByBenci.Services
                 if (invite == null)
                 {
                     // Determine invite date
-                    DateTime inviteDate = invite.InviteDate;
+                    DateTime inviteDate = invite!.InviteDate;
 
                     bool validDate = (DateTime.Now - inviteDate).TotalDays <= 7;
 
