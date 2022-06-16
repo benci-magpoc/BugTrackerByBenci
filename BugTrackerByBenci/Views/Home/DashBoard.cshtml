@@ -84,7 +84,7 @@
         </div>
         <div class="row gy-2">
             <div class="col-md-12 col">
-                <div class="row col-cols-4 mt-5 bg-secondary">
+                <div class="row col-cols-4 mt-5">
                     <div class="card col m-1 p-2">
                         <div class="card-body">
                             <h5>Projects by Tickets</h5>
@@ -134,7 +134,7 @@
             </div>
         </div>
         <div class="row gy-2">
-            <div class="cols mt-5 bg-secondary">
+            <div class="cols mt-5">
                 <div class="card col m-1 p-2">
                     <div class="card-body" style="height:600px;overflow-y:auto;">
                         <h5>Project: Tickets vs Developers</h5>
@@ -150,12 +150,13 @@
         <div class="row">
             @* Projects Table *@
             <div class="col col-md-3">
-                <div class="bg-secondary">
+                <div class="">
                     <div class="card m-1 p-2">
                         <div class="card-header">
-                            <h2>Projects</h2>
+                            <h2>Projects </h2>
                         </div>
                         <div class="card-body">
+                            <h5>(Click a project to show tickets)</h5>
                             <ol id="projects" style="list-style: none; padding: 0 !important;">
                                 @foreach (var project in Model.Projects!)
                                 {
@@ -170,11 +171,11 @@
             </div>
             @* Tickets Table *@
             <div class="col col-md-6">
-                <div class="bg-secondary">
+                <div class="">
                     <div class="card m-1 p-2">
                         <div class="card-header">
                             <h2>Tickets of <span id="projectName">All Projects</span></h2>
-                            <table class="table table-hover">
+                            <table id="zero_config" class="table table-hover">
                                 <thead class="">
                                 <tr>
                                     <th>Title</th>

@@ -13,7 +13,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="zero_config" class="table table-hover table-bordered border-2">
+                    <table id="zero_config" class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Project Name</th>
@@ -32,14 +32,22 @@
                             {
                                 <tr>
                                     <td>
-                                        <div class="dropdown-menu">
-                                        <a class="link-info dropdown-toggle">@Html.DisplayFor(modelItem => item.Name)
-                                            <p>
-                                                Description
-                                            </p>
-                                            <p>
+                                        @*<p>
+                                            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                @item.Name
+                                            </a>
+                                        </p>
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="card card-body">
                                                 @item.Description
-                                            </p></a></div>
+                                            </div>
+                                        </div>*@
+                                        <a class="link-info" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+                                        @*<div class="collapse" id="projectDescription">
+                                            <div class="card card-body">
+                                                @item.Description
+                                            </div>
+                                        </div>*@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Description)
@@ -79,61 +87,61 @@
                                                 {
                                                     <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30" /></span>
                                                 }
-                                                <span class="h4">@member.FullName</span>
+                                                <span>@member.FullName</span>
                                             }
                                         }
                                     </td>
                                     <td>
-                                        
+
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-light-primary text-primary dropdown-toggle"
-                                                    data-bs-toggle="dropdown" aria-haspopup="true"
-                                                    aria-expanded="false">
+                                                data-bs-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
                                                 <i class="fas fa-cog"></i>
                                             </button>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" asp-action="Details" asp-route-id="@item!.Id">
                                                     <i data-feather="eye"
-                                                       class="feather-sm me-2"></i> Details
+                                                   class="feather-sm me-2"></i> Details
                                                 </a>
                                                 @if (User.IsInRole(nameof(BTRoles.Admin)))
                                                 {
                                                     <a class="dropdown-item" asp-action="Archive" asp-route-id="@item!.Id">
                                                         <i data-feather="trash-2"
-                                                           class="feather-sm me-2"></i> Archive
+                                                   class="feather-sm me-2"></i> Archive
                                                     </a>
                                                     <a class="dropdown-item" asp-action="AssignProjectManager" asp-route-id="@item!.Id">
                                                         <i data-feather="user-plus"
-                                                           class="feather-sm me-2"></i> Assign PM
+                                                   class="feather-sm me-2"></i> Assign PM
                                                     </a>
                                                 }
                                                 @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
                                                 {
                                                     <a class="dropdown-item" asp-action="AssignProjectMembers" asp-route-id="@item!.Id">
                                                         <i data-feather="users"
-                                                           class="feather-sm me-2"></i> Assign Members
+                                                   class="feather-sm me-2"></i> Assign Members
                                                     </a>
                                                     <a class="dropdown-item" asp-action="Edit" asp-route-id="@item!.Id">
                                                         <i data-feather="edit-2"
-                                                           class="feather-sm me-2"></i> Edit
+                                                   class="feather-sm me-2"></i> Edit
                                                     </a>
                                                 }
                                             </div>
                                         </div>
                                         @*<div class="row">
 
-                                            <div class="col-12 mb-1"><a asp-action="Details" asp-route-id="@item!.Id">Details</a></div>
-                                            <div class="col-12 mb-1"><a asp-action="Archive" asp-route-id="@item!.Id">Archive</a></div>
-                                            @if (User.IsInRole(nameof(BTRoles.Admin)))
-                                            {
-                                                <div class="col-12 mb-1"><a asp-action="AssignProjectManager" asp-route-id="@item!.Id">Assign PM</a></div>
-                                            }
-                                            @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                            {
-                                                <div class="col-12 mb-1"><a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Members</a></div>
-                                                <div class="col-12 mb-1"><a asp-action="Edit" asp-route-id="@item!.Id">Edit</a></div>
-                                            }
-                                        </div>*@
+                                    <div class="col-12 mb-1"><a asp-action="Details" asp-route-id="@item!.Id">Details</a></div>
+                                    <div class="col-12 mb-1"><a asp-action="Archive" asp-route-id="@item!.Id">Archive</a></div>
+                                    @if (User.IsInRole(nameof(BTRoles.Admin)))
+                                    {
+                                    <div class="col-12 mb-1"><a asp-action="AssignProjectManager" asp-route-id="@item!.Id">Assign PM</a></div>
+                                    }
+                                    @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                    {
+                                    <div class="col-12 mb-1"><a asp-action="AssignProjectMembers" asp-route-id="@item!.Id">Assign Members</a></div>
+                                    <div class="col-12 mb-1"><a asp-action="Edit" asp-route-id="@item!.Id">Edit</a></div>
+                                    }
+                                    </div>*@
                                     </td>
                                 </tr>
                             }

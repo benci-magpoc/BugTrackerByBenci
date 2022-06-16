@@ -13,7 +13,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="zero_config" class="table table-hover table-bordered border-2">
+                    <table id="zero_config" class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Project Name</th>
@@ -32,7 +32,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
+                                        <a class="link-info" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Description)

@@ -12,7 +12,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12 col">
-                <div class="row bg-secondary">
+                <div class="row">
                     <div class="card col m-1 p-2">
                         <div class="body">
                             @* Project Name *@
@@ -57,7 +57,7 @@
                 </div>
             </div>
             <div class="col-md-4 col mt-5 ">
-                <div class="bg-secondary">
+                <div class="">
                     <div class="card m-1 p-2">
                         <div class="header">
                             <h2 class="me-5">
@@ -76,59 +76,58 @@
                                 {
                                     @if (member.AvatarData != null)
                                     {
-                                        <span class="mx-2"><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="30" /></span>
+                                        <span class="mx-2"><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="36" height="36"/></span>
                                     }
                                     else
                                     {
-                                        <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30" /></span>
+                                        <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="36" /></span>
                                     }
-                                    <span class="h4">@member.FullName</span>
+                                    <span class="ms-1">@member.FullName</span>
                                 }
                             }
-                            @* if() logic for Avatar/Default etc *@
-
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col mt-5 ">
-                <div class="bg-secondary">
-                    <div class="card m-1 p-2">
-                        <div class="header">
-                            <h2>
-                                Project Team
-                                @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                {
-                                    <a class="btn btn-md btn-info ms-4" asp-action="AssignProjectMembers" asp-controller="Projects" asp-route-id="@Model.Project!.Id" data-bs-toggle="tooltip" title="Assign Project Members">Assign Members</a>
-                                }
-                            </h2>
-                            <hr />
-                        </div>
-                        <div class="body" style="overflow-y:auto;height:300px;">
-                            @foreach (var member in Model.Project!.Members!)
+        <div class="col-md-4 col mt-5 ">
+            <div class="">
+                <div class="card m-1 p-2">
+                    <div class="header">
+                        <h2>
+                            Project Team
+                            @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
                             {
-                                <h4 class="ms-3">
-                                    @if (member.AvatarData != null)
-                                    {
-                                        <span><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="30" /></span>
-                                    }
-                                    else
-                                    {
-                                        <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30" /></span>
-                                    }
-                                    <span class="ms-1">@member.FullName - </span>
-                                    <span>@await RoleService.GetUserRoleAsync(member) </span>
-                                </h4>
-
+                                <a class="btn btn-md btn-info ms-4" asp-action="AssignProjectMembers" asp-controller="Projects" asp-route-id="@Model.Project!.Id" data-bs-toggle="tooltip" title="Assign Project Members">Assign Members</a>
                             }
-                            @* Logic for avatars *@
+                        </h2>
+                        <hr />
+                    </div>
+                    <div class="body" style="overflow-y:auto;height:300px;">
+                        @foreach (var member in Model.Project!.Members!)
+                        {
+                            <div class="mb-2 ms-3">
+                                @if (member.AvatarData != null)
+                                {
+                                    <span><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="36" height="36"/></span>
+                                }
+                                else
+                                {
+                                    <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="36" height="36"/></span>
+                                }
+                                <span class="ms-1">@member.FullName - </span>
+                                <span>@await RoleService.GetUserRoleAsync(member) </span>
+                            </div>
 
-                        </div>
+                        }
+                        @* Logic for avatars *@
+
                     </div>
                 </div>
             </div>
+        </div>
+        @*Project Activity History*@
             <div class="col-md-4 col mt-5 ">
-                <div class="bg-dark">
+                <div class="">
                     <div class="card m-1 p-2">
                         <div class="header">
                             <h2>Project Activity</h2>
@@ -137,9 +136,10 @@
                         <div class="card-body" style="overflow-y:auto;height:300px;background-color:antiquewhite">
                             @foreach (TicketHistory history in Model.TicketHistory!)
                             {
-                                <h6>@history.Description</h6>
-                                <h6>From: @history.OldValue <span><i class="mdi mdi-arrow-right-bold"></i></span> @history.NewValue</h6>
-                                <h6>Date of change: @history.Created</h6>
+                                <p class="fw-bold">Changes with @history.Ticket!.Title</p>
+                                <p>@history.Description</p>
+                                <p>From: @history.OldValue <span><i class="mdi mdi-arrow-right-bold"></i></span> @history.NewValue</p>
+                                <p>Date of change: @history.Created</p>
                                 <hr />
                             }
                         </div>
@@ -148,14 +148,13 @@
                 </div>
             </div>
             <div class="col-md-12 col">
-                <div class="mt-5 bg-secondary">
+                <div class="mt-5">
                     <div class="card m-1 p-2">
                         <div class="header">
                             <h2>Tickets</h2>
                         </div>
-
-                        <div class="table-responsive" style="overflow-y:auto;height:600px;">
-                            <table class="table table-hover">
+                        <div class="table-responsive"">
+                            <table id="zero_config" class="table table-hover">
                                 <thead class="">
                                     <tr>
                                         @* Table header *@
@@ -221,12 +220,6 @@
                                                         }
                                                     </div>
                                                 </div>
-                                                @*<a class="btn btn-sm btn-outline-info" asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><i class="fs-5 ti-info-alt" data-bs-toggle="tooltip" title="Details"></i></a>
-                                            @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                            {
-                                            <a class="btn btn-sm btn-outline-warning" asp-action="Edit" asp-route-id="@ticket.Id"><i class="fs-5 ti-pencil-alt" data-bs-toggle="tooltip" title="Edit"></i></a>
-                                            <a class="btn btn-sm btn-outline-danger" asp-action="Archive" asp-route-id="@ticket.Id"><i class="fs-5 ti-archive" data-bs-toggle="tooltip" title="Archive"></i></a>
-                                            }*@
                                             </td>
                                         </tr>
                                     }
