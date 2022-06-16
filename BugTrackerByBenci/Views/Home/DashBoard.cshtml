@@ -14,7 +14,7 @@
 
 <a href="javascript:void(0);">
     @* User Info *@
-    
+
 </a>
 @* Get The btUser FullName *@
 <strong>@btUser.FullName</strong>
@@ -56,14 +56,15 @@
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <a asp-action="UnassignedTickets" asp-controller="Tickets" style="text-decoration:none">
-                <div class="card text-center bg-warning">
-                    <div class="body">
-                        <div class="p-15 text-light">
-                            <h3>@Model.Tickets!.Where(t => string.IsNullOrEmpty(t.DeveloperUserId))!.Count()</h3>
-                            <span>Unassigned Tickets</span>
+                    <div class="card text-center bg-warning">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@Model.Tickets!.Where(t => string.IsNullOrEmpty(t.DeveloperUserId))!.Count()</h3>
+                                <span>Unassigned Tickets</span>
+                            </div>
                         </div>
                     </div>
-                </div></a>
+                </a>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="card text-center bg-dark">
@@ -82,52 +83,63 @@
                 </div>
             </div>
         </div>
-        <div class="row gy-2">
+        <div class="row row-cols-1 gy-2">
             <div class="col-md-12 col">
-                <div class="row col-cols-4 mt-5">
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <h5>Projects by Tickets</h5>
-                            <!-- Morris: Donut -->
-                            <div class="col-md-12">
-                                <div class="chart chart-md" id="morrisActiveWork"></div>
+                <div class="row mt-5">
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="card m-1 p-2">
+                            <div class="card-body">
+                                <h5>Projects by Tickets</h5>
+                                <!-- Morris: Donut -->
+                                <div class="col-md-12">
+                                    <div class="chart chart-md" id="morrisActiveWork"></div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div id="activeWorkLegend" class="donut-legend" style="font-size: x-small"></div>
+                                </div>
                             </div>
-                        </div><div class="col-md-12 text-center">
-                            <div id="activeWorkLegend" class="donut-legend" style="font-size:x-small"></div>
                         </div>
                     </div>
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <h5>Tickets by Priority</h5>
-                            <!-- Morris: Donut -->
-                            <div class="col-md-12">
-                                <div class="chart chart-md" id="morrisTicketPriority"></div>
-                            </div>
-                        </div><div class="col-md-12 text-center">
-                            <div id="legend" class="donut-legend" style="font-size:x-small"></div>
-                        </div>
-                    </div>
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <h5>Tickets by Type</h5>
-                            <!-- Morris: Donut -->
-                            <div class="col-md-12">
-                                <div class="chart chart-md" id="morrisTicketType"></div>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="card m-1 p-2">
+                            <div class="card-body">
+                                <h5>Tickets by Priority</h5>
+                                <!-- Morris: Donut -->
+                                <div class="col-md-12">
+                                    <div class="chart chart-md" id="morrisTicketPriority"></div>
+                                </div>
                             </div>
                             <div class="col-md-12 text-center">
-                                <div id="typeLegend" class="donut-legend" style="font-size:x-small"></div>
+                                <div id="legend" class="donut-legend" style="font-size: x-small"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="card col m-1 p-2">
-                        <div class="card-body">
-                            <h5>Tickets by Status</h5>
-                            <!-- Morris: Donut -->
-                            <div class="col-md-12">
-                                <div class="chart chart-md" id="morrisTicketStatus"></div>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="card m-1 p-2">
+                            <div class="card-body">
+                                <h5>Tickets by Type</h5>
+                                <!-- Morris: Donut -->
+                                <div class="col-md-12">
+                                    <div class="chart chart-md" id="morrisTicketType"></div>
+                                </div>
+                                <div class="col-md-12 text-center">
+                                    <div id="typeLegend" class="donut-legend" style="font-size: x-small"></div>
+                                </div>
                             </div>
-                        </div><div class="col-md-12 text-center">
-                            <div id="statusLegend" class="donut-legend" style="font-size:x-small"></div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-3">
+                        <div class="card m-1 p-2">
+                            <div class="card-body">
+                                <h5>Tickets by Status</h5>
+                                <!-- Morris: Donut -->
+                                <div class="col-md-12">
+                                    <div class="chart chart-md" id="morrisTicketStatus"></div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <div id="statusLegend" class="donut-legend" style="font-size: x-small"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -160,81 +172,88 @@
                             <ol id="projects" style="list-style: none; padding: 0 !important;">
                                 @foreach (var project in Model.Projects!)
                                 {
+                                    <div class="my-1">
                                     <li><a data-target-id="@project.Id" data-target-name="@project.Name" type="button" class="projectItem link-info" data-bs-toggle="tooltip" title="Click to show tickets">@project.Name</a></li>
+                            </div>
+
                                 }
-                            </ol>
-                        </div>
-                        <div class="card-footer">
-                        </div>
+                        </ol>
+                    </div>
+                    <div class="card-footer">
                     </div>
                 </div>
             </div>
+        </div>
             @* Tickets Table *@
-            <div class="col col-md-6">
-                <div class="">
-                    <div class="card m-1 p-2">
-                        <div class="card-header">
-                            <h2>Tickets of <span id="projectName">All Projects</span></h2>
-                            <table id="zero_config" class="table table-hover">
-                                <thead class="">
+        <div class="col col-md-6">
+            <div class="">
+                <div class="card m-1 p-2">
+                    <div class="card-header">
+                        <h2>Tickets of <span id="projectName">All Projects</span></h2>
+                        <table id="zero_config" class="table table-hover">
+                            <thead class="">
                                 <tr>
                                     <th>Title</th>
                                     <th>Developer</th>
                                     <th>Status</th>
                                     <th>Priority</th>
                                 </tr>
-                                </thead>
-                                <tbody id="ticketsList">
-                                    @foreach(var ticket in Model.Tickets!){
-                                        <tr data-target="@ticket.ProjectId">
-                                            <td><a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id"
-                                                   data-bs-toggle="tooltip" title="@ticket.Title details">@ticket.Title</a></td>
-                                            <td>@ticket.DeveloperUser?.FullName</td>
-                                            <td>@ticket.TicketStatus!.Name</td>
-                                            <td>@ticket.TicketPriority!.Name</td>
-                                        </tr>
-                                        }
+                            </thead>
+                            <tbody id="ticketsList">
+                                    @foreach (var ticket in Model.Tickets!)
+                                    {
+                                    <tr data-target="@ticket.ProjectId">
+                                        <td>
+                                            <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id"
+                                           data-bs-toggle="tooltip" title="Click to go to details">@ticket.Title</a>
+                                        </td>
+                                        <td>@ticket.DeveloperUser?.FullName</td>
+                                        <td>@ticket.TicketStatus!.Name</td>
+                                        <td>@ticket.TicketPriority!.Name</td>
+                                    </tr>
+                                    }
 
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="card-body">
-                            </div>
-                            <div class="card-footer">
-                            </div>
-                        </div>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-body">
+                    </div>
+                    <div class="card-footer">
                     </div>
                 </div>
-                <div class="col col-md-3">
-                    <div class="bg-dark">
-                        <div class="card m-1 p-2">
-                            <div class="card-header">
-                                <h2>Company Members</h2>
-                                <hr />
+            </div>
+        </div>
+        <div class="col col-md-3">
+            <div class="">
+                <div class="card m-1 p-2">
+                    <div class="card-header">
+                        <h2>Company Members</h2>
+                        <hr />
+                    </div>
+                    <div class="card-body">
+                            @foreach (var member in Model.Members!)
+                            {
+                            <div class="my-2">
+                                    @if (member.AvatarData != null)
+                                    {
+                                    <span><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="30" /></span>
+                                    }
+                                    else
+                                    {
+                                    <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30" /></span>
+                                    }
+                                <span class="ms-1">@member.FullName - </span>
+                                <span>@await RoleService.GetUserRoleAsync(member) </span>
                             </div>
-                            <div class="card-body">
-                                @foreach (var member in Model.Members!)
-                                {
-                                    <h5>
-                                        @if (member.AvatarData != null)
-                                        {
-                                            <span><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="30"/></span>
-                                        }
-                                        else
-                                        {
-                                            <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30"/></span>
-                                        }
-                                        <span class="ms-1">@member.FullName - </span>
-                                        <span>@await RoleService.GetUserRoleAsync(member) </span></h5>
-                                }
-                            </div>
-                        </div>
+                            }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-                                        @section scripts{
+</div>
+    </div>
+@section scripts{
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
@@ -243,16 +262,16 @@
             {
                 label: "Low",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Low)).Count()
-            }, {
+                                    }, {
                 label: "Medium",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Medium)).Count()
-            }, {
+                                    }, {
                 label: "High",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.High)).Count()
-            }, {
+                                    }, {
                 label: "Urgent",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Urgent)).Count()
-            }
+                                    }
         ];
         /*
         Chart for Ticket by Priority
@@ -281,16 +300,16 @@
             {
                 label: "New",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.New)).Count()
-            }, {
+                                    }, {
                 label: "Dev",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Development)).Count()
-            }, {
+                                    }, {
                 label: "Test",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Testing)).Count()
-            }, {
+                                    }, {
                 label: "Resolved",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Resolved)).Count()
-            }
+                                    }
         ];
 
 
@@ -320,22 +339,22 @@
             {
                 label: "New Development",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.NewDevelopment)).Count()
-            }, {
+                                    }, {
                 label: "Routine",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.WorkTask)).Count()
-            }, {
+                                    }, {
                 label: "Defect",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Defect)).Count()
-            }, {
+                                    }, {
                 label: "Change",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.ChangeRequest)).Count()
-            }, {
+                                    }, {
                 label: "Enchancement",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Enhancement)).Count()
-            }, {
+                                    }, {
                 label: "General",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.GeneralTask)).Count()
-            }
+                                    }
         ];
         /*
         Chart for Ticket by Type
@@ -363,16 +382,16 @@
             {
                 label: "Active Projects",
                 value: @Model.Projects.Where(p => p.StartDate < DateTime.Now && p.EndDate > DateTime.Now).Count()
-            }, {
+                                    }, {
                 label: "Assigned Tickets",
                 value: @Model.Tickets.Where(t => t.DeveloperUser != null).Count()
-            }, {
+                                    }, {
                 label: "Unassigned Tickets",
                 value: @Model.Tickets.Where(t => t.DeveloperUser == null).Count()
-            }, {
+                                    }, {
                 label: "Members",
                 value: @Model.Company.Members.Count()
-            }
+                                    }
         ];
         /*
         Chart for Ticket by Type
@@ -427,12 +446,12 @@
     </script>
 
     <script>
-        
+
         var allRows = document.querySelectorAll("#ticketsList > tr");
 
         console.log(allRows);
         document.querySelectorAll("a.projectItem").forEach((btn) => {
-            
+
             btn.addEventListener("click",
                 function() {
                     var ticketBody = document.getElementById("ticketsList");
@@ -450,10 +469,10 @@
                     while (ticketBody.hasChildNodes()) {
                         ticketBody.removeChild(ticketBody.firstChild);
                     }
-                    
+
                     ticketId.forEach((row) => {
                         ticketBody.appendChild(row);
-                        
+
                     });
                 });
         });

@@ -210,13 +210,16 @@
                         <h2>History</h2>
                         <hr />
                     </div>
-                    <div class="card-body" style="overflow-y:auto;height:1000px;background-color:antiquewhite">
+                    <div class="card-body" style="overflow-y: auto; height: 1000px; background-color: antiquewhite">
+                        <div class="mb-1"> <span class="fw-bold">Changes with @Model.Title</span> </div>
                         @foreach (TicketHistory history in Model.History)
                         {
-                            <h6>@history.Description</h6>
-
-                            <h6>From: @history.OldValue <span><i class="mdi mdi-arrow-right-bold"></i></span> @history.NewValue</h6>
-                            <h6>Date of change: @history.Created</h6>
+                            <div class="mb-1"> <span>@history.Description</span> </div>
+                            <div class="mb-1">
+                                <span>From: @history.OldValue <span><i class="mdi mdi-arrow-right-bold"></i></span> @history.NewValue</span>
+                            </div>
+                            <div class="mb-1"> <span>Date of change: @history.Created</span> </div>
+                            <hr/>
                         }
                     </div>
                 </div>

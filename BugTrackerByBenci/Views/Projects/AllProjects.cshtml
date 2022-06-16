@@ -7,7 +7,11 @@
 @{
     ViewData["Title"] = "All Projects";
 }
-
+<div class="collapse" id="collapseExample">
+    <div class="card card-body">
+        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
+    </div>
+</div>
 <div class="row">
     <div class="col-12">
         <div class="card">
@@ -32,22 +36,10 @@
                             {
                                 <tr>
                                     <td>
-                                        @*<p>
-                                            <a class="btn btn-primary" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                                @item.Name
-                                            </a>
-                                        </p>
-                                        <div class="collapse" id="collapseExample">
-                                            <div class="card card-body">
-                                                @item.Description
-                                            </div>
-                                        </div>*@
                                         <a class="link-info" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
-                                        @*<div class="collapse" id="projectDescription">
-                                            <div class="card card-body">
-                                                @item.Description
-                                            </div>
-                                        </div>*@
+                                        @*<a type="button" class="me-2 d-flex align-items-center font-weight-medium" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="Project Description @item.Description">
+                                            @item.Name<i data-feather="chevron-right" class="fill-white feather-sm"></i>
+                                        </a>*@
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Description)
