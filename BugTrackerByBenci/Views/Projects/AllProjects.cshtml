@@ -32,7 +32,14 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
+                                        <div class="dropdown-menu">
+                                        <a class="link-info dropdown-toggle">@Html.DisplayFor(modelItem => item.Name)
+                                            <p>
+                                                Description
+                                            </p>
+                                            <p>
+                                                @item.Description
+                                            </p></a></div>
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Description)

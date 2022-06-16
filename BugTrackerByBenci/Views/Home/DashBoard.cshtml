@@ -159,7 +159,7 @@
                             <ol id="projects" style="list-style: none; padding: 0 !important;">
                                 @foreach (var project in Model.Projects!)
                                 {
-                                    <li><a data-target-id="@project.Id" data-target-name="@project.Name" type="button" class="projectItem">@project.Name</a></li>
+                                    <li><a data-target-id="@project.Id" data-target-name="@project.Name" type="button" class="projectItem link-info" data-bs-toggle="tooltip" title="Click to show tickets">@project.Name</a></li>
                                 }
                             </ol>
                         </div>
@@ -208,7 +208,7 @@
                     <div class="bg-dark">
                         <div class="card m-1 p-2">
                             <div class="card-header">
-                                <h2>Members</h2>
+                                <h2>Company Members</h2>
                                 <hr />
                             </div>
                             <div class="card-body">
