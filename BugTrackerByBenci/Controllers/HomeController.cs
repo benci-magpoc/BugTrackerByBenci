@@ -52,6 +52,7 @@ namespace BugTrackerByBenci.Controllers
 
             return View(model);
         }
+        [AllowAnonymous]
         public IActionResult LandingPage()
         {
             return View();
