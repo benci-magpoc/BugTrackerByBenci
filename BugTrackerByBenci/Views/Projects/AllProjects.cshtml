@@ -37,7 +37,8 @@
                                 <tr>
                                     <td>
                                         @*<a class="link-info" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>*@
-                                        <a type="button" class="me-2 d-flex align-items-center font-weight-medium" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="Project Description @item.Description">
+                                        <a type="button" class="me-2 d-flex align-items-center font-weight-medium" data-bs-container="body"
+                                           data-toggle="tooltip" title="Project Description" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="@item.Description">
                                             @item.Name<i data-feather="chevron-right" class="fill-white feather-sm"></i>
                                         </a>
                                     </td>
