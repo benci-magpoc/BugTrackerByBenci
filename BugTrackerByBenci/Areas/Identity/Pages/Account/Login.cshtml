@@ -3,102 +3,194 @@
 
 @{
     ViewData["Title"] = "Log in";
-    Layout = null;
+    Layout = "_LoginLayout";
 }
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <!-- Tell the browser to be responsive to screen width -->
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="keywords"
-          content="wrappixel, admin dashboard, html css dashboard, web dashboard, bootstrap 5 admin, bootstrap 5, css3 dashboard, bootstrap 5 dashboard, ample admin bootstrap 5 dashboard, frontend, responsive bootstrap 5 admin template">
-    <meta name="description" content="Ample is powerful and clean admin dashboard template">
-    <title>Bug Tracker Login</title>
-    <link rel="canonical" href="https://www.wrappixel.com/templates/ampleadmin/" />
-    <!-- Favicon icon -->
-    <link rel="icon" type="image/png" sizes="16x16" href="/Ample/landing-assets/images/favicon.png">
-    <!-- Custom CSS -->
-    <link href="/Ample/landing-assets/libs/owl.carousel/dist/assets/owl.carousel.min.css" rel="stylesheet"
-          type="text/css" />
-    <link href="/Ample/landing-assets/libs/owl.carousel/dist/assets/owl.theme.default.min.css" rel="stylesheet"
-          type="text/css" />
-    <!-- Custom CSS -->
-    <link href="/Ample/landing-assets/css/style.min.css" rel="stylesheet">
-    <link href="/css/custom.css" rel="stylesheet">
-    <!-- Google Font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fira+Sans:wght@200;400&family=Roboto:wght@300;700&display=swap"
-        rel="stylesheet">
-
-</head>
-<body>
+@*
 <div class="container">
-<div class="loginBox">
-    <div class="appLogoContainer">
-        <img class="appLogo" src="/img/bugTrackerLogo.png" alt="">
+    <div class="loginBox">
+        <div class="appLogoContainer">
+            <img class="appLogo" src="/img/bugTrackerLogo.png" alt="">
+        </div>
+
+        <div class="container mt-5 text-center">
+            <!-- <div class="form-signin bg-light"> -->
+            <form id="account" method="post">
+                <h1 class="mb-5 appTitle">Bug Tracker</h1>
+                <h1 class="signInText h3 my-4 fw-normal">Please sign in</h1>
+                <div class="container">
+
+                    <div class="form-floating">
+                        <input asp-for="Input.Email" id="floatingInput" class="form-control" autocomplete="username" aria-required="true" type="email" placeholder="name@example.com">
+                        <label asp-for="Input.Email">Username/Email address</label>
+                    </div>
+                    <div class="form-floating">
+                        <input asp-for="Input.Password" id="floatingPassword" class="form-control" autocomplete="current-password" aria-required="true" type="password" class="form-control" placeholder="Password">
+                        <label asp-for="Input.Password">Password</label>
+                    </div>
+
+                    <div class="checkbox mb-1">
+                        <label asp-for="Input.RememberMe" class="form-label">
+                            <input asp-for="Input.RememberMe" type="checkbox" value="remember-me"/>
+                            @Html.DisplayNameFor(m => m.Input.RememberMe)
+                        </label>
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <div id="signInButton" class="col g-0">
+                            <button id="login-submit" asp-route-returnUrl="/Home/Dashboard" class="myButton mb-3" type="submit">Sign in</button>
+                        </div>
+                    </div>
+                    <div class="row d-flex justify-content-center my-2">
+                        <span>Login as one of Demo Users</span>
+                    </div>
+
+                    <div id="demoLogin" class="row d-flex justify-content-center">
+                        <div class="col col-md-3 g-0">
+                            <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Admin" type="submit" name="demoEmail" value="DemoAdminEmail">Admin</button>
+                        </div>
+                        <div class="col col-md-3 g-0">
+                            <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Project Manager"
+                                    type="submit" name="demoEmail" value="DemoPMEmail">PM</button></div>
+                        <div class="col col-md-3 g-0">
+                            <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Developer"
+                                    type="submit" name="demoEmail" value="DemoDevEmail">Developer</button></div>
+                        <div class="col col-md-3 g-0">
+                            <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Submitter"
+                                    type="submit" name="demoEmail" value="DemoSubEmail">Submitter</button></div>
+                    </div>
+                    <div class="mt-5 d-flex justify-content-center">
+                        <p class="mt-3 text-muted">&copy; Benci Magpoc 2022</p>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <!-- </div> -->
     </div>
-
-    <div class="container mt-5 text-center">
-        <!-- <div class="form-signin bg-light"> -->
-        <form id="account" method="post">
-            <h1 class="mb-5 appTitle">Bug Tracker</h1>
-            <h1 class="signInText h3 my-4 fw-normal">Please sign in</h1>
-            <div class="container">
-
-                <div class="form-floating">
-                    <input asp-for="Input.Email" id="floatingInput" class="form-control" autocomplete="username" aria-required="true" type="email" placeholder="name@example.com">
-                    <label asp-for="Input.Email">Username/Email address</label>
-                </div>
-                <div class="form-floating">
-                    <input asp-for="Input.Password" id="floatingPassword" class="form-control" autocomplete="current-password" aria-required="true" type="password" class="form-control" placeholder="Password">
-                    <label asp-for="Input.Password">Password</label>
-                </div>
-
-                <div class="checkbox mb-1">
-                    <label asp-for="Input.RememberMe" class="form-label">
-                        <input asp-for="Input.RememberMe" type="checkbox" value="remember-me"/>
-                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                    </label>
-                </div>
-                <div class="row d-flex justify-content-center">
-                    <div id="signInButton" class="col g-0">
-                        <button id="login-submit" asp-route-returnUrl="/Home/Dashboard" class="myButton mb-3" type="submit">Sign in</button>
-                    </div>
-                </div>
-                <div class="row d-flex justify-content-center my-2">
-                    <span>Login as one of Demo Users</span>
-                </div>
-
-                <div id="demoLogin" class="row d-flex justify-content-center">
-                    <div class="col col-md-3 g-0">
-                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Admin" type="submit" name="demoEmail" value="DemoAdminEmail">Admin</button>
-                    </div>
-                    <div class="col col-md-3 g-0">
-                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Project Manager"
-                                type="submit" name="demoEmail" value="DemoPMEmail">PM</button></div>
-                    <div class="col col-md-3 g-0">
-                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Developer"
-                                type="submit" name="demoEmail" value="DemoDevEmail">Developer</button></div>
-                    <div class="col col-md-3 g-0">
-                        <button asp-route-returnUrl="/Home/Dashboard" class="myButton" data-toggle="tooltip" title="Demo Submitter"
-                                type="submit" name="demoEmail" value="DemoSubEmail">Submitter</button></div>
-                </div>
-                <div class="mt-5 d-flex justify-content-center">
-                    <p class="mt-3 text-muted">&copy; Benci Magpoc 2022</p>
+</div>*@
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<div class="preloader">
+    <svg class="tea lds-ripple" width="37" height="48" viewbox="0 0 37 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M27.0819 17H3.02508C1.91076 17 1.01376 17.9059 1.0485 19.0197C1.15761 22.5177 1.49703 29.7374 2.5 34C4.07125 40.6778 7.18553 44.8868 8.44856 46.3845C8.79051 46.79 9.29799 47 9.82843 47H20.0218C20.639 47 21.2193 46.7159 21.5659 46.2052C22.6765 44.5687 25.2312 40.4282 27.5 34C28.9757 29.8188 29.084 22.4043 29.0441 18.9156C29.0319 17.8436 28.1539 17 27.0819 17Z" stroke="#233242" stroke-width="2"></path>
+        <path d="M29 23.5C29 23.5 34.5 20.5 35.5 25.4999C36.0986 28.4926 34.2033 31.5383 32 32.8713C29.4555 34.4108 28 34 28 34" stroke="#233242" stroke-width="2"></path>
+        <path id="teabag" fill="#233242" fill-rule="evenodd" clip-rule="evenodd" d="M16 25V17H14V25H12C10.3431 25 9 26.3431 9 28V34C9 35.6569 10.3431 37 12 37H18C19.6569 37 21 35.6569 21 34V28C21 26.3431 19.6569 25 18 25H16ZM11 28C11 27.4477 11.4477 27 12 27H18C18.5523 27 19 27.4477 19 28V34C19 34.5523 18.5523 35 18 35H12C11.4477 35 11 34.5523 11 34V28Z"></path>
+        <path id="steamL" d="M17 1C17 1 17 4.5 14 6.5C11 8.5 11 12 11 12" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke="#233242"></path>
+        <path id="steamR" d="M21 6C21 6 21 8.22727 19 9.5C17 10.7727 17 13 17 13" stroke="#233242" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+</div>
+<!-- ============================================================== -->
+<!-- Preloader - style you can find in spinners.css -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Login box.scss -->
+<!-- ============================================================== -->
+<div class="auth-wrapper d-flex no-block justify-content-center align-items-center" style="background:url(/assets/images/background/login-register.jpg) no-repeat center center; background-size: cover;">
+    <div class="auth-box p-4 bg-white rounded">
+        <div id="loginform">
+            <div class="logo text-center mb-4">
+                <span><img src="/img/logoBugTracker.png"/><img src="/img/textLogoBugTracker.png"/></span>
+            </div>
+            <!-- Form -->
+            <div class="row">
+                <div class="col-12">
+                    <form class="form-horizontal mt-3 form-material" id="account" method="post">
+                        <div class="form-group mb-3">
+                            <div class="">
+                                <input asp-for="Input.Email" id="floatingInput" class="form-control" autocomplete="username" aria-required="true" type="email" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <div class="">
+                                <input asp-for="Input.Password" id="floatingPassword" class="form-control" autocomplete="current-password" aria-required="true" type="password" class="form-control" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="d-flex">
+                                <div class="checkbox checkbox-info pt-0">
+                                    <div class="checkbox checkbox-info pt-0">
+                                        <input id="checkbox-signup" asp-for="Input.RememberMe" type="checkbox" value="remember-me" class="material-inputs chk-col-indigo">
+                                        <label for="checkbox-signup"> Remember me </label>
+                                    </div>
+                                </div>
+                                <div class="ms-auto">
+                                    <a id="forgot-password" asp-page="./ForgotPassword" class="link font-weight-medium"><i class="fa fa-lock me-1"></i>Forgot pwd?</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group text-center mt-4 mb-3">
+                            <div class="col-xs-12">
+                                <button id="login-submit" asp-route-returnUrl="/Home/Dashboard" class="btn btn-info d-block w-100 waves-effect waves-light" type="submit">Log In</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <p>
+                                <button class="btn btn-info d-block w-100 waves-effect waves-light dropdown-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                    Login as on of Demo Users
+                                </button>
+                            </p>
+                            <div class="collapse" id="collapseExample">
+                                <div class="card card-body">
+                                    <button asp-route-returnUrl="/Home/Dashboard" class="btn btn-info d-block w-100 waves-effect waves-light my-2" data-toggle="tooltip" title="Demo Admin" type="submit"
+                                            name="demoEmail" value="DemoAdminEmail">Demo Admin</button>
+                                    <button asp-route-returnUrl="/Home/Dashboard" class="btn btn-info d-block w-100 waves-effect waves-light my-2" data-toggle="tooltip" title="Demo Project Manager"
+                                            type="submit" name="demoEmail" value="DemoPMEmail">Demo Project Manager</button>
+                                    <button asp-route-returnUrl="/Home/Dashboard" class="btn btn-info d-block w-100 waves-effect waves-light my-2" data-toggle="tooltip" title="Demo Developer"
+                                            type="submit" name="demoEmail" value="DemoDevEmail">Demo Developer</button>
+                                    <button asp-route-returnUrl="/Home/Dashboard" class="btn btn-info d-block w-100 waves-effect waves-light my-2" data-toggle="tooltip" title="Demo Submitter"
+                                            type="submit" name="demoEmail" value="DemoSubEmail">Demo Submitter</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group mb-0 mt-4">
+                            <div class="col-sm-12 justify-content-center d-flex">
+                                <p>Need to register your company? <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-info font-weight-medium ms-1">Register</a></p>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </form>
+        </div>
+        <div id="recoverform">
+            <div class="logo">
+                <h3 class="font-weight-medium mb-3">Recover Password</h3>
+                <span class="text-muted">Enter your Email and instructions will be sent to you!</span>
+            </div>
+            <div class="row mt-3 form-material">
+                <!-- Form -->
+                <form class="col-12" action="index.html">
+                    <!-- email -->
+                    <div class="form-group row">
+                        <div class="col-12">
+                            <input class="form-control" type="email" required="" placeholder="Username">
+                        </div>
+                    </div>
+                    <!-- pwd -->
+                    <div class="row mt-3">
+                        <div class="col-12">
+                            <button class="btn d-block w-100 btn-primary text-uppercase" type="submit" name="action">Reset</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <!-- </div> -->
 </div>
-</div>
-
+<!-- ============================================================== -->
+<!-- Login box.scss -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Page wrapper scss in scafholding.scss -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Page wrapper scss in scafholding.scss -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Right Sidebar -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- Right Sidebar -->
+<!-- ============================================================== -->
+@*
 
 <!-- ============================================================== -->
 <!-- All Jquery -->
@@ -110,7 +202,7 @@
 <script src="/Ample/landing-assets/js/custom.js"></script>
 </body>
 
-</html>
+</html>*@
 
 @*
 <div class="row">
