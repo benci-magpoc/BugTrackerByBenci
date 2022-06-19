@@ -50,8 +50,12 @@ namespace BugTrackerByBenci.Controllers
         {
             int companyId = User.Identity!.GetCompanyId();
 
-            List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyIdAsync(companyId); 
+            List<Ticket> tickets = await _ticketService.GetAllTicketsByCompanyIdAsync(companyId);
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"All Tickets"
+            };
             return View(tickets);
         }
 
@@ -103,9 +107,14 @@ namespace BugTrackerByBenci.Controllers
 
             List<Ticket> tickets = await _ticketService.GetArchivedTicketsByCompanyIdAsync(companyId);
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"Archived Tickets"
+            };
             return View(tickets);
         }
         //GET: Assign Tickets 
+        [Authorize(Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> AssignDeveloper(int? id)
         {
             int companyId = User.Identity!.GetCompanyId();
@@ -121,11 +130,17 @@ namespace BugTrackerByBenci.Controllers
                 model.DeveloperList = new SelectList(developers, "Id", "FullName", model.Ticket.DeveloperUserId);
             }
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"Assign Developer"
+            };
+
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, ProjectManager")]
         // Post: Assign Developer
         public async Task<IActionResult> AssignDeveloper(TicketDeveloperViewModel model)
         {
@@ -184,6 +199,13 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Tickets/Index\">All Tickets</a>",
+                $"Details"
+            };
+            
+
             return View(ticket);
         }
 
@@ -204,6 +226,12 @@ namespace BugTrackerByBenci.Controllers
 
             ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
             ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
+
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Tickets/Index\">All Tickets</a>",
+                $"Create"
+            };
 
             return View();
         }
@@ -349,6 +377,7 @@ namespace BugTrackerByBenci.Controllers
         }
 
         // GET: Tickets/Restore/5
+        [Authorize (Roles="Admin, ProjectManager")]
         public async Task<IActionResult> Archive(int? id)
         {
             if (id == null || _context.Tickets == null)
@@ -363,12 +392,19 @@ namespace BugTrackerByBenci.Controllers
                 return NotFound();
             }
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Tickets/Index\">All Tickets</a>",
+                $"Archive"
+            };
+
             return View(ticket);
         }
 
         // POST: Tickets/Restore/5
         [HttpPost, ActionName("Archive")]
         [ValidateAntiForgeryToken]
+        [Authorize (Roles="Admin, ProjectManager")]
         public async Task<IActionResult> ArchiveConfirmed(int id)
         {
             if (_context.Tickets == null)
@@ -395,10 +431,16 @@ namespace BugTrackerByBenci.Controllers
 
             List<Ticket> tickets = await _ticketService.GetTicketsByUserIdAsync(userId, companyId);
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            { 
+                $"My Tickets"
+            };
+
             return View(tickets);
         }
 
         // GET: Tickets/Restore/5
+        [Authorize (Roles = "Admin, ProjectManager")]
         public async Task<IActionResult> RestoreTicket(int? id)
         {
             if (id == null || _context.Tickets == null)
@@ -412,6 +454,12 @@ namespace BugTrackerByBenci.Controllers
             {
                 return NotFound();
             }
+
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"<a href=\"/Tickets/Index\">All Tickets</a>",
+                $"Restore Ticket"
+            };
 
             return View(ticket);
         }
