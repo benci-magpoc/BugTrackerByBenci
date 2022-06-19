@@ -6,6 +6,7 @@
 
 @{
     ViewData["Title"] = "All Projects";
+    int counter = 0;
 }
 <div class="collapse" id="collapseExample">
     <div class="card card-body">
@@ -17,11 +18,11 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="zero_config" class="table table-hover">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Project Name</th>
-                                <th>Project Description</th>
+                                @*<th>Project Description</th>*@
                                 <th>Created Date</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
@@ -36,15 +37,31 @@
                             {
                                 <tr>
                                     <td>
-                                        @*<a class="link-info" asp-action="Details" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>*@
-                                        <a type="button" class="me-2 d-flex align-items-center font-weight-medium" data-bs-container="body"
-                                           data-toggle="tooltip" title="Project Description" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="@item.Description">
-                                            @item.Name<i data-feather="chevron-right" class="fill-white feather-sm"></i>
-                                        </a>
+                                        <div class="project-name">
+                                            <a class="me-2 align-items-center font-weight-medium">
+                                                @item.Name
+                                            </a>
+                                        @if (counter > 1)
+                                        {
+                                            <div class="project-description">
+                                                <p>@item.Description</p>
+                                                <br/>
+                                                <a type="button" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary mb-2">Go to Project's Details</a>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="project-description-bottom">
+                                                <p>@item.Description</p>
+                                                <br/>
+                                                <a type="button" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary mb-2">Go to Project's Details</a>
+                                            </div>
+                                        }
+                                        </div>
                                     </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
-                                    </td>
+                                    @*<td>
+                                Html.DisplayFor(modelItem => item.Description)
+                                </td>*@
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Created)
                                     </td>
@@ -88,35 +105,35 @@
 
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-light-primary text-primary dropdown-toggle"
-                                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">
+                                                    data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
                                                 <i class="fas fa-cog"></i>
                                             </button>
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" asp-action="Details" asp-route-id="@item!.Id">
                                                     <i data-feather="eye"
-                                                   class="feather-sm me-2"></i> Details
+                                                       class="feather-sm me-2"></i> Details
                                                 </a>
                                                 @if (User.IsInRole(nameof(BTRoles.Admin)))
                                                 {
                                                     <a class="dropdown-item" asp-action="Archive" asp-route-id="@item!.Id">
                                                         <i data-feather="trash-2"
-                                                   class="feather-sm me-2"></i> Archive
+                                                           class="feather-sm me-2"></i> Archive
                                                     </a>
                                                     <a class="dropdown-item" asp-action="AssignProjectManager" asp-route-id="@item!.Id">
                                                         <i data-feather="user-plus"
-                                                   class="feather-sm me-2"></i> Assign PM
+                                                           class="feather-sm me-2"></i> Assign PM
                                                     </a>
                                                 }
                                                 @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
                                                 {
                                                     <a class="dropdown-item" asp-action="AssignProjectMembers" asp-route-id="@item!.Id">
                                                         <i data-feather="users"
-                                                   class="feather-sm me-2"></i> Assign Members
+                                                           class="feather-sm me-2"></i> Assign Members
                                                     </a>
                                                     <a class="dropdown-item" asp-action="Edit" asp-route-id="@item!.Id">
                                                         <i data-feather="edit-2"
-                                                   class="feather-sm me-2"></i> Edit
+                                                           class="feather-sm me-2"></i> Edit
                                                     </a>
                                                 }
                                             </div>
@@ -137,6 +154,7 @@
                                     </div>*@
                                     </td>
                                 </tr>
+                                counter++;
                             }
                         </tbody>
                     </table>

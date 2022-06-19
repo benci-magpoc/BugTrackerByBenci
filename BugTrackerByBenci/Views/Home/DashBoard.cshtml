@@ -187,10 +187,10 @@
             @* Tickets Table *@
         <div class="col col-md-6">
             <div class="">
-                <div class="card m-1 p-2">
+                <div class="card m-1 p-2" style="height: 800px; overflow: scroll;">
                     <div class="card-header">
                         <h2>Tickets of <span id="projectName">All Projects</span></h2>
-                        <table id="zero_config" class="table table-hover">
+                        <table class="table table-hover">
                             <thead class="">
                                 <tr>
                                     <th>Title</th>
@@ -454,6 +454,8 @@
 
             btn.addEventListener("click",
                 function() {
+                    console.log(allRows);
+
                     var ticketBody = document.getElementById("ticketsList");
                     allRows.forEach((row) => {
                         ticketBody.appendChild(row);
@@ -463,7 +465,6 @@
                     var targetId = this.getAttribute("data-target-id");
                     var ticketId = document.querySelectorAll(`tr[data-target="${targetId}"]`);
                     ticketBody = document.getElementById("ticketsList");
-                    console.log(allRows);
 
                     document.getElementById("projectName").innerHTML = projectName;
                     while (ticketBody.hasChildNodes()) {
