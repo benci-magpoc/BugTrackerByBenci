@@ -38,6 +38,11 @@ namespace BugTrackerByBenci.Controllers
             int companyId = User.Identity!.GetCompanyId();
             List<BTUser> btUsers = await _companyInfoService.GetAllMembersAsync(companyId);
 
+            ViewData["BreadCrumbs"] = new List<string>()
+            {
+                $"Company Members"
+            };
+
             return View(btUsers);
         }
         public async Task<IActionResult> Dashboard()
