@@ -202,9 +202,57 @@
                                             <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id"
                                            data-bs-toggle="tooltip" title="Click to go to details">@ticket.Title</a>
                                         </td>
-                                        <td>@ticket.DeveloperUser?.FullName</td>
-                                        <td>@ticket.TicketStatus!.Name</td>
-                                        <td>@ticket.TicketPriority!.Name</td>
+                                        <td>@if (ticket.DeveloperUser != null)
+                                            {
+                                                @ticket.DeveloperUser!.FullName
+                                            }
+                                            else
+                                            {
+                                                if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.Admin)))
+                                                {
+                                                    <a class="btn btn-xs btn-info ms-2" asp-action="AssignDeveloper" asp-controller="Tickets" asp-route-id="@ticket.Id">Assign Dev</a>
+                                                }
+                                                else
+                                                {
+                                                    <text>No Developer Assigned</text>
+                                                }
+                                            }</td>
+                                        <td>
+                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.New)))
+                                            {
+                                                <span class="btn btn-outline-success">@ticket.TicketStatus!.Name</span>
+                                            }
+                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Development)))
+                                            {
+                                                <span class="btn btn-outline-info">@ticket.TicketStatus!.Name</span>
+                                            }
+                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Testing)))
+                                            {
+                                                <span class="btn btn-outline-primary">@ticket.TicketStatus!.Name</span>
+                                            }
+                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Resolved)))
+                                            {
+                                                <span class="btn btn-outline-dark">@ticket.TicketStatus!.Name</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if(ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.Low)))
+                                            {
+                                                <span class="btn btn-outline-success">@ticket.TicketPriority!.Name</span>
+                                            }
+                                            @if(ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.Medium)))
+                                            {
+                                                <span class="btn btn-outline-secondary">@ticket.TicketPriority!.Name</span>
+                                            }
+                                            @if(ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.High)))
+                                            {
+                                                <span class="btn btn-outline-warning">@ticket.TicketPriority!.Name</span>
+                                            }
+                                            @if(ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.Urgent)))
+                                            {
+                                                <span class="btn btn-outline-danger">@ticket.TicketPriority!.Name</span>
+                                            }
+                                        </td>
                                     </tr>
                                 }
 
