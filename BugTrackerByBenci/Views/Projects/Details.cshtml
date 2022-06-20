@@ -174,7 +174,7 @@
                                 </thead>
                                 <tbody>
                                     @* Table body *@
-                                    @foreach (var ticket in Model.Project.Tickets!)
+                                    @foreach (var ticket in Model.Project.Tickets!.Where(t=>t.Archived == false))
                                     {
                                         <tr>
                                             <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><strong>@ticket.Title</strong></a> </td>
