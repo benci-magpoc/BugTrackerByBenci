@@ -23,10 +23,8 @@
     <strong>@Model.Company!.Name</strong>
 </span>
 
-
+<!-- Info Pills -->
 <div class="container-fluid">
-
-    <!-- Info Pills -->
     <div class="row row-cols-1 mt-2">
         <div class="col-12 col-lg-3 col-md-6">
             <a asp-action="AllProjects" asp-controller="Projects" style="text-decoration:none">
@@ -146,8 +144,8 @@
     </div>
     <div class="row">
         <div class="col-12 m-2 mt-md-5 m-md-0">
-            <div class="card m-1 p-2">
-                <div class="card-body" style="height:600px;overflow-y:auto; border-radius: .5rem;">
+            <div class="card m-1 p-2" style="border-radius: .5rem;">
+                <div class="card-body" style="height:600px;overflow-y:auto;">
                     <h5>Project: Tickets vs Developers</h5>
                     <!-- HTML -->
                     <div id="plotlyChart"></div>
@@ -156,38 +154,37 @@
         </div>
     </div>
     <!-- TODO Tooltip to go to project -->
-    <div class="mt-2 mt-md-4">
-        <div class="row gy-2 p-3">
-            @* Projects Table *@
-            <div class="col-12 col-md-3 m-2 m-md-0">
-                <div class="">
-                    <div class="card m-1 p-2" style="border-radius: .5rem;">
-                        <div class="card-header">
-                            <h2>Projects </h2>
-                        </div>
-                        <div class="card-body">
-                            <h5>(Click a project to show tickets)</h5>
-                            <ol id="projects" style="list-style: none; padding: 0 !important;">
-                                @foreach (var project in Model.Projects!)
-                                {
-                                    <div class="my-1">
-                                    <li><a data-target-id="@project.Id" data-target-name="@project.Name" type="button" class="projectItem link-info" data-bs-toggle="tooltip" title="Click to show tickets">@project.Name</a></li>
-                            </div>
+    <div class="row mt-2 mt-md-4">
+        @* Projects Table *@
+        <div class="col-12 col-md-3 m-2 m-md-0">
 
-                                }
-                        </ol>
-                    </div>
-                    <div class="card-footer">
-                    </div>
+            <div class="card m-1 me-md-0 p-2" style="border-radius: .5rem;">
+                <div class="card-header">
+                    <h2>Projects </h2>
+                </div>
+                <div class="card-body">
+                    <h5>(Click a project to show tickets)</h5>
+                    <ol id="projects" style="list-style: none; padding: 0 !important;">
+                        @foreach (var project in Model.Projects!)
+                        {
+                            <li><a data-target-id="@project.Id" data-target-name="@project.Name" type="button" class="my-1 projectItem link-info" data-bs-toggle="tooltip" title="Click to show tickets">@project.Name</a></li>
+
+
+                        }
+                    </ol>
+                </div>
+                <div class="card-footer">
                 </div>
             </div>
+
         </div>
-            @* Tickets Table *@
+
+        @* Tickets Table *@
         <div class="col-12 col-md-6 m-2 m-md-0">
-            <div class="">
-                <div class="card m-1 p-2" style="height: 800px; overflow: scroll; border-radius: .5rem;">
-                    <div class="card-header">
-                        <h2>Tickets of <span id="projectName">All Projects</span></h2>
+            <div class="card m-1 mx-md-0 p-2" style="height: 800px; overflow: scroll; border-radius: .5rem;">
+                <div class="card-header">
+                    <h2>Tickets of <span id="projectName">All Projects</span></h2>
+                    <div class="card-body">
                         <table class="table table-hover">
                             <thead class="">
                                 <tr>
@@ -198,8 +195,8 @@
                                 </tr>
                             </thead>
                             <tbody id="ticketsList">
-                                    @foreach (var ticket in Model.Tickets!)
-                                    {
+                                @foreach (var ticket in Model.Tickets!)
+                                {
                                     <tr data-target="@ticket.ProjectId">
                                         <td>
                                             <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.Id"
@@ -209,48 +206,46 @@
                                         <td>@ticket.TicketStatus!.Name</td>
                                         <td>@ticket.TicketPriority!.Name</td>
                                     </tr>
-                                    }
+                                }
 
                             </tbody>
                         </table>
                     </div>
-                    <div class="card-body">
-                    </div>
-                    <div class="card-footer">
-                    </div>
+                </div>
+                <div class="card-footer">
                 </div>
             </div>
         </div>
         <div class="col-12 col-md-3 m-2 m-md-0">
-            <div class="">
-                <div class="card m-1 p-2" style="border-radius: .5rem;">
-                    <div class="card-header">
-                        <h2>Company Members</h2>
-                        <hr />
-                    </div>
-                    <div class="card-body">
-                            @foreach (var member in Model.Members!)
+            <div class="card ms-md-0 m-1 p-2" style="border-radius: .5rem;">
+                <div class="card-header">
+                    <h2>Company Members</h2>
+                    <hr />
+                </div>
+                <div class="card-body">
+                    @foreach (var member in Model.Members!)
+                    {
+                        <div class="my-2">
+                            @if (member.AvatarData != null)
                             {
-                            <div class="my-2">
-                                    @if (member.AvatarData != null)
-                                    {
-                                    <span><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="30" /></span>
-                                    }
-                                    else
-                                    {
-                                    <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30" /></span>
-                                    }
-                                <span class="ms-1">@member.FullName - </span>
-                                <span>@await RoleService.GetUserRoleAsync(member) </span>
-                            </div>
+                                <span><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="30" /></span>
                             }
-                    </div>
+                            else
+                            {
+                                <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="30" /></span>
+                            }
+                            <span class="ms-1">@member.FullName - </span>
+                            <span>@await RoleService.GetUserRoleAsync(member) </span>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
-    @section scripts{
+
+
+@section scripts{
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
 
@@ -259,16 +254,16 @@
             {
                 label: "Low",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Low)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Medium",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Medium)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "High",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.High)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Urgent",
                 value: @Model.Tickets.Where(t => t.TicketPriority.Name == nameof(BTTicketPriorities.Urgent)).Count()
-                                                            }
+                                                                                                                                                            }
         ];
         /*
         Chart for Ticket by Priority
@@ -297,16 +292,16 @@
             {
                 label: "New",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.New)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Dev",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Development)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Test",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Testing)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Resolved",
                 value: @Model.Tickets.Where(t => t.TicketStatus.Name == nameof(BTTicketStatus.Resolved)).Count()
-                                                            }
+                                                                                                                                                            }
         ];
 
 
@@ -336,22 +331,22 @@
             {
                 label: "New Development",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.NewDevelopment)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Routine",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.WorkTask)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Defect",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Defect)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Change",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.ChangeRequest)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Enchancement",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.Enhancement)).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "General",
                 value: @Model.Tickets.Where(t => t.TicketType.Name == nameof(BTTicketTypes.GeneralTask)).Count()
-                                                            }
+                                                                                                                                                            }
         ];
         /*
         Chart for Ticket by Type
@@ -379,16 +374,16 @@
             {
                 label: "Active Projects",
                 value: @Model.Projects.Where(p => p.StartDate < DateTime.Now && p.EndDate > DateTime.Now).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Assigned Tickets",
                 value: @Model.Tickets.Where(t => t.DeveloperUser != null).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Unassigned Tickets",
                 value: @Model.Tickets.Where(t => t.DeveloperUser == null).Count()
-                                                            }, {
+                                                                                                                                                            }, {
                 label: "Members",
                 value: @Model.Company.Members.Count()
-                                                            }
+                                                                                                                                                            }
         ];
         /*
         Chart for Ticket by Type
