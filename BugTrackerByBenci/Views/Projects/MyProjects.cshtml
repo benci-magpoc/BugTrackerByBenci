@@ -6,6 +6,7 @@
 
 @{
     ViewData["Title"] = "My Projects";
+    int counter = 0;
 }
 
 <div class="row">
@@ -13,11 +14,10 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table id="zero_config" class="table table-hover">
+                    <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Project Name</th>
-                                <th>Project Description</th>
                                 <th>Created Date</th>
                                 <th>Start Date</th>
                                 <th>End Date</th>
@@ -32,13 +32,27 @@
                             {
                                 <tr>
                                     <td>
-                                        <a type="button" class="me-2 d-flex align-items-center font-weight-medium" data-bs-container="body"
-                                           data-toggle="tooltip" title="Project Description" data-bs-toggle="popover" data-bs-placement="right" data-bs-content="@item.Description">
-                                            @item.Name<i data-feather="chevron-right" class="fill-white feather-sm"></i>
-                                        </a>
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Description)
+                                        <div class="project-name">
+                                            <a class="me-2 align-items-center font-weight-medium">
+                                                @item.Name
+                                            </a>
+                                            @if (counter > 1)
+                                            {
+                                                <div class="project-description">
+                                                    <p>@item.Description</p>
+                                                    <br/>
+                                                    <a type="button" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary mb-2">Go to Project's Details</a>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="project-description-bottom">
+                                                    <p>@item.Description</p>
+                                                    <br/>
+                                                    <a type="button" asp-controller="Projects" asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-primary mb-2">Go to Project's Details</a>
+                                                </div>
+                                            }
+                                        </div>
                                     </td>
                                     <td>
                                         @Html.DisplayFor(modelItem => item.Created)
@@ -118,6 +132,7 @@
                                         </div>
                                     </td>
                                 </tr>
+                                counter++;
                             }
                         </tbody>
                     </table>
