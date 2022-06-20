@@ -218,19 +218,20 @@
                                                 }
                                             }</td>
                                         <td>
-                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.New)))
+                                            <!--TODO: badge outline-->
+                                            @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.New)))
                                             {
                                                 <span class="btn btn-outline-success">@ticket.TicketStatus!.Name</span>
                                             }
-                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Development)))
+                                            @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Development)))
                                             {
                                                 <span class="btn btn-outline-info">@ticket.TicketStatus!.Name</span>
                                             }
-                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Testing)))
+                                            @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Testing)))
                                             {
                                                 <span class="btn btn-outline-primary">@ticket.TicketStatus!.Name</span>
                                             }
-                                            @if(ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Resolved)))
+                                            @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Resolved)))
                                             {
                                                 <span class="btn btn-outline-dark">@ticket.TicketStatus!.Name</span>
                                             }
