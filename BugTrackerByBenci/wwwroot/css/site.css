@@ -17,100 +17,7 @@ body {
     margin-bottom: 60px;
 }
 
-/*.project-description-wrapper {
-    display: flex;
-    justify-content: center;
-}
-
-.project-description {
-    width: auto;
-    height: auto;
-    padding: 1.5rem;
-    position: relative;
-    background-color: white;
-    display: flex;
-    align-items: flex-end;*/
-/*transition: 0.4s ease-out;*/
-/*}
-
-.project-name {
-     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    -o-object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.project-description:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 100%;
-    height: 100%;*/
-/*border-radius: 15px;*/
-/*background: rgba(0, 0, 0, .6);
-    z-index: 2;
-    transition: 0.5s;
-    opacity: 0;
-}
-
-.project-description:hover::before {
-    opacity: 1;
-}
-
-.project-description .project-details {
-    position: relative;
-    z-index: 3;
-    color: #f7fafc;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 0.5s;
-}
-
-.project-description:hover .project-details {
-    opacity: 1;
-    transform: translateY(0px)
-}
-
-.project-description .project-details button {
-    padding: .6rem;
-    outline: none;
-    border: none;
-    border-radius: 3px;
-    background: white;
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.4s ease;
-}
-
-    .project-description .project-details button:hover {
-        background-color: rgb(66, 148, 186);
-    }*/
-
-/*[data-description] {
-    position: relative;
-}
-
-    [data-description]:hover::after {
-        content: attr(data-description);
-        position: absolute;
-        display: inline-block;
-        width: 400px;
-        top: 100%;
-        left: 0;
-        right: 0;
-        margin-top: 5px;
-        padding: 5px;
-        background-color: white;
-        color: #495e70;
-        font-size: .9rem;
-    }*/
-
+/* Tool Tips for Projects*/
 .project-name {
     position: relative;
     display: inline-block;
@@ -193,4 +100,95 @@ body {
     opacity: 1;
     position: absolute;
     z-index: 20000;
+}
+
+/* Badges for Ticket Priority and Ticket Status */
+
+/*td[data-status] span .badge{
+    padding-top: 60px;
+    padding-bottom: 10px;
+    margin: auto;
+    text-align: center;
+}
+
+td[data-status] .badge {
+        margin-right: 10px;
+    }*/
+
+[data-status] {
+    display: inline-block;
+    font-size: inherit;
+    font-weight: 600;
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    min-width: 10px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 5px;
+}
+
+[data-status="New"] {
+    color: #64DD17;
+    border-color: #64DD17;
+    background-color: transparent;
+}
+
+[data-status="Development"] {
+    color: #29b6f6; 
+    border-color: #29B6F6;
+    background-color: transparent;
+}
+
+[data-status="Testing"] {
+    color: #2196f3;
+    border-color: #2196F3;
+    background-color: transparent;
+}
+
+[data-status="Resolved"] {
+    color: #b0bec5;
+    border-color: #B0BEC5;
+    background-color: transparent;
+}
+
+[data-priority] {
+    display: inline-block;
+    font-size: inherit;
+    font-weight: 600;
+    padding: 5px 10px;
+    border: 1px solid transparent;
+    min-width: 10px;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    border-radius: 5px;
+}
+
+[data-priority="Low"] {
+    color: #64DD17;
+    border-color: #64DD17;
+    background-color: transparent;
+}
+
+[data-priority="Medium"] {
+    color: #323a45;
+    border-color: #323a45;
+    background-color: transparent;
+}
+
+[data-priority="High"] {
+    color: #FFD600;
+    border-color: #FFD600;
+    background-color: transparent;
+}
+
+[data-priority="Urgent"] {
+    color: #ef1c1c;
+    border-color: #ef1c1c;
+    background-color: transparent;
 }
