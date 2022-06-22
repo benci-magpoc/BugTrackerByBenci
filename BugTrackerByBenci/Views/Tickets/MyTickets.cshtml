@@ -41,15 +41,12 @@
                                             }
                                         }
                                     </td>
-                                    @if (ticket.TicketStatus!.Name == "New")
-                                    {
-                                        <td><span class="badge-success">@ticket.TicketStatus.Name </span></td>
-                                    }
-                                    else
-                                    {
-                                        <td><span class="badge-primary">@ticket.TicketStatus.Name </span></td>
-                                    }
-                                    <td><span class="badge-primary">@ticket.TicketPriority!.Name</span></td>
+                                    <td>
+                                        <span data-status="@ticket.TicketStatus!.Name">@ticket.TicketStatus!.Name</span>
+                                    </td>
+                                    <td>
+                                        <span data-priority="@ticket.TicketPriority!.Name">@ticket.TicketPriority!.Name</span>
+                                    </td>
                                     <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
                                     <td>
                                         <div class="btn-group">

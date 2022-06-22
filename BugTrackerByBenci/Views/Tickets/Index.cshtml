@@ -42,40 +42,10 @@
                                         }
                                     </td>
                                     <td>
-                                        @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.New)))
-                                        {
-                                            <span class="btn btn-outline-success">@ticket.TicketStatus!.Name</span>
-                                        }
-                                        @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Development)))
-                                        {
-                                            <span class="btn btn-outline-info">@ticket.TicketStatus!.Name</span>
-                                        }
-                                        @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Testing)))
-                                        {
-                                            <span class="btn btn-outline-primary">@ticket.TicketStatus!.Name</span>
-                                        }
-                                        @if (ticket.TicketStatus!.Name == (nameof(BTTicketStatus.Resolved)))
-                                        {
-                                            <span class="btn btn-outline-dark">@ticket.TicketStatus!.Name</span>
-                                        }
+                                        <span data-status="@ticket.TicketStatus!.Name">@ticket.TicketStatus!.Name</span>
                                     </td>
                                     <td>
-                                        @if (ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.Low)))
-                                        {
-                                            <span class="btn btn-outline-success">@ticket.TicketPriority!.Name</span>
-                                        }
-                                        @if (ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.Medium)))
-                                        {
-                                            <span class="btn btn-outline-secondary">@ticket.TicketPriority!.Name</span>
-                                        }
-                                        @if (ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.High)))
-                                        {
-                                            <span class="btn btn-outline-warning">@ticket.TicketPriority!.Name</span>
-                                        }
-                                        @if (ticket.TicketPriority!.Name == (nameof(BTProjectPriorities.Urgent)))
-                                        {
-                                            <span class="btn btn-outline-danger">@ticket.TicketPriority!.Name</span>
-                                        }
+                                        <span data-priority="@ticket.TicketPriority!.Name">@ticket.TicketPriority!.Name</span>
                                     </td>
                                     <td>@ticket.Created.ToString("MM-dd-yyyy")</td>
                                     <td>
