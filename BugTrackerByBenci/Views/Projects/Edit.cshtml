@@ -48,6 +48,7 @@
                             <label class="control-label">Project Image</label>
                             <input asp-for="Project!.ProjectImage" class="form-control" accept=".png,.jpg,.jpeg,.gif,.svg,.webp"
                                    onchange="document.getElementById('projectImage').src = window.URL.createObjectURL(this.files[0])" />
+                            <span asp-validation-for="Project!.ProjectImage" class="text-danger"></span>
                         </div>
                         <label>Image Preview</label>
                         @if (Model.Project?.FileData != null)

@@ -256,12 +256,24 @@
                                 <span class="hide-menu">Projects</span>
                             </a>
                             <ul aria-expanded="false" class="collapse  first-level">
+                                <li class="sidebar-item">
+                                    <a asp-area="" asp-controller="Projects" asp-action="AllProjects" class="sidebar-link">
+                                        <i class="mdi mdi-view-day"></i>
+                                        <span class="hide-menu"> All Projects </span>
+                                    </a>
+                                </li>
+                                <li class="sidebar-item">
+                                    <a asp-area="" asp-controller="Projects" asp-action="MyProjects" class="sidebar-link">
+                                        <i class="mdi mdi-view-parallel"></i>
+                                        <span class="hide-menu"> My Projects </span>
+                                    </a>
+                                </li>
                                 @if (User.IsInRole(nameof(BTRoles.Admin)))
                                 {
                                     <li class="sidebar-item">
                                         <a asp-area="" asp-controller="Projects" asp-action="Create" class="sidebar-link">
                                             <i class="mdi mdi-view-quilt"></i>
-                                            <span class="hide-menu"> Create New </span>
+                                            <span class="hide-menu"> Add Project </span>
                                         </a>
                                     </li>
                                     <li class="sidebar-item">
@@ -270,26 +282,13 @@
                                             <span class="hide-menu"> Archived Projects </span>
                                         </a>
                                     </li>
-
+                                    <li class="sidebar-item">
+                                        <a asp-area="" asp-controller="Projects" asp-action="UnassignedProjects" class="sidebar-link">
+                                            <i class="mdi mdi-view-array"></i>
+                                            <span class="hide-menu"> Unassigned Projects </span>
+                                        </a>
+                                    </li>
                                 }
-                                <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Projects" asp-action="MyProjects" class="sidebar-link">
-                                        <i class="mdi mdi-view-parallel"></i>
-                                        <span class="hide-menu"> My Projects </span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Projects" asp-action="AllProjects" class="sidebar-link">
-                                        <i class="mdi mdi-view-day"></i>
-                                        <span class="hide-menu"> All Projects </span>
-                                    </a>
-                                </li>
-                                <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Projects" asp-action="UnassignedProjects" class="sidebar-link">
-                                        <i class="mdi mdi-view-array"></i>
-                                        <span class="hide-menu"> Unassigned Projects </span>
-                                    </a>
-                                </li>
                             </ul>
                         </li>
                         <!-- ============================================================== -->
@@ -306,9 +305,9 @@
                             </a>
                             <ul aria-expanded="false" class="collapse  first-level">
                                 <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Tickets" asp-action="Create" class="sidebar-link">
-                                        <i class="mdi mdi-view-quilt"></i>
-                                        <span class="hide-menu"> Create </span>
+                                    <a asp-area="" asp-controller="Tickets" asp-action="Index" class="sidebar-link">
+                                        <i class="mdi mdi-view-array"></i>
+                                        <span class="hide-menu"> All Tickets </span>
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
@@ -318,9 +317,9 @@
                                     </a>
                                 </li>
                                 <li class="sidebar-item">
-                                    <a asp-area="" asp-controller="Tickets" asp-action="Index" class="sidebar-link">
-                                        <i class="mdi mdi-view-array"></i>
-                                        <span class="hide-menu"> All Tickets </span>
+                                    <a asp-area="" asp-controller="Tickets" asp-action="Create" class="sidebar-link">
+                                        <i class="mdi mdi-view-quilt"></i>
+                                        <span class="hide-menu"> Submit New Ticket </span>
                                     </a>
                                 </li>
                                 @if (User.IsInRole(nameof(BTRoles.Admin)))
