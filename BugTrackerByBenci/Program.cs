@@ -44,8 +44,8 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 
 var app = builder.Build();
 
-var scope = app.Services.CreateScope();
-await DataUtility.ManageDataAsync(scope.ServiceProvider);
+//var scope = app.Services.CreateScope();
+//await DataUtility.ManageDataAsync(scope.ServiceProvider);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
