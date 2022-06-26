@@ -53,7 +53,7 @@
                                     <li>Start Date: <span class="">@Html.DisplayFor(model => model.Project!.StartDate)</span></li>
                                     <li>Deadline: <span class="">@Html.DisplayFor(model => model.Project!.EndDate)</span></li>
                                     <li>Priority: <span class="">@Html.DisplayFor(model => model.Project!.Priority!.Name)</span></li>
-                                    <li>@((Model.Project!.StartDate < DateTime.Now && Model.Project!.EndDate > DateTime.Now) ? "Active" : "Inactive")</li>
+                                    <li>This project is @((Model.Project!.StartDate < DateTime.Now && Model.Project!.EndDate > DateTime.Now) ? "Active" : "Inactive")</li>
                                 </ul>
                             </div>
                         </div>
@@ -73,22 +73,30 @@
                             </h2>
                             <hr />
                         </div>
-                        <div class="body" style="overflow-y:auto;height:300px;">
-                            @foreach (var member in Model.Project!.Members!)
-                            {
-                                if (await RoleService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
-                                {
-                                    @if (member.AvatarData != null)
+                        <div class="body">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    @foreach (var member in Model.Project!.Members!)
                                     {
-                                        <span class="mx-2"><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="36" height="36" /></span>
+                                        if (await RoleService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
+                                        {
+                                            @if (member.AvatarData != null)
+                                            {
+                                                <span class="mx-2"><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="img-fluid"/></span>
+                                            }
+                                            else
+                                            {
+                                                <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="img-fluid"/></span>
+                                            }
+                                            <span class="ms-1">@member.FullName</span>
+                                        }
                                     }
-                                    else
-                                    {
-                                        <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="36" /></span>
-                                    }
-                                    <span class="ms-1">@member.FullName</span>
-                                }
-                            }
+
+
+                                    @*col*@
+                                </div>
+                                @*row*@
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -174,7 +182,7 @@
                                 </thead>
                                 <tbody>
                                     @* Table body *@
-                                    @foreach (var ticket in Model.Project.Tickets!.Where(t=>t.Archived == false))
+                                    @foreach (var ticket in Model.Project.Tickets!.Where(t => t.Archived == false))
                                     {
                                         <tr>
                                             <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><strong>@ticket.Title</strong></a> </td>
