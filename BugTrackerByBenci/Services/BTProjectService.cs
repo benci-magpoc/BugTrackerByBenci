@@ -246,6 +246,7 @@ namespace BugTrackerByBenci.Services
                     .Include(p=>p.Tickets)!
                         .ThenInclude(t=>t.TicketPriority)
                     .Include(p => p.Members)!
+                        .ThenInclude(c=>c.Company)
                     .Include(p=>p.Priority)
                     .FirstOrDefaultAsync(p=> p.Id == projectId && p.CompanyId == companyId);
 

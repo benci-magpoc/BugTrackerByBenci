@@ -3,7 +3,7 @@
 @using BugTrackerByBenci.Models.Enums
 @model BugTrackerByBenci.Models.ViewModels.ProjectDetailsWithHistoryViewModel
 @inject IRolesService RoleService
-
+@inject IBTProjectService ProjectService
 @{
     ViewData["Title"] = "Details";
 }
@@ -53,42 +53,59 @@
                                     <li>Start Date: <span class="">@Html.DisplayFor(model => model.Project!.StartDate)</span></li>
                                     <li>Deadline: <span class="">@Html.DisplayFor(model => model.Project!.EndDate)</span></li>
                                     <li>Priority: <span class="">@Html.DisplayFor(model => model.Project!.Priority!.Name)</span></li>
-                                    <li>@((Model.Project!.StartDate < DateTime.Now && Model.Project!.EndDate > DateTime.Now) ? "Active" : "Inactive")</li>
+                                    <li>This project is @((Model.Project!.StartDate < DateTime.Now && Model.Project!.EndDate > DateTime.Now) ? "Active" : "Inactive")</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-4 col mt-2 mt-md-5 ">
+            <div class="col-12 col-md-4 col mt-2 mt-md-5">
                 <div class="">
-                    <div class="card m-1 p-2" style="border-radius: .5rem;">
+                    <div class="card m-1 p-2 h-100" style="border-radius: .5rem;">
                         <div class="header">
                             <h2 class="me-5">
                                 Project Manager
-                                @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
-                                {
-                                    <a class="btn btn-md btn-info ms-4" asp-action="AssignProjectManager" asp-controller="Projects" asp-route-id="@Model.Project!.Id" data-bs-toggle="tooltip" title="Assign Project Manager">Assign PM</a>
-                                }
                             </h2>
                             <hr />
                         </div>
-                        <div class="body" style="overflow-y:auto;height:300px;">
-                            @foreach (var member in Model.Project!.Members!)
-                            {
-                                if (await RoleService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
+                        <div class="body" style="overflow-y:auto; height:300px;">
+                            <div class="row w-100">
+                                @foreach (var member in Model.Project!.Members!)
                                 {
-                                    @if (member.AvatarData != null)
+                                    if (await RoleService.IsUserInRoleAsync(member, nameof(BTRoles.ProjectManager)))
                                     {
-                                        <span class="mx-2"><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="rounded-circle" width="36" height="36" /></span>
+                                        <div class="col-12 col-md-7 order-2 order-md-1">
+                                            <p class="h3 fw-bold ms-1">@member.FullName</p>
+                                            <span class="fs-1 ms-1">Company</span>
+                                            <h6 class="ms-1">@member.Company!.Name</h6>
+                                            <span class="fs-1 ms-1">Phone Number</span>
+                                            <p class="fw-bold ms-1">@(String.IsNullOrEmpty(member.PhoneNumber) ? "Not Listed" : @member.PhoneNumber)</p>
+                                            <span class="fs-1 ms-1">Email</span>
+                                            <p class="fw-bold ms-1">@member.Email</p>
+                                            <span class="fs-1 ms-1">Projects Assigned</span>
+                                            <p class="fw-bold ms-1">@member.Projects!.Count @((member.Projects!.Count > 1) ? "Projects" : "Project")</p>
+                                        </div>
+
+                                        <div class="col-12 col-md-5 order-1 order-md-2 text-center">
+                                            @if (member.AvatarData != null)
+                                            {
+                                                <span><img src="data:image/*;base64,@(Convert.ToBase64String(member.AvatarData))" alt="user" class="img-thumbnail" data-bs-toggle="tooltip" title="@member.FullName"/></span>
+                                            }
+                                            else
+                                            {
+                                                <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" /></span>
+                                            }
+                                            @if (User.IsInRole(nameof(BTRoles.Admin)) || User.IsInRole(nameof(BTRoles.ProjectManager)))
+                                            {
+                                                <div class="col-12 text-center">
+                                                    <a class="btn btn-md btn-info my-3" asp-action="AssignProjectManager" asp-controller="Projects" asp-route-id="@Model.Project!.Id" data-bs-toggle="tooltip" title="Change Project Manager">Change PM</a>
+                                                </div>
+                                            }
+                                        </div>
                                     }
-                                    else
-                                    {
-                                        <span><img src="https://cdn.icon-icons.com/icons2/233/PNG/512/Contacts_26253.png" alt="user" class="rounded-circle" width="36" /></span>
-                                    }
-                                    <span class="ms-1">@member.FullName</span>
                                 }
-                            }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -174,7 +191,7 @@
                                 </thead>
                                 <tbody>
                                     @* Table body *@
-                                    @foreach (var ticket in Model.Project.Tickets!.Where(t=>t.Archived == false))
+                                    @foreach (var ticket in Model.Project.Tickets!.Where(t => t.Archived == false))
                                     {
                                         <tr>
                                             <td><a asp-action="Details" asp-controller="Tickets" asp-route-id="@ticket.Id"><strong>@ticket.Title</strong></a> </td>
