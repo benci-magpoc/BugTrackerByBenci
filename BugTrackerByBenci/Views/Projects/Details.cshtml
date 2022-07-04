@@ -157,7 +157,8 @@
                         <div class="card-body" style="overflow-y:auto;height:300px;background-color:antiquewhite">
                             @foreach (TicketHistory history in Model.TicketHistory!)
                             {
-                                <div class="mb-1"> <span class="fw-bold">Changes with @history.Ticket!.Title</span> </div>
+                                <div class="mb-1"> <span class="fw-bold">Changes with 
+                                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@history.Ticket.Id">@history.Ticket!.Title</a></span> </div>
                                 <div class="mb-1"> <span>@history.Description</span> </div>
                                 <div class="mb-1">
                                     <span>From: @history.OldValue <span><i class="mdi mdi-arrow-right-bold"></i></span> @history.NewValue</span>
