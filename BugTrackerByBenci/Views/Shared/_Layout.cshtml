@@ -455,7 +455,9 @@
 
 <script>
     $(document).ready(function() {
-        $('#myTable').DataTable();
+        $('#myTable').DataTable({
+            ordering: [[ 4, 'desc' ]]
+        });
     });
 </script>
 <script>

@@ -28,11 +28,6 @@ namespace BugTrackerByBenci.Controllers
             _companyInfoService = companyInfoService;
         }
 
-        public async Task<IActionResult> Index()
-        {
-            return View();
-        }
-
         public async Task<IActionResult> CompanyMembers()
         {
             int companyId = User.Identity!.GetCompanyId();

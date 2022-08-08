@@ -58,6 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Remove="Views\Home\Index.cshtml" />
     <Content Remove="Views\Projects\OldAllProjects.cshtml" />
     <Content Remove="Views\Projects\OldCreate.cshtml" />
     <Content Remove="Views\Projects\TentativeDetails.cshtml" />

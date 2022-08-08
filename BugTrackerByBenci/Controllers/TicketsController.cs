@@ -277,7 +277,7 @@ namespace BugTrackerByBenci.Controllers
 
                 if (projectManager != null)
                 {
-                    await _notificationService.SendEmailNotificationAsync(notification, $"New Ticket Added For Project: {newTicket.Project.Name}");
+                    await _notificationService.SendEmailNotificationAsync(notification, $"New Ticket Added For Project: {newTicket!.Project!.Name}");
                 }
                 else
                 {
