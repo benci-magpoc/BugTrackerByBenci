@@ -35,7 +35,7 @@ namespace BugTrackerUnitTests.Services
             var databaseContext = new ApplicationDbContext(options);
             databaseContext.Database.EnsureCreated();
             
-            if(await databaseContext.Projects.CountAsync() < 0)
+            if(await databaseContext.Projects.CountAsync() <= 0)
             {
                 for (int i = 0; i < 10; i++)
                 {
@@ -56,10 +56,21 @@ namespace BugTrackerUnitTests.Services
             return databaseContext;
         }
 
+        private async Task<DbContext> GetNullDbContext()
+        {
+            var options = new DbContextOptionsBuilder<DbContext>()
+                .UseInMemoryDatabase(databaseName: "Fake Database")
+                .Options;
+            var databaseContext = new DbContext(options);
+            databaseContext.Database.EnsureCreated();
+
+            return databaseContext;
+        }
 
         [Fact]
-        public async void Add_New_Project_Service_ReturnsSuccess()
+        public async void AddNewProjectService_ReturnsSuccess()
         {
+            //Arrange
             var project = new Project()
             {
                 CompanyId = 1,
@@ -71,19 +82,47 @@ namespace BugTrackerUnitTests.Services
                 ProjectPriorityId = 0
             };
             var dbContext = await GetDbContext();
-            
             var projectService = new BTProjectService(dbContext, _userManager, _rolesService);
-            
-            //A.CallTo(() => projectService.AddNewProjectAsync(project)).MustHaveHappened();
-            
+
             //Act
-            var result = projectService.AddNewProjectAsync(project);
+            Func<Task> result = async () => await projectService.AddNewProjectAsync(project);
 
             //Assert
-            result.Wait();
-            result.Should().NotBeNull();
+            await result.Should().NotThrowAsync();
             
         }
+
+        [Fact]
+        public async void AddNewProjectService_ReturnsException()
+        {
+            //Arrange
+            var project = new Project();
+            var dbContext = await GetDbContext();
+            var projectService = new BTProjectService(dbContext, _userManager, _rolesService);
+
+            //Act
+            Func<Task> result = async () => await projectService.AddNewProjectAsync(project);
+
+            //Assert
+            await result.Should().ThrowAsync<Exception>();
+
+        }
+
+        [Fact]
+        public async void GetProjectByIdAsync_ReturnsProject()
+        {
+            //Arrange
+            var dbContext = await GetDbContext();
+            var projectService = new BTProjectService(dbContext, _userManager, _rolesService);
+
+            //Act
+            var result = projectService.GetProjectByIdAsync(1, 1);
+
+            //Assert
+            result.Should().BeOfType<Task<Project>>();
+        }
+
+
 
 
     }

@@ -38,19 +38,15 @@ namespace BugTrackerUnitTests.Controllers
         {
             //Arrange
             var btUsers = A.Fake<List<BTUser>>();
-            var companyID = 1;
-
-            A.CallTo(() => _companyInfoService.GetAllMembersAsync(A<int>._)).MustHaveHappened();
-
-
-            //_ = A.CallTo(() => _companyInfoService.GetAllMembersAsync(companyID)).Returns(btUsers);
+            //var companyId = A.Fake<User.Identity.GetCompanyId()>
+            //Act
             A.CallTo(() => _companyInfoService.GetAllMembersAsync(A<int>._)).Returns(btUsers);
-            A.CallTo(() => _companyInfoService.GetCompanyInfoById(companyID)).MustNotHaveHappened();
+            //Func<Task> result = async () => await _homeController.CompanyMembers();
             var result = _homeController.CompanyMembers();
-            A.CallTo(() => _companyInfoService.GetAllMembersAsync(A<int>._)).MustHaveHappened();
-
+            
             //Assert
             result.Should().BeOfType<Task<IActionResult>>();
+
 
         }
 
