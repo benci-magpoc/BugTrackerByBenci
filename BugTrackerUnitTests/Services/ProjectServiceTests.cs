@@ -2,18 +2,12 @@
 using BugTrackerByBenci.Models;
 using BugTrackerByBenci.Services;
 using BugTrackerByBenci.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using BugTrackerUnitTests.Generators;
 using FakeItEasy;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using BugTrackerUnitTests.Generators;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using System.Data.Common;
 
 namespace BugTrackerUnitTests.Services
 {
@@ -42,10 +36,10 @@ namespace BugTrackerUnitTests.Services
         public async void AddNewProjectService_ReturnsSuccess()
         {
             //Arrange
-            var project = ProjectGenerator.GenerateProject(1);
+            var project = ProjectGenerator.GenerateProject(1).First();
 
             //Act
-            Func<Task> result = async () => await _projectService.AddNewProjectAsync(project[0]);
+            Func<Task> result = async () => await _projectService.AddNewProjectAsync(project);
 
             //Assert
             await result.Should().NotThrowAsync();
@@ -58,14 +52,14 @@ namespace BugTrackerUnitTests.Services
         [Fact]
         public async void AddNewProjectService_ReturnsException()
         {
-            //Arrange to add an empty project
+            //Arrange - add an empty project
             var project = new Project();
 
             //Act
             Func<Task> result = async () => await _projectService.AddNewProjectAsync(project);
 
             //Assert
-            await result.Should().ThrowAsync<Exception>();
+            await result.Should().ThrowAsync<DbUpdateException>();
 
         }
 
@@ -76,9 +70,8 @@ namespace BugTrackerUnitTests.Services
         public async void GetProjectByIdAsync_ReturnsProject()
         {
             //Arrange
-            var project = ProjectGenerator.GenerateProject(1);
-            
-            await _projectService.AddNewProjectAsync(project[0]);
+            var project = ProjectGenerator.GenerateProject(1).First();
+            await _projectService.AddNewProjectAsync(project);
 
             //Act
             var result = _projectService.GetProjectByIdAsync(1, 1);
@@ -131,7 +124,7 @@ namespace BugTrackerUnitTests.Services
         public async void AddUserToProjectAsync_ReturnsTrue()
         {
             //Arrange - Add user and add one project
-            var project = ProjectGenerator.GenerateProject(1);
+            var project = ProjectGenerator.GenerateProject(1).First();
 
             var user = new BTUser()
             {
@@ -140,7 +133,7 @@ namespace BugTrackerUnitTests.Services
             };
 
             _context.Users.Add(user);
-            _context.Add(project[0]);
+            _context.Add(project);
             _context.SaveChanges();
 
             //Act

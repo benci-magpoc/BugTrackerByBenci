@@ -10,6 +10,10 @@ namespace BugTrackerUnitTests.Generators
 {
     public static class DbContextGenerator
     {
+        /// <summary>
+        /// Function to generate an in memory database
+        /// </summary>
+        /// <returns>ApplicationDbContext</returns>
         public static ApplicationDbContext GenerateDbContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()

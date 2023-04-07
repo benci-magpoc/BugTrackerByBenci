@@ -9,6 +9,11 @@ namespace BugTrackerUnitTests.Generators
 {
     public static class ProjectGenerator
     {
+        /// <summary>
+        /// Function to make a list of projects and return it given how many count there is
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
         public static List<Project> GenerateProject(int count)
         {
             List<Project> projects = new List<Project>();
