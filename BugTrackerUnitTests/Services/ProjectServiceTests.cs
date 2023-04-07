@@ -13,6 +13,7 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using BugTrackerUnitTests.Generators;
 
 namespace BugTrackerUnitTests.Services
 {
@@ -41,19 +42,10 @@ namespace BugTrackerUnitTests.Services
         public async void AddNewProjectService_ReturnsSuccess()
         {
             //Arrange
-            var project = new Project()
-            {
-                CompanyId = 1,
-                Name = "Build a Personal Porfolio",
-                Description = "Single page html, css & javascript page.  Serves as a landing page for candidates and contains a bio and links to all applications and challenges.",
-                Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
-                StartDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20), DateTimeKind.Utc),
-                EndDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20).AddMonths(1), DateTimeKind.Utc),
-                ProjectPriorityId = 0
-            };
+            var project = ProjectGenerator.GenerateProject(1);
 
             //Act
-            Func<Task> result = async () => await _projectService.AddNewProjectAsync(project);
+            Func<Task> result = async () => await _projectService.AddNewProjectAsync(project[0]);
 
             //Assert
             await result.Should().NotThrowAsync();
@@ -84,18 +76,9 @@ namespace BugTrackerUnitTests.Services
         public async void GetProjectByIdAsync_ReturnsProject()
         {
             //Arrange
-            var project = new Project()
-            {
-                CompanyId = 1,
-                Name = "Build a Personal Porfolio",
-                Description = "Single page html, css & javascript page.  Serves as a landing page for candidates and contains a bio and links to all applications and challenges.",
-                Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
-                StartDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20), DateTimeKind.Utc),
-                EndDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20).AddMonths(1), DateTimeKind.Utc),
-                ProjectPriorityId = 0
-            };
-
-            await _projectService.AddNewProjectAsync(project);
+            var project = ProjectGenerator.GenerateProject(1);
+            
+            await _projectService.AddNewProjectAsync(project[0]);
 
             //Act
             var result = _projectService.GetProjectByIdAsync(1, 1);
@@ -111,19 +94,11 @@ namespace BugTrackerUnitTests.Services
         public async void GetAllProjectsByCompanyIdAsync_ReturnsListOfProjects()
         {
             //Arrange
+            var projects = ProjectGenerator.GenerateProject(10);
+
             for (int i = 0; i < 10; i++)
             {
-                var project = new Project()
-                {
-                    CompanyId = 1,
-                    Name = "Build a Personal Porfolio",
-                    Description = "Single page html, css & javascript page.  Serves as a landing page for candidates and contains a bio and links to all applications and challenges.",
-                    Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
-                    StartDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20), DateTimeKind.Utc),
-                    EndDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20).AddMonths(1), DateTimeKind.Utc),
-                    ProjectPriorityId = 0
-                };
-                await _projectService.AddNewProjectAsync(project);
+                await _projectService.AddNewProjectAsync(projects[i]);
             }
 
             //Act
@@ -156,6 +131,8 @@ namespace BugTrackerUnitTests.Services
         public async void AddUserToProjectAsync_ReturnsTrue()
         {
             //Arrange - Add user and add one project
+            var project = ProjectGenerator.GenerateProject(1);
+
             var user = new BTUser()
             {
                 FirstName = "Benci",
@@ -163,20 +140,7 @@ namespace BugTrackerUnitTests.Services
             };
 
             _context.Users.Add(user);
-            _context.SaveChanges();
-
-            var project = new Project()
-            {
-                CompanyId = 1,
-                Name = "Build a Personal Porfolio",
-                Description = "Single page html, css & javascript page.  Serves as a landing page for candidates and contains a bio and links to all applications and challenges.",
-                Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
-                StartDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20), DateTimeKind.Utc),
-                EndDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20).AddMonths(1), DateTimeKind.Utc),
-                ProjectPriorityId = 0
-            };
-
-            _context.Add(project);
+            _context.Add(project[0]);
             _context.SaveChanges();
 
             //Act
