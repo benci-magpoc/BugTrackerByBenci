@@ -104,6 +104,9 @@ namespace BugTrackerUnitTests.Services
             result.Should().BeOfType<Task<Project>>();
         }
 
+        /// <summary>
+        /// Adds 10 projects to inmemory DB and asserts 10
+        /// </summary>
         [Fact]
         public async void GetAllProjectsByCompanyIdAsync_ReturnsListOfProjects()
         {
@@ -128,18 +131,82 @@ namespace BugTrackerUnitTests.Services
 
             //Assert
             result.Should().BeOfType<List<Project>>();
-            
+            _context.Projects.Should().HaveCount(10);
         }
 
+        /// <summary>
+        /// Gets projects tests but no projects added
+        /// </summary>
         [Fact]
         public async void GetAllProjectsByCompanyIdAsync_ReturnsNoProjects()
         {
+            //Arrange - none to arrange
             
             //Act
-            var result = await _projectService.GetAllProjectsByCompanyIdAsync(1);
+            await _projectService.GetAllProjectsByCompanyIdAsync(1);
 
             //Assert
-            result.Count.Should().Be(0);
+            _context.Projects.Should().HaveCount(0);
+        }
+
+        /// <summary>
+        /// Tests Add user to assert true
+        /// </summary>
+        [Fact]
+        public async void AddUserToProjectAsync_ReturnsTrue()
+        {
+            //Arrange - Add user and add one project
+            var user = new BTUser()
+            {
+                FirstName = "Benci",
+                LastName = "Magpoc"
+            };
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            var project = new Project()
+            {
+                CompanyId = 1,
+                Name = "Build a Personal Porfolio",
+                Description = "Single page html, css & javascript page.  Serves as a landing page for candidates and contains a bio and links to all applications and challenges.",
+                Created = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc),
+                StartDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20), DateTimeKind.Utc),
+                EndDate = DateTime.SpecifyKind(new DateTime(2021, 8, 20).AddMonths(1), DateTimeKind.Utc),
+                ProjectPriorityId = 0
+            };
+
+            _context.Add(project);
+            _context.SaveChanges();
+
+            //Act
+            var result = await _projectService.AddUserToProjectAsync(user.Id, 1);
+
+            //Assert
+            result.Should().BeTrue();
+        }
+
+        /// <summary>
+        /// Tests Add user to assert exception
+        /// </summary>
+        [Fact]
+        public async void AddUserToProjectAsync_ReturnsException()
+        {
+            //Arrange - Add user 
+            var user = new BTUser()
+            {
+                FirstName = "Benci",
+                LastName = "Magpoc"
+            };
+
+            _context.Users.Add(user);
+            _context.SaveChanges();
+
+            //Act
+            Func<Task> result = async () => await _projectService.AddUserToProjectAsync(user.Id, 1);
+
+            //Assert
+            await result.Should().ThrowAsync<NullReferenceException>();
         }
 
     }
