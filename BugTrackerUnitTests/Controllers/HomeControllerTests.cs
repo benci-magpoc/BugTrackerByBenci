@@ -38,16 +38,13 @@ namespace BugTrackerUnitTests.Controllers
         {
             //Arrange
             var btUsers = A.Fake<List<BTUser>>();
-            //var companyId = A.Fake<User.Identity.GetCompanyId()>
+
             //Act
             A.CallTo(() => _companyInfoService.GetAllMembersAsync(A<int>._)).Returns(btUsers);
-            //Func<Task> result = async () => await _homeController.CompanyMembers();
             var result = _homeController.CompanyMembers();
-            
+
             //Assert
             result.Should().BeOfType<Task<IActionResult>>();
-
-
         }
 
         [Fact]
@@ -56,17 +53,17 @@ namespace BugTrackerUnitTests.Controllers
             //Arrange
             var companyID = 1;
             var dashboardViewModel = A.Fake<DashboardViewModel>();
-            
+
+            //Act
+            var result = _homeController.Dashboard();
             A.CallTo(() => _projectService.GetAllProjectsByCompanyIdAsync(companyID))!.Returns(dashboardViewModel.Projects);
             A.CallTo(() => _ticketService.GetAllTicketsByCompanyIdAsync(companyID))!.Returns(dashboardViewModel.Tickets);
             A.CallTo(() => _companyInfoService.GetAllMembersAsync(companyID))!.Returns(dashboardViewModel.Members);
             A.CallTo(() => _companyInfoService.GetCompanyInfoById(companyID))!.Returns(dashboardViewModel.Company);
-                        
-            //Act
-            var result = _homeController.Dashboard();
 
             //Assert
             result.Should().BeOfType<Task<IActionResult>>();
         }
+
     }
 }
