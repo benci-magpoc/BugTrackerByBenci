@@ -7,7 +7,6 @@ using FakeItEasy;
 using FluentAssertions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Data.Common;
 
 namespace BugTrackerUnitTests.Services
 {
@@ -24,6 +23,7 @@ namespace BugTrackerUnitTests.Services
             _userManager = A.Fake<UserManager<BTUser>>();
             _rolesService = A.Fake<IRolesService>();
             _context = DbContextGenerator.GenerateDbContext();
+            _context.Database.EnsureCreated();
 
             //SUT
             _projectService = new BTProjectService(_context, _userManager, _rolesService);
@@ -43,7 +43,7 @@ namespace BugTrackerUnitTests.Services
 
             //Assert
             await result.Should().NotThrowAsync();
-            
+
         }
 
         /// <summary>
@@ -70,14 +70,14 @@ namespace BugTrackerUnitTests.Services
         public async void GetProjectByIdAsync_ReturnsProject()
         {
             //Arrange
-            var project = ProjectGenerator.GenerateProject(1).First();
-            await _projectService.AddNewProjectAsync(project);
+            var project = ProjectGenerator.GenerateProject(1);
+            await _projectService.AddNewProjectAsync(project[0]);
 
             //Act
-            var result = _projectService.GetProjectByIdAsync(1, 1);
+            Project? result = await _projectService.GetProjectByIdAsync(1, 1);
 
             //Assert
-            result.Should().BeOfType<Task<Project>>();
+            result.Should().BeOfType<Project>();
         }
 
         /// <summary>
@@ -86,7 +86,7 @@ namespace BugTrackerUnitTests.Services
         [Fact]
         public async void GetAllProjectsByCompanyIdAsync_ReturnsListOfProjects()
         {
-            //Arrange
+            //Arrange - generate 10 projects
             var projects = ProjectGenerator.GenerateProject(10);
 
             for (int i = 0; i < 10; i++)
@@ -95,11 +95,11 @@ namespace BugTrackerUnitTests.Services
             }
 
             //Act
-            var result = await _projectService.GetAllProjectsByCompanyIdAsync(1);
+            List<Project> result = await _projectService.GetAllProjectsByCompanyIdAsync(1);
 
             //Assert
             result.Should().BeOfType<List<Project>>();
-            _context.Projects.Should().HaveCount(10);
+            result.Should().HaveCount(10);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace BugTrackerUnitTests.Services
         public async void GetAllProjectsByCompanyIdAsync_ReturnsNoProjects()
         {
             //Arrange - none to arrange
-            
+
             //Act
             await _projectService.GetAllProjectsByCompanyIdAsync(1);
 
